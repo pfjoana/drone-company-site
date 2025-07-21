@@ -60,12 +60,18 @@ export default function Hero({ heroData }) {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
-          <button className="bg-white text-black px-8 py-3 rounded-sm font-semibold hover:bg-white/90 transition-colors duration-300">
+          <a
+            href="/projects"
+            className="bg-white text-black px-8 py-3 rounded-sm font-semibold hover:bg-white/90 transition-colors duration-300"
+          >
             Ver Projetos
-          </button>
-          <button className="border border-white text-white px-8 py-3 rounded-sm font-semibold hover:bg-white/10 transition-colors duration-300">
+          </a>
+          <a
+            href="/#servicos"
+            className="border border-white text-white px-8 py-3 rounded-sm font-semibold hover:bg-white/10 transition-colors duration-300"
+          >
             Saber Mais
-          </button>
+          </a>
         </div>
       </div>
 
