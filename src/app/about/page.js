@@ -1,103 +1,69 @@
 export default function Sobre() {
+  // Dados que depois virão do Sanity
+  const aboutData = {
+    name: "João Silva", // Depois virá do Sanity
+    title: "Piloto Certificado & Fundador",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80", // Placeholder
+    description: [
+      "Especialista em captação aérea com paixão por criar conteúdo visual de qualidade cinematográfica que eleva qualquer projeto.",
+      "A nossa missão é combinar tecnologia de ponta com criatividade e profissionalismo, oferecendo soluções personalizadas para cada cliente.",
+      "Cada projeto é tratado com dedicação e atenção ao detalhe, garantindo resultados que superam as expectativas."
+    ]
+  }
+
   return (
     <div className="pt-16">
       {/* Hero section */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold mb-8 text-center">
+      <section className="py-24 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6">
             Sobre Nós
           </h1>
-          <p className="text-xl md:text-2xl text-white/80 text-center max-w-4xl mx-auto">
-            Especialistas em captação aérea com anos de experiência e paixão pela excelência visual.
+          <p className="text-xl text-white/80 leading-relaxed">
+            Especialistas em captação aérea com paixão pela excelência visual.
           </p>
         </div>
       </section>
 
       {/* Main content */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="pb-24 px-4">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
           {/* Foto e info pessoal */}
           <div className="order-2 lg:order-1">
             <div className="bg-white/10 rounded-lg p-8">
-              <div className="w-48 h-48 bg-white/20 rounded-full mx-auto mb-8 flex items-center justify-center">
-                {/* Placeholder para foto - depois substituir por imagem real */}
-                <span className="text-6xl">👨‍💼</span>
+              <div className="w-48 h-48 rounded-full mx-auto mb-8 overflow-hidden">
+                <img
+                  src={aboutData.image}
+                  alt={aboutData.name}
+                  className="w-full h-full object-cover"
+                />
               </div>
 
-              <h2 className="text-3xl font-bold mb-4 text-center">Paulo Silva</h2>
-              <p className="text-white/80 text-center mb-6">Piloto Certificado & Fundador</p>
-
-              <div className="space-y-4 text-sm text-white/70">
-                <div className="flex items-center justify-between">
-                  <span>Experiência:</span>
-                  <span className="text-white">5+ anos</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Certificações:</span>
-                  <span className="text-white">ANAC A1/A3</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Projetos realizados:</span>
-                  <span className="text-white">200+</span>
-                </div>
-              </div>
+              <h2 className="text-2xl lg:text-3xl font-bold mb-4 text-center">{aboutData.name}</h2>
+              <p className="text-white/80 text-center mb-6">{aboutData.title}</p>
             </div>
           </div>
 
           {/* Texto principal */}
           <div className="order-1 lg:order-2">
-            <h2 className="text-3xl md:text-4xl font-bold mb-8">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-8">
               Transformamos perspetivas em experiências
             </h2>
 
-            <div className="space-y-6 text-lg text-white/80">
-              <p>
-                Com mais de 5 anos de experiência na captação aérea, especializamo-nos
-                em criar conteúdo visual de qualidade cinematográfica que eleva qualquer projeto.
-              </p>
-
-              <p>
-                A nossa missão é combinar tecnologia de ponta com criatividade e
-                profissionalismo, oferecendo soluções personalizadas para cada cliente.
-              </p>
-
-              <p>
-                Desde inspeções técnicas precisas até campanhas de marketing imobiliário
-                impactantes, cada projeto é tratado com o mesmo nível de dedicação e
-                atenção ao detalhe.
-              </p>
-            </div>
-
-            <div className="mt-12 grid grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-2xl font-bold mb-4">Equipamento</h3>
-                <ul className="space-y-2 text-white/70">
-                  <li>• DJI Mavic 3 Pro</li>
-                  <li>• DJI Air 2S</li>
-                  <li>• Câmaras 4K/6K</li>
-                  <li>• Estabilizadores gimbal</li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-bold mb-4">Especializações</h3>
-                <ul className="space-y-2 text-white/70">
-                  <li>• Inspeções técnicas</li>
-                  <li>• Marketing imobiliário</li>
-                  <li>• Eventos corporativos</li>
-                  <li>• Vídeo institucional</li>
-                </ul>
-              </div>
+            <div className="space-y-6 text-lg text-white/80 leading-relaxed">
+              {aboutData.description.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       {/* Valores/Missão */}
-      <section className="py-20 px-4 bg-white/5">
+      <section className="py-24 px-4 bg-white/5">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+          <h2 className="text-3xl lg:text-4xl font-bold text-center mb-16">
             Os Nossos Valores
           </h2>
 
@@ -107,7 +73,7 @@ export default function Sobre() {
                 <span className="text-2xl">🎯</span>
               </div>
               <h3 className="text-xl font-bold mb-4">Precisão</h3>
-              <p className="text-white/70">
+              <p className="text-white/70 leading-relaxed">
                 Cada detalhe importa. Trabalhamos com precisão técnica para
                 garantir resultados excepcionais.
               </p>
@@ -118,7 +84,7 @@ export default function Sobre() {
                 <span className="text-2xl">⚡</span>
               </div>
               <h3 className="text-xl font-bold mb-4">Agilidade</h3>
-              <p className="text-white/70">
+              <p className="text-white/70 leading-relaxed">
                 Resposta rápida e entregas dentro do prazo, sem comprometer
                 a qualidade do trabalho.
               </p>
@@ -129,7 +95,7 @@ export default function Sobre() {
                 <span className="text-2xl">🚀</span>
               </div>
               <h3 className="text-xl font-bold mb-4">Inovação</h3>
-              <p className="text-white/70">
+              <p className="text-white/70 leading-relaxed">
                 Sempre atualizados com as mais recentes tecnologias e
                 tendências do mercado.
               </p>

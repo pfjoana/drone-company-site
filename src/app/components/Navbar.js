@@ -19,9 +19,9 @@ export default function Navbar() {
   const navLinks = [
     { href: '/', label: 'Início' },
     { href: '/about', label: 'Sobre' },
-    { href: '/products', label: 'Serviços' },
-    { href: '/projetos', label: 'Projetos' },
-    { href: '/contactos', label: 'Contactos' },
+    { href: '/#servicos', label: 'Serviços' }, // Vai sempre para homepage + secção
+    { href: '/projects', label: 'Projetos' },
+    { href: '/contacts', label: 'Contactos' },
   ]
 
   return (
@@ -36,7 +36,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="font-bold text-xl">
-            All Perspectives
+            DroneCompany
           </Link>
 
           {/* Desktop Navigation */}
