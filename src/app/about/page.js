@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 export default function Sobre() {
   // Dados que depois virão do Sanity
   const aboutData = {
@@ -32,11 +34,13 @@ export default function Sobre() {
           {/* Foto e info pessoal */}
           <div className="order-2 lg:order-1">
             <div className="bg-white/10 rounded-lg p-8">
-              <div className="w-48 h-48 rounded-full mx-auto mb-8 overflow-hidden">
-                <img
+              <div className="w-48 h-48 rounded-full mx-auto mb-8 overflow-hidden relative">
+                <Image
                   src={aboutData.image}
                   alt={aboutData.name}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 192px, 192px"
                 />
               </div>
 

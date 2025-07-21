@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 import Hero from './components/Hero'
 
 export default function Home() {
@@ -121,10 +123,12 @@ export default function Home() {
               >
                 {/* Image container with overlay effect */}
                 <div className="relative overflow-hidden rounded-lg mb-6 aspect-[4/3]">
-                  <img
+                  <Image
                     src={service.image}
                     alt={service.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
 
                   {/* Overlay que aparece no hover */}
@@ -237,10 +241,12 @@ export default function Home() {
             {featuredProjects.map((project) => (
               <div key={project.id} className="group cursor-pointer">
                 <div className="relative aspect-square rounded-lg overflow-hidden mb-4">
-                  <img
+                  <Image
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -261,12 +267,12 @@ export default function Home() {
           </div>
 
           <div className="text-center">
-            <a
+            <Link
               href="/projects"
               className="bg-white text-black px-8 py-4 rounded font-semibold hover:bg-white/90 transition-colors duration-300 inline-block"
             >
               Ver Todos os Projetos
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -282,18 +288,18 @@ export default function Home() {
             transformar a sua visão em realidade com captação aérea profissional.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
+            <Link
               href="/contacts"
               className="bg-white text-black px-8 py-4 rounded font-semibold hover:bg-white/90 transition-colors duration-300"
             >
               Solicitar Orçamento
-            </a>
-            <a
+            </Link>
+            <Link
               href="#servicos"
               className="border border-white text-white px-8 py-4 rounded font-semibold hover:bg-white/10 transition-colors duration-300"
             >
               Conhecer Serviços
-            </a>
+            </Link>
           </div>
         </div>
       </section>

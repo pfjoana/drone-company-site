@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Projetos() {
   const [hoveredProject, setHoveredProject] = useState(null)
@@ -80,10 +82,12 @@ export default function Projetos() {
               >
                 {/* Image Container */}
                 <div className="relative overflow-hidden rounded-lg mb-6 aspect-[4/3] bg-gray-900 w-full">
-                  <img
+                  <Image
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
 
                   {/* Overlay no hover */}
@@ -134,18 +138,18 @@ export default function Projetos() {
             elevar o seu projeto com captação aérea profissional.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
+            <Link
               href="/contacts"
               className="bg-white text-black px-8 py-4 rounded font-semibold hover:bg-white/90 transition-colors duration-300"
             >
               Começar Projeto
-            </a>
-            <a
+            </Link>
+            <Link
               href="/#servicos"
               className="border border-white text-white px-8 py-4 rounded font-semibold hover:bg-white/10 transition-colors duration-300"
             >
               Ver Serviços
-            </a>
+            </Link>
           </div>
         </div>
       </section>

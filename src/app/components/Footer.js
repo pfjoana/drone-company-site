@@ -13,7 +13,7 @@ export default function Footer() {
           </div>
 
           {/* Links */}
-          <div>
+          {/* <div>
             <h4 className="font-semibold mb-4">Links</h4>
             <div className="space-y-2">
               <a href="/sobre" className="block text-white/70 hover:text-white text-sm transition-colors">
@@ -29,7 +29,7 @@ export default function Footer() {
                 Contactos
               </a>
             </div>
-          </div>
+          </div> */}
 
           {/* Contactos */}
           <div>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import Link from 'next/link'
 // import { urlFor } from '@/lib/sanity' // Descomenta quando tiveres Sanity configurado
 
 export default function Hero({ heroData }) {
@@ -60,18 +61,18 @@ export default function Hero({ heroData }) {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
-          <a
+          <Link
             href="/projects"
             className="bg-white text-black px-8 py-3 rounded-sm font-semibold hover:bg-white/90 transition-colors duration-300"
           >
             Ver Projetos
-          </a>
-          <a
+          </Link>
+          <Link
             href="/#servicos"
             className="border border-white text-white px-8 py-3 rounded-sm font-semibold hover:bg-white/10 transition-colors duration-300"
           >
             Saber Mais
-          </a>
+          </Link>
         </div>
       </div>
 
