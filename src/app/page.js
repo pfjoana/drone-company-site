@@ -1,10 +1,47 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 import Hero from './components/Hero'
+import { client, urlFor } from '../lib/sanity'
 
 export default function Home() {
   const [hoveredService, setHoveredService] = useState(null)
+  const [featuredProjects, setFeaturedProjects] = useState([])
+
+  // Fetch featured projects from Sanity
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const projects = await client.fetch(`
+          *[_type == "project" && featured == true][0...4]{
+            _id,
+            title,
+            category,
+            mainImage{
+              asset->{
+                _id,
+                url
+              }
+            },
+            video{
+              asset->{
+                _id,
+                url
+              }
+            }
+          }
+        `)
+        console.log('Featured projects:', projects) // Debug
+        setFeaturedProjects(projects)
+      } catch (error) {
+        console.error('Error fetching projects:', error)
+      }
+    }
+
+    fetchProjects()
+  }, [])
 
   const services = [
     {
@@ -51,33 +88,6 @@ export default function Home() {
     }
   ]
 
-  const featuredProjects = [
-    {
-      id: 1,
-      title: 'Villa Moderna - Cascais',
-      category: 'Imobiliário',
-      image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 2,
-      title: 'Inspeção Condomínio Torres',
-      category: 'Inspeção',
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 3,
-      title: 'Tech Summit 2024',
-      category: 'Eventos',
-      image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 4,
-      title: 'Quinta do Lago Resort',
-      category: 'Imobiliário',
-      image: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-    }
-  ]
-
   return (
     <div>
       {/* Hero Section */}
@@ -121,10 +131,12 @@ export default function Home() {
               >
                 {/* Image container with overlay effect */}
                 <div className="relative overflow-hidden rounded-lg mb-6 aspect-[4/3]">
-                  <img
+                  <Image
                     src={service.image}
                     alt={service.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
 
                   {/* Overlay que aparece no hover */}
@@ -235,18 +247,36 @@ export default function Home() {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {featuredProjects.map((project) => (
-              <div key={project.id} className="group cursor-pointer">
+              <div key={project._id} className="group cursor-pointer">
                 <div className="relative aspect-square rounded-lg overflow-hidden mb-4">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-white text-2xl">▶</span>
+                  {/* Video que só reproduz no hover */}
+                  {project.video?.asset && (
+                    <video
+                      className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                    >
+                      <source src={project.video.asset.url} type="video/mp4" />
+                    </video>
+                  )}
+
+                  {/* Imagem principal ou fallback */}
+                  {project.mainImage ? (
+                    <Image
+                      src={project.mainImage.asset.url}
+                      alt={project.title}
+                      fill
+                      className="object-cover group-hover:opacity-0 transition-opacity duration-300"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gray-800 group-hover:opacity-0 transition-opacity duration-300 flex items-center justify-center">
+                      <span className="text-white/50 text-sm">Vídeo</span>
                     </div>
-                  </div>
+                  )}
+
                   <div className="absolute top-2 left-2">
                     <span className="bg-black/50 text-white text-xs px-2 py-1 rounded">
                       {project.category}
@@ -258,15 +288,33 @@ export default function Home() {
                 </h3>
               </div>
             ))}
+
+            {/* Se não há projetos, mostra placeholders */}
+            {featuredProjects.length === 0 && (
+              <>
+                <div className="group cursor-pointer">
+                  <div className="relative aspect-square rounded-lg overflow-hidden mb-4 bg-gray-800 flex items-center justify-center">
+                    <span className="text-white/50">Projeto 1</span>
+                  </div>
+                  <h3 className="font-bold text-sm">Carregando projetos...</h3>
+                </div>
+                <div className="group cursor-pointer">
+                  <div className="relative aspect-square rounded-lg overflow-hidden mb-4 bg-gray-800 flex items-center justify-center">
+                    <span className="text-white/50">Projeto 2</span>
+                  </div>
+                  <h3 className="font-bold text-sm">Carregando projetos...</h3>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="text-center">
-            <a
+            <Link
               href="/projects"
               className="bg-white text-black px-8 py-4 rounded font-semibold hover:bg-white/90 transition-colors duration-300 inline-block"
             >
               Ver Todos os Projetos
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -282,18 +330,18 @@ export default function Home() {
             transformar a sua visão em realidade com captação aérea profissional.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
+            <Link
               href="/contacts"
               className="bg-white text-black px-8 py-4 rounded font-semibold hover:bg-white/90 transition-colors duration-300"
             >
               Solicitar Orçamento
-            </a>
-            <a
+            </Link>
+            <Link
               href="#servicos"
               className="border border-white text-white px-8 py-4 rounded font-semibold hover:bg-white/10 transition-colors duration-300"
             >
               Conhecer Serviços
-            </a>
+            </Link>
           </div>
         </div>
       </section>
