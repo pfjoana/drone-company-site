@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
 export default function Navbar() {
@@ -19,7 +20,7 @@ export default function Navbar() {
   const navLinks = [
     { href: '/', label: 'Início' },
     { href: '/about', label: 'Sobre' },
-    { href: '/#servicos', label: 'Serviços' }, // Vai sempre para homepage + secção
+    { href: '/#servicos', label: 'Serviços' }, 
     { href: '/projects', label: 'Projetos' },
     { href: '/contacts', label: 'Contactos' },
   ]
@@ -35,8 +36,14 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="font-bold text-xl">
-            DroneCompany
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/logo_horizontal.png"
+              alt="All Perspectives"
+              width={180}
+              height={40}
+              className="h-8 w-auto"
+            />
           </Link>
 
           {/* Desktop Navigation */}

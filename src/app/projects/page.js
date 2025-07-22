@@ -1,57 +1,46 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { client } from '../../lib/sanity'
 
 export default function Projetos() {
   const [hoveredProject, setHoveredProject] = useState(null)
+  const [projects, setProjects] = useState([])
 
-  // Mock data - depois será do Sanity
-  const projects = [
-    {
-      id: 1,
-      title: 'Inspeção Condomínio Torres',
-      category: 'Inspeção',
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      description: 'Inspeção técnica completa de cobertura e fachada de condomínio residencial'
-    },
-    {
-      id: 2,
-      title: 'Villa Moderna - Cascais',
-      category: 'Imobiliário',
-      image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      description: 'Tour aéreo para campanha de marketing imobiliário de propriedade de luxo'
-    },
-    {
-      id: 3,
-      title: 'Evento Tech Summit 2024',
-      category: 'Eventos',
-      image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      description: 'Cobertura aérea completa de evento corporativo com mais de 1000 participantes'
-    },
-    {
-      id: 4,
-      title: 'Complexo Industrial Porto',
-      category: 'Inspeção',
-      image: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      description: 'Mapeamento e inspeção detalhada de infraestrutura industrial'
-    },
-    {
-      id: 5,
-      title: 'Quinta do Lago Resort',
-      category: 'Imobiliário',
-      image: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      description: 'Vídeo promocional de resort de luxo para campanha internacional'
-    },
-    {
-      id: 6,
-      title: 'Festival de Verão Braga',
-      category: 'Eventos',
-      image: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      description: 'Documentação aérea de festival municipal com múltiplos palcos'
+  // Fetch all projects from Sanity
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const data = await client.fetch(`
+          *[_type == "project"] | order(_createdAt desc){
+            _id,
+            title,
+            category,
+            mainImage{
+              asset->{
+                _id,
+                url
+              }
+            },
+            video{
+              asset->{
+                _id,
+                url
+              }
+            }
+          }
+        `)
+        console.log('All projects:', data) // Debug
+        setProjects(data)
+      } catch (error) {
+        console.error('Error fetching projects:', error)
+      }
     }
-  ]
+
+    fetchProjects()
+  }, [])
 
   return (
     <div className="pt-16">
@@ -72,57 +61,78 @@ export default function Projetos() {
       {/* Projects Grid - 2 Columns */}
       <section className="pb-24 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {projects.map((project) => (
               <div
-                key={project.id}
+                key={project._id}
                 className="group cursor-pointer"
-                onMouseEnter={() => setHoveredProject(project.id)}
+                onMouseEnter={() => setHoveredProject(project._id)}
                 onMouseLeave={() => setHoveredProject(null)}
               >
-                {/* Image Container */}
+                {/* Image/Video Container */}
                 <div className="relative overflow-hidden rounded-lg mb-6 aspect-[4/3] bg-gray-900 w-full">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
+                  {/* Video que reproduz no hover */}
+                  {project.video?.asset?.url && (
+                    <video
+                      className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                    >
+                      <source src={project.video.asset.url} type="video/mp4" />
+                    </video>
+                  )}
 
-                  {/* Overlay no hover */}
-                  <div className={`absolute inset-0 bg-black/60 transition-opacity duration-300 ${
-                    hoveredProject === project.id ? 'opacity-100' : 'opacity-0'
-                  }`}>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center text-white px-6">
-                        <div className="w-16 h-16 border-2 border-white rounded-full flex items-center justify-center mx-auto mb-4">
-                          <span className="text-2xl">▶</span>
-                        </div>
-                        <p className="text-sm">Ver Projeto</p>
-                      </div>
+                  {/* Imagem principal se existir */}
+                  {project.mainImage?.asset?.url && (
+                    <Image
+                      src={project.mainImage.asset.url}
+                      alt={project.title || 'Projeto'}
+                      fill
+                      className="object-cover transition-opacity duration-500 group-hover:opacity-0"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  )}
+
+                  {/* Fallback se não há imagem nem vídeo */}
+                  {!project.mainImage?.asset?.url && !project.video?.asset?.url && (
+                    <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
+                      <span className="text-white/50 text-lg">Sem mídia</span>
                     </div>
-                  </div>
+                  )}
 
                   {/* Category badge */}
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-black/50 backdrop-blur-sm text-white text-sm px-3 py-1 rounded-full">
-                      {project.category}
-                    </span>
-                  </div>
+                  {project.category && (
+                    <div className="absolute top-4 left-4">
+                      <span className="bg-black/50 backdrop-blur-sm text-white text-sm px-3 py-1 rounded-full">
+                        {project.category}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Project Info */}
                 <div className="px-2">
                   <h3 className="text-xl lg:text-2xl font-bold mb-3 group-hover:text-white/90 transition-colors">
-                    {project.title}
+                    {project.title || 'Projeto sem título'}
                   </h3>
                   <p className="text-white/70 leading-relaxed text-sm lg:text-base">
-                    {project.description}
+                    {project.category ?
+                      `Projeto de ${project.category.toLowerCase()} com captação aérea profissional.` :
+                      'Projeto de captação aérea profissional.'
+                    }
                   </p>
                 </div>
               </div>
             ))}
+
+            {/* Loading state */}
+            {projects.length === 0 && (
+              <div className="col-span-2 text-center py-20">
+                <p className="text-white/70 text-lg">Carregando projetos...</p>
+              </div>
+            )}
           </div>
         </div>
       </section>

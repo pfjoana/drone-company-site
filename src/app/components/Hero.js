@@ -1,33 +1,62 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-// import { urlFor } from '@/lib/sanity' // Descomenta quando tiveres Sanity configurado
+import { client, urlFor } from '../../lib/sanity'
 
-export default function Hero({ heroData }) {
+export default function Hero() {
   const videoRef = useRef(null)
+  const [heroData, setHeroData] = useState(null)
 
   useEffect(() => {
-    // Garantir que o vídeo começa automaticamente e sem som
+    // Fetch hero data from Sanity
+    const fetchHeroData = async () => {
+      try {
+        const data = await client.fetch(`
+          *[_type == "hero"][0]{
+            backgroundVideo{
+              asset->{
+                _id,
+                url
+              }
+            },
+            backgroundImage{
+              asset->{
+                _id,
+                url
+              }
+            }
+          }
+        `)
+        console.log('Hero data from Sanity:', data) // Debug
+        setHeroData(data)
+      } catch (error) {
+        console.error('Error fetching hero data:', error)
+      }
+    }
+
+    fetchHeroData()
+  }, [])
+
+  useEffect(() => {
+    // Auto-play video when loaded
     if (videoRef.current) {
       videoRef.current.play().catch(console.error)
     }
-  }, [])
+  }, [heroData])
+
+  // Get video URL helper
+  const getVideoUrl = (videoAsset) => {
+    if (!videoAsset?.asset) return null
+    console.log('Video URL:', videoAsset.asset.url) // Debug
+    return videoAsset.asset.url
+  }
 
   return (
     <section className="relative h-screen w-full overflow-hidden">
 
-      {/* IMAGEM DE FUNDO (temporária) */}
-      <div
-        className="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')`
-        }}
-      />
-
-      {/* VIDEO BACKGROUND (comentado até teres Sanity) */}
-      {/*
-      {heroData?.video && (
+      {/* Video or Image Background */}
+      {heroData?.backgroundVideo ? (
         <video
           ref={videoRef}
           className="absolute top-0 left-0 w-full h-full object-cover"
@@ -35,13 +64,26 @@ export default function Hero({ heroData }) {
           muted
           loop
           playsInline
-          poster={heroData?.posterImage ? urlFor(heroData.posterImage).url() : undefined}
         >
-          <source src={heroData.video} type="video/mp4" />
+          <source src={getVideoUrl(heroData.backgroundVideo)} type="video/mp4" />
           O seu browser não suporta vídeos HTML5.
         </video>
+      ) : heroData?.backgroundImage ? (
+        <div
+          className="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url('${urlFor(heroData.backgroundImage).url()}')`
+          }}
+        />
+      ) : (
+        // Fallback para o placeholder do Unsplash
+        <div
+          className="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')`
+          }}
+        />
       )}
-      */}
 
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/40" />
@@ -55,9 +97,8 @@ export default function Hero({ heroData }) {
         </h1>
 
         <p className="text-lg md:text-xl lg:text-2xl text-white/95 mb-8 max-w-3xl drop-shadow-md">
-          {heroData?.description ||
-            "Serviços especializados de drone para inspeções, imobiliário e eventos. Qualidade cinematográfica ao seu alcance."
-          }
+          Serviços especializados de drone para inspeções, imobiliário e eventos.
+          Qualidade cinematográfica ao seu alcance.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
