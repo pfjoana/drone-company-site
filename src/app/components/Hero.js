@@ -85,18 +85,18 @@ export default function Hero() {
         />
       )}
 
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/40" />
+      {/* Subtle dark overlay for text readability */}
+      <div className="absolute inset-0 bg-black/30" />
 
       {/* Content overlay */}
       <div className="relative z-10 flex flex-col justify-center items-center h-full text-center px-4">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-white drop-shadow-lg">
+        <h1 className="hero-title text-4xl md:text-6xl lg:text-8xl font-bold mb-6 text-white drop-shadow-2xl">
           Captação Aérea
           <br />
-          <span className="text-white/90">Profissional</span>
+          <span className="text-white/95">Profissional</span>
         </h1>
 
-        <p className="text-lg md:text-xl lg:text-2xl text-white/95 mb-8 max-w-3xl drop-shadow-md">
+        <p className="text-lg md:text-xl lg:text-2xl text-white/95 mb-8 max-w-3xl drop-shadow-lg font-medium">
           Serviços especializados de drone para inspeções, imobiliário e eventos.
           Qualidade cinematográfica ao seu alcance.
         </p>
@@ -104,13 +104,13 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row gap-4">
           <Link
             href="/projects"
-            className="bg-white text-black px-8 py-3 rounded-sm font-semibold hover:bg-white/90 transition-colors duration-300"
+            className="bg-white text-black px-8 py-3 rounded-sm font-semibold hover:bg-white/90 transition-colors duration-300 shadow-lg"
           >
             Ver Projetos
           </Link>
           <Link
             href="/#servicos"
-            className="border border-white text-white px-8 py-3 rounded-sm font-semibold hover:bg-white/10 transition-colors duration-300"
+            className="border-2 border-white text-white px-8 py-3 rounded-sm font-semibold hover:bg-white/10 transition-colors duration-300 backdrop-blur-sm"
           >
             Saber Mais
           </Link>
@@ -119,8 +119,8 @@ export default function Hero() {
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-        <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-white/70 rounded-full mt-2 animate-bounce" />
+        <div className="w-6 h-10 border-2 border-white/70 rounded-full flex justify-center">
+          <div className="w-1 h-3 bg-white/80 rounded-full mt-2 animate-bounce" />
         </div>
       </div>
     </section>

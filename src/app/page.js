@@ -93,14 +93,14 @@ export default function Home() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Intro - Só texto à esquerda */}
+      {/* Intro - Statement impactante */}
       <section className="py-32 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-4xl">
-            <h2 className="text-4xl md:text-6xl font-bold mb-8 leading-tight">
+          <div className="max-w-5xl">
+            <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-12 leading-[0.9] text-black">
               Elevamos o seu conteúdo
             </h2>
-            <p className="text-xl text-white/80 leading-relaxed">
+            <p className="text-2xl md:text-3xl text-gray-700 leading-relaxed font-medium max-w-4xl">
               Combinamos tecnologia de ponta com experiência profissional para criar
               imagens e vídeos aéreos que destacam o seu projeto, propriedade ou evento.
             </p>
@@ -108,14 +108,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Serviços Section - Mais altura */}
+      {/* Serviços Section */}
       <section id="servicos" className="py-32 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">
               Os Nossos Serviços
             </h2>
-            <p className="text-xl text-white/80 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed font-medium">
               Três áreas de especialização para responder a todas as suas necessidades
               de captação aérea profissional.
             </p>
@@ -140,7 +140,7 @@ export default function Home() {
                   />
 
                   {/* Overlay que aparece no hover */}
-                  <div className={`absolute inset-0 bg-black/60 transition-opacity duration-300 ${
+                  <div className={`absolute inset-0 bg-black/70 transition-opacity duration-300 ${
                     hoveredService === service.id ? 'opacity-100' : 'opacity-0'
                   }`}>
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -158,11 +158,11 @@ export default function Home() {
 
                 {/* Service info */}
                 <div>
-                  <p className="text-white/60 text-sm mb-2">{service.subtitle}</p>
-                  <h3 className="text-2xl font-bold mb-4 group-hover:text-white/90 transition-colors">
+                  <p className="text-gray-600 text-sm mb-2 font-medium">{service.subtitle}</p>
+                  <h3 className="text-2xl font-bold mb-4 text-black group-hover:text-gray-700 transition-colors">
                     {service.title}
                   </h3>
-                  <p className="text-white/70 leading-relaxed">
+                  <p className="text-gray-700 leading-relaxed font-medium">
                     {service.description}
                   </p>
                 </div>
@@ -172,78 +172,79 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Reviews + Featured Projects - Bloco cinza com mais altura */}
-      <section className="py-32 px-4 bg-white/5">
+      {/* Reviews + Featured Projects - Bloco cinza claro */}
+      <section className="py-32 px-4 bg-gray-50">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-black">
             O Que Dizem os Nossos Clientes
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Review 1 */}
-            <div className="bg-white/10 rounded-lg p-6">
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
               <div className="flex mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-400 text-xl">★</span>
                 ))}
               </div>
-              <p className="text-white/80 mb-4 leading-relaxed">
+              <p className="text-gray-700 mb-4 leading-relaxed">
                 "Excelente trabalho na inspeção do nosso condomínio. Relatório muito detalhado
                 e imagens de alta qualidade que nos ajudaram a identificar todos os problemas."
               </p>
               <div>
-                <p className="font-semibold">Maria Santos</p>
-                <p className="text-white/60 text-sm">Administradora de Condomínio</p>
+                <p className="font-semibold text-black">Maria Santos</p>
+                <p className="text-gray-500 text-sm">Administradora de Condomínio</p>
               </div>
             </div>
 
             {/* Review 2 */}
-            <div className="bg-white/10 rounded-lg p-6">
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
               <div className="flex mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-400 text-xl">★</span>
                 ))}
               </div>
-              <p className="text-white/80 mb-4 leading-relaxed">
+              <p className="text-gray-700 mb-4 leading-relaxed">
                 "As fotografias aéreas da nossa propriedade ficaram incríveis!
                 Vendemos a casa muito mais rápido graças ao material promocional."
               </p>
               <div>
-                <p className="font-semibold">Carlos Oliveira</p>
-                <p className="text-white/60 text-sm">Proprietário</p>
+                <p className="font-semibold text-black">Carlos Oliveira</p>
+                <p className="text-gray-500 text-sm">Proprietário</p>
               </div>
             </div>
 
             {/* Review 3 */}
-            <div className="bg-white/10 rounded-lg p-6">
+            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
               <div className="flex mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-400 text-xl">★</span>
                 ))}
               </div>
-              <p className="text-white/80 mb-4 leading-relaxed">
+              <p className="text-gray-700 mb-4 leading-relaxed">
                 "Profissionalismo exemplar na cobertura do nosso evento corporativo.
                 O vídeo final superou todas as expectativas!"
               </p>
               <div>
-                <p className="font-semibold">Ana Rodrigues</p>
-                <p className="text-white/60 text-sm">Diretora de Marketing</p>
+                <p className="font-semibold text-black">Ana Rodrigues</p>
+                <p className="text-gray-500 text-sm">Diretora de Marketing</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Featured Projects Preview - Mesmo bloco cinza */}
-        <div className="max-w-6xl mx-auto mt-24">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Projetos em Destaque
-            </h2>
-            <p className="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-              Uma seleção dos nossos trabalhos mais recentes que demonstram
-              a qualidade e diversidade dos nossos serviços.
-            </p>
-          </div>
+        {/* Featured Projects Preview - Fundo branco com mais espaço */}
+        <div className="bg-white pt-32 pb-16">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">
+                Projetos em Destaque
+              </h2>
+              <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed font-medium">
+                Uma seleção dos nossos trabalhos mais recentes que demonstram
+                a qualidade e diversidade dos nossos serviços.
+              </p>
+            </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {featuredProjects.map((project) => (
@@ -272,18 +273,18 @@ export default function Home() {
                       sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw"
                     />
                   ) : (
-                    <div className="absolute inset-0 bg-gray-800 group-hover:opacity-0 transition-opacity duration-300 flex items-center justify-center">
-                      <span className="text-white/50 text-sm">Vídeo</span>
+                    <div className="absolute inset-0 bg-gray-200 group-hover:opacity-0 transition-opacity duration-300 flex items-center justify-center">
+                      <span className="text-gray-500 text-sm">Vídeo</span>
                     </div>
                   )}
 
                   <div className="absolute top-2 left-2">
-                    <span className="bg-black/50 text-white text-xs px-2 py-1 rounded">
+                    <span className="bg-black/60 text-white text-xs px-2 py-1 rounded">
                       {project.category}
                     </span>
                   </div>
                 </div>
-                <h3 className="font-bold text-sm group-hover:text-white/80 transition-colors">
+                <h3 className="font-bold text-sm text-black group-hover:text-gray-600 transition-colors">
                   {project.title}
                 </h3>
               </div>
@@ -293,52 +294,53 @@ export default function Home() {
             {featuredProjects.length === 0 && (
               <>
                 <div className="group cursor-pointer">
-                  <div className="relative aspect-square rounded-lg overflow-hidden mb-4 bg-gray-800 flex items-center justify-center">
-                    <span className="text-white/50">Projeto 1</span>
+                  <div className="relative aspect-square rounded-lg overflow-hidden mb-4 bg-gray-200 flex items-center justify-center">
+                    <span className="text-gray-500">Projeto 1</span>
                   </div>
-                  <h3 className="font-bold text-sm">Carregando projetos...</h3>
+                  <h3 className="font-bold text-sm text-black">Carregando projetos...</h3>
                 </div>
                 <div className="group cursor-pointer">
-                  <div className="relative aspect-square rounded-lg overflow-hidden mb-4 bg-gray-800 flex items-center justify-center">
-                    <span className="text-white/50">Projeto 2</span>
+                  <div className="relative aspect-square rounded-lg overflow-hidden mb-4 bg-gray-200 flex items-center justify-center">
+                    <span className="text-gray-500">Projeto 2</span>
                   </div>
-                  <h3 className="font-bold text-sm">Carregando projetos...</h3>
+                  <h3 className="font-bold text-sm text-black">Carregando projetos...</h3>
                 </div>
               </>
             )}
           </div>
 
-          <div className="text-center">
-            <Link
-              href="/projects"
-              className="bg-white text-black px-8 py-4 rounded font-semibold hover:bg-white/90 transition-colors duration-300 inline-block"
-            >
-              Ver Todos os Projetos
-            </Link>
+            <div className="text-center">
+              <Link
+                href="/projects"
+                className="bg-black text-white px-8 py-4 rounded font-semibold hover:bg-gray-800 transition-colors duration-300 inline-block"
+              >
+                Ver Todos os Projetos
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Final - Mais altura */}
-      <section className="py-32 px-4">
+      {/* CTA Final */}
+      <section className="py-32 px-4 bg-gray-50">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-black">
             Pronto para Elevar o Seu Projeto?
           </h2>
-          <p className="text-xl text-white/80 mb-12 leading-relaxed">
+          <p className="text-xl text-gray-700 mb-12 leading-relaxed font-medium">
             Entre em contacto connosco hoje mesmo e descubra como podemos
             transformar a sua visão em realidade com captação aérea profissional.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/contacts"
-              className="bg-white text-black px-8 py-4 rounded font-semibold hover:bg-white/90 transition-colors duration-300"
+              className="bg-black text-white px-8 py-4 rounded font-semibold hover:bg-gray-800 transition-colors duration-300"
             >
               Solicitar Orçamento
             </Link>
             <Link
               href="#servicos"
-              className="border border-white text-white px-8 py-4 rounded font-semibold hover:bg-white/10 transition-colors duration-300"
+              className="border border-black text-black px-8 py-4 rounded font-semibold hover:bg-black/5 transition-colors duration-300"
             >
               Conhecer Serviços
             </Link>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 export default function Contactos() {
   const [formData, setFormData] = useState({
@@ -40,30 +41,30 @@ export default function Contactos() {
   }
 
   return (
-    <div className="pt-16">
-      {/* Hero Section */}
-      <section className="py-24 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
-            Entre em Contacto
-          </h1>
-          <p className="text-xl text-white/80 leading-relaxed">
-            Pronto para elevar o seu projeto? Vamos conversar sobre como
-            podemos ajudar com captação aérea profissional.
-          </p>
+    <div className="pt-24">
+
+      {/* Statement + texto marketing */}
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-4xl">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-[0.9] text-black">
+              Entre em contacto
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-700 leading-relaxed font-medium">
+              Solicite o seu orçamento personalizado. Vamos conversar sobre como podemos elevar o seu projeto com captação aérea profissional.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Contact Content */}
-      <section className="pb-24 px-4">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+      {/* Layout orgânico - Form + Imagem + Contactos */}
+      <section className="py-16 px-4">
+        <div className="max-w-7xl mx-auto relative">
 
-          {/* Contact Form */}
-          <div>
-            <h2 className="text-3xl font-bold mb-8">Solicitar Orçamento</h2>
-
+          {/* Formulário à esquerda */}
+          <div className="max-w-xl">
             {submitStatus === 'success' && (
-              <div className="bg-green-500/20 border border-green-500/50 text-green-300 p-4 rounded-lg mb-6">
+              <div className="bg-green-50 border border-green-200 text-green-700 p-4 rounded-lg mb-8">
                 Mensagem enviada com sucesso! Entraremos em contacto em breve.
               </div>
             )}
@@ -71,9 +72,6 @@ export default function Contactos() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="nome" className="block text-sm font-medium mb-2">
-                    Nome *
-                  </label>
                   <input
                     type="text"
                     id="nome"
@@ -81,15 +79,12 @@ export default function Contactos() {
                     value={formData.nome}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-white/50 focus:outline-none transition-colors"
-                    placeholder="Seu nome completo"
+                    className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-colors text-lg"
+                    placeholder="Nome"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">
-                    Email *
-                  </label>
                   <input
                     type="email"
                     id="email"
@@ -97,119 +92,101 @@ export default function Contactos() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-white/50 focus:outline-none transition-colors"
-                    placeholder="seu@email.com"
+                    className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-colors text-lg"
+                    placeholder="Email"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="telefone" className="block text-sm font-medium mb-2">
-                    Telefone
-                  </label>
                   <input
                     type="tel"
                     id="telefone"
                     name="telefone"
                     value={formData.telefone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-white/50 focus:outline-none transition-colors"
-                    placeholder="+351 123 456 789"
+                    className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-colors text-lg"
+                    placeholder="Telefone"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="servico" className="block text-sm font-medium mb-2">
-                    Tipo de Serviço *
-                  </label>
                   <select
                     id="servico"
                     name="servico"
                     value={formData.servico}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:border-white/50 focus:outline-none transition-colors"
+                    className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black focus:border-black focus:outline-none transition-colors text-lg"
                   >
-                    <option value="" className="bg-black">Selecione um serviço</option>
-                    <option value="inspecoes" className="bg-black">Inspeções Técnicas</option>
-                    <option value="imobiliario" className="bg-black">Marketing Imobiliário</option>
-                    <option value="eventos" className="bg-black">Eventos & Institucional</option>
-                    <option value="outro" className="bg-black">Outro</option>
+                    <option value="" className="bg-white">Tipo de serviço</option>
+                    <option value="inspecoes" className="bg-white">Inspeções Técnicas</option>
+                    <option value="imobiliario" className="bg-white">Marketing Imobiliário</option>
+                    <option value="eventos" className="bg-white">Eventos & Institucional</option>
+                    <option value="outro" className="bg-white">Outro</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="mensagem" className="block text-sm font-medium mb-2">
-                  Mensagem *
-                </label>
                 <textarea
                   id="mensagem"
                   name="mensagem"
                   value={formData.mensagem}
                   onChange={handleChange}
                   required
-                  rows={6}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:border-white/50 focus:outline-none transition-colors resize-none"
-                  placeholder="Conte-nos mais sobre o seu projeto, localização, prazos e qualquer informação relevante..."
+                  rows={4}
+                  className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-colors resize-none text-lg"
+                  placeholder="Conte-nos sobre o seu projeto..."
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-white text-black px-8 py-4 rounded-lg font-semibold hover:bg-white/90 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-black text-white px-8 py-4 rounded font-semibold hover:bg-gray-800 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
               >
-                {isSubmitting ? 'Enviando...' : 'Enviar Mensagem'}
+                {isSubmitting ? 'Enviando...' : 'Enviar mensagem'}
               </button>
             </form>
           </div>
 
-          {/* Contact Info */}
-          <div>
-            <h2 className="text-3xl font-bold mb-8">Informações de Contacto</h2>
-
-            <div className="space-y-8">
-              {/* Email */}
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-xl">✉</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">Email</h3>
-                  <p className="text-white/70">email@dronecompany.com</p>
-                  <p className="text-white/70">geral@dronecompany.com</p>
-                </div>
-              </div>
-
-              {/* Telefone */}
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-xl">☎</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">Telefone</h3>
-                  <p className="text-white/70">+351 123 456 789</p>
-                  <p className="text-white/70">+351 987 654 321</p>
-                </div>
-              </div>
-
-              {/* Localização */}
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-xl">📍</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">Localização</h3>
-                  <p className="text-white/70">Porto, Portugal</p>
-                  <p className="text-white/70">Cobrimos todo o território nacional</p>
-                </div>
-              </div>
+          {/* Contactos visíveis - Antes da imagem */}
+          <div className="absolute right-8 top-0">
+            <div className="space-y-4 text-right text-lg text-black font-medium">
+              <p>email@allperspectives.com</p>
+              <p>+351 123 456 789</p>
+              <p>Porto, Portugal</p>
             </div>
           </div>
+
+          {/* Frase decorativa */}
+          <div className="absolute right-8 top-32">
+            <p className="text-xl md:text-2xl font-bold text-gray-300 italic">
+              Ready for lift-off?
+            </p>
+          </div>
+
+          {/* Imagem do drone - Abaixo dos contactos */}
+          <div className="absolute right-0 top-48 w-[420px] h-80 lg:w-[480px] lg:h-96">
+            <div className="relative w-full h-full">
+              <Image
+                src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                alt="Drone profissional"
+                fill
+                className="object-cover shadow-xl"
+                sizes="(max-width: 768px) 100vw, 400px"
+              />
+            </div>
+          </div>
+
         </div>
       </section>
+
+      {/* Espaço extra para breathing */}
+      <section className="py-32"></section>
+
     </div>
   )
 }
