@@ -43,111 +43,80 @@ export default function Sobre() {
   }
 
   return (
-    <div className="pt-16">
-      {/* Hero section */}
-      <section className="py-24 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
-            Sobre
-          </h1>
-          <p className="text-xl text-white/80 leading-relaxed">
-            Especialista em captação aérea com paixão pela excelência visual.
-          </p>
-        </div>
-      </section>
+    <div className="pt-24">
 
-      {/* Main content */}
-      <section className="pb-24 px-4">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-
-          {/* Foto menor para equilibrar */}
-          <div className="order-2 lg:order-1">
-            <div className="w-full max-w-sm mx-auto lg:mx-0">
-              <div className="aspect-[4/5] rounded-lg overflow-hidden relative">
-                {aboutData?.profileImage?.asset?.url ? (
-                  <Image
-                    src={aboutData.profileImage.asset.url}
-                    alt={staticData.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 40vw"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-white/20 flex items-center justify-center">
-                    <span className="text-8xl">👨‍💼</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Info pessoal + texto */}
-          <div className="order-1 lg:order-2">
-            {/* Info pessoal */}
-            <div className="mb-8">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-3">{staticData.name}</h2>
-              <p className="text-xl text-white/80 mb-4">{staticData.title}</p>
-
-              {/* Só certificações */}
-              <div className="text-sm text-white/70">
-                <span>Certificações: </span>
-                <span className="text-white">ANAC A1/A3</span>
-              </div>
-            </div>
-
-            {/* Texto principal */}
-            <div className="space-y-6 text-lg text-white/80 leading-relaxed">
-              {staticData.description.map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
-              ))}
-            </div>
+      {/* Statement gigante no canto */}
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-4xl">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-[0.9] text-black">
+              Transformamos perspectivas em experiências
+            </h1>
           </div>
         </div>
       </section>
 
-      {/* Valores/Missão */}
-      <section className="py-24 px-4 bg-white/5">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl lg:text-4xl font-bold text-center mb-16">
-            Os Nossos Valores
-          </h2>
+      {/* Layout orgânico rebalanceado */}
+      <section className="py-16 px-4">
+        <div className="max-w-7xl mx-auto relative">
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl">🎯</span>
-              </div>
-              <h3 className="text-xl font-bold mb-4">Precisão</h3>
-              <p className="text-white/70 leading-relaxed">
-                Cada detalhe importa. Trabalhamos com precisão técnica para
-                garantir resultados excepcionais.
+          {/* Foto grande - posição ajustada */}
+          <div className="absolute left-8 top-0 w-96 h-[450px] lg:w-[450px] lg:h-[550px]">
+            <div className="relative w-full h-full overflow-hidden shadow-xl">
+              {aboutData?.profileImage?.asset?.url ? (
+                <Image
+                  src={aboutData.profileImage.asset.url}
+                  alt={staticData.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 450px"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                  <span className="text-8xl">👨‍💼</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Conteúdo agrupado à direita */}
+          <div className="ml-auto max-w-2xl pl-8 pt-8 text-right">
+
+            {/* Frase decorativa + Nome agrupados */}
+            <div className="mb-12">
+              <p className="text-xl md:text-2xl font-bold text-gray-300 italic mb-8">
+                Conheça o piloto, editor, storyteller
+              </p>
+
+              <h2 className="text-4xl lg:text-5xl font-bold text-black mb-4">
+                Paulo Silva
+              </h2>
+              <p className="text-xl text-gray-700 font-semibold">
+                Piloto Certificado & Editor de Vídeo
+              </p>
+              <p className="text-base text-gray-600 font-medium mt-2">
+                ANAC A1/A3
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl">⚡</span>
-              </div>
-              <h3 className="text-xl font-bold mb-4">Agilidade</h3>
-              <p className="text-white/70 leading-relaxed">
-                Resposta rápida e entregas dentro do prazo, sem comprometer
-                a qualidade do trabalho.
+            {/* Texto mais intenso e bold */}
+            <div className="space-y-6 text-lg text-gray-800 leading-relaxed text-right">
+              <p className="font-semibold">
+                <strong>Da pilotagem à pós-produção.</strong> Especialista que combina skills técnicos de voo com storytelling visual cinematográfico.
+              </p>
+
+              <p className="font-semibold">
+                <strong>Processo completo.</strong> Da planificação do voo até ao cut final. Cada projeto é uma narrativa visual que supera expectativas.
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl">🚀</span>
-              </div>
-              <h3 className="text-xl font-bold mb-4">Inovação</h3>
-              <p className="text-white/70 leading-relaxed">
-                Sempre atualizados com as mais recentes tecnologias e
-                tendências do mercado.
-              </p>
-            </div>
           </div>
         </div>
       </section>
+
+      {/* Espaço extra para breathing */}
+      <section className="py-32"></section>
+
     </div>
   )
 }
