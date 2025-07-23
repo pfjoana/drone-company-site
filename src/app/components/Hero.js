@@ -51,7 +51,7 @@ export default function Hero() {
     }
   }, [heroData])
 
-  // GSAP Animations
+  // GSAP Animations com timing para o logo
   useEffect(() => {
     const ctx = gsap.context(() => {
 
@@ -66,13 +66,13 @@ export default function Hero() {
         linesClass: "overflow-hidden"
       })
 
-      // Set initial states
+      // Set initial states - COM BOTÕES
       gsap.set(titleSplit.words, { y: 100, opacity: 0 })
       gsap.set(subtitleSplit.lines, { y: 50, opacity: 0 })
       gsap.set(buttonsRef.current, { y: 30, opacity: 0 })
       gsap.set(scrollIndicatorRef.current, { opacity: 0 })
 
-      // Animation timeline
+      // Animation timeline - COMPLETA
       const tl = gsap.timeline({ delay: 0.5 })
 
       tl.to(titleSplit.words, {
@@ -137,55 +137,55 @@ export default function Hero() {
           }}
         />
       ) : (
-        // Fallback
-        <div
-          className="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')`
-          }}
-        />
+        // SEM FALLBACK - só vídeo escuro até carregar
+        <div className="absolute top-0 left-0 w-full h-full bg-black" />
       )}
 
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/30" />
+      {/* Overlay de contraste no canto esquerdo */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/15 to-transparent" />
 
-      {/* Content - MAIS À ESQUERDA para deixar centro livre */}
-      <div className="relative z-10 h-full flex flex-col justify-center px-4">
+      {/* Content - UM POUCO MAIS ABAIXO + Caixa semi-transparente */}
+      <div className="relative z-10 h-full flex flex-col justify-start pt-40 px-4">
         <div className="max-w-7xl mx-auto w-full">
-          {/* Contentor mais pequeno e mais à esquerda */}
-          <div className="max-w-xl lg:max-w-2xl">
+          {/* Contentor com fundo semi-transparente - CENTRADO + SOMBRA */}
+          <div className="max-w-sm lg:max-w-md bg-black/40 backdrop-blur-sm shadow-2xl p-6 lg:p-8 text-center">
 
-            {/* Título forte e impactante */}
+            {/* Título menor e centrado */}
             <h1
               ref={titleRef}
-              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-8 leading-[0.9] text-white drop-shadow-2xl"
+              className="text-2xl md:text-3xl lg:text-4xl font-bold mb-5 leading-[0.9] text-white"
+              style={{
+                textShadow: '2px 2px 8px rgba(0,0,0,0.8)'
+              }}
             >
               Captação Aérea
               <br />
-              <span className="text-white/90 font-extrabold">Profissional</span>
+              <span className="font-extrabold">Profissional</span>
             </h1>
 
-            {/* Subtítulo mais descritivo */}
-            <div ref={subtitleRef} className="space-y-4 mb-12">
-              <p className="text-lg md:text-xl lg:text-2xl text-white/95 drop-shadow-lg font-semibold">
+            {/* Subtítulo - SÓ UMA FRASE */}
+            <div ref={subtitleRef} className="mb-6">
+              <p
+                className="text-sm md:text-base lg:text-lg text-white font-semibold"
+                style={{
+                  textShadow: '1px 1px 6px rgba(0,0,0,0.8)'
+                }}
+              >
                 Transformamos perspectivas em experiências cinematográficas
-              </p>
-              <p className="text-base md:text-lg lg:text-xl text-white/85 drop-shadow-lg font-medium">
-                Serviços especializados para inspeções, imobiliário e eventos
               </p>
             </div>
 
-            {/* Botões */}
-            <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4">
+            {/* Botões maiores para melhor usabilidade */}
+            <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/projects"
-                className="bg-white text-black px-8 py-4 rounded-sm font-bold hover:bg-white/90 transition-all duration-300 shadow-xl text-lg"
+                className="bg-white text-black px-6 py-3 font-bold hover:bg-white/90 transition-all duration-300 shadow-lg text-sm"
               >
                 Ver Projetos
               </Link>
               <Link
                 href="/#servicos"
-                className="border-2 border-white text-white px-8 py-4 rounded-sm font-bold hover:bg-white/10 transition-all duration-300 backdrop-blur-sm text-lg"
+                className="border-2 border-white text-white px-6 py-3 font-bold hover:bg-white/20 transition-all duration-300 text-sm"
               >
                 Nossos Serviços
               </Link>
