@@ -1,7 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
+
+// GSAP imports
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SplitText } from 'gsap/SplitText'
 
 export default function Contactos() {
   const [formData, setFormData] = useState({
@@ -15,6 +20,76 @@ export default function Contactos() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
 
+  // Refs para animações
+  const headerRef = useRef(null)
+  const rightContentRef = useRef(null)
+  const droneRef = useRef(null)
+
+  // Register GSAP plugins
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger, SplitText)
+  }, [])
+
+  // GSAP Animations - Simplificadas
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+
+      // 1. Split Text no header por LINHAS
+      const headerSplit = new SplitText(headerRef.current, {
+        type: "lines",
+        linesClass: "split-line"
+      })
+
+      gsap.set(headerSplit.lines, { y: 100, opacity: 0 })
+
+      gsap.to(headerSplit.lines, {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power4.out",
+        delay: 0.5
+      })
+
+      // 2. Split Text no conteúdo direito (contactos + frase)
+      const rightSplit = new SplitText(rightContentRef.current, {
+        type: "lines",
+        linesClass: "contact-line"
+      })
+
+      gsap.set(rightSplit.lines, { x: 50, opacity: 0 })
+
+      ScrollTrigger.create({
+        trigger: rightContentRef.current,
+        start: "top 80%",
+        onEnter: () => {
+          gsap.to(rightSplit.lines, {
+            x: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out"
+          })
+        }
+      })
+
+      // 3. Parallax subtil na imagem
+      gsap.to(droneRef.current, {
+        yPercent: -30,
+        ease: "none",
+        scrollTrigger: {
+          trigger: droneRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1
+        }
+      })
+
+    })
+
+    return () => ctx.revert()
+  }, [])
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -26,7 +101,6 @@ export default function Contactos() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simular envio (depois implementar com API real)
     setTimeout(() => {
       setIsSubmitting(false)
       setSubmitStatus('success')
@@ -43,10 +117,10 @@ export default function Contactos() {
   return (
     <div className="pt-24">
 
-      {/* Statement + texto marketing */}
+      {/* Header com Split Text */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-4xl">
+          <div className="max-w-4xl" ref={headerRef}>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-[0.9] text-black">
               Entre em contacto
             </h1>
@@ -69,8 +143,8 @@ export default function Contactos() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                   <input
                     type="text"
@@ -79,7 +153,7 @@ export default function Contactos() {
                     value={formData.nome}
                     onChange={handleChange}
                     required
-                    className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-colors text-lg"
+                    className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 text-lg"
                     placeholder="Nome"
                   />
                 </div>
@@ -92,13 +166,13 @@ export default function Contactos() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-colors text-lg"
+                    className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 text-lg"
                     placeholder="Email"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                   <input
                     type="tel"
@@ -106,7 +180,7 @@ export default function Contactos() {
                     name="telefone"
                     value={formData.telefone}
                     onChange={handleChange}
-                    className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-colors text-lg"
+                    className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 text-lg"
                     placeholder="Telefone"
                   />
                 </div>
@@ -118,7 +192,7 @@ export default function Contactos() {
                     value={formData.servico}
                     onChange={handleChange}
                     required
-                    className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black focus:border-black focus:outline-none transition-colors text-lg"
+                    className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black focus:border-black focus:outline-none transition-all duration-300 text-lg"
                   >
                     <option value="" className="bg-white">Tipo de serviço</option>
                     <option value="inspecoes" className="bg-white">Inspeções Técnicas</option>
@@ -137,46 +211,54 @@ export default function Contactos() {
                   onChange={handleChange}
                   required
                   rows={4}
-                  className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-colors resize-none text-lg"
+                  className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 resize-none text-lg"
                   placeholder="Conte-nos sobre o seu projeto..."
                 />
               </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-black text-white px-8 py-4 rounded font-semibold hover:bg-gray-800 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
-              >
-                {isSubmitting ? 'Enviando...' : 'Enviar mensagem'}
-              </button>
+              <div>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-black text-white px-8 py-4 rounded font-semibold hover:bg-gray-800 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+                >
+                  {isSubmitting ? 'Enviando...' : 'Enviar mensagem'}
+                </button>
+              </div>
             </form>
           </div>
 
-          {/* Contactos visíveis - Antes da imagem */}
-          <div className="absolute right-8 top-0">
-            <div className="space-y-4 text-right text-lg text-black font-medium">
-              <p>email@allperspectives.com</p>
-              <p>+351 123 456 789</p>
-              <p>Porto, Portugal</p>
+          {/* Contactos + frase decorativa - ACIMA da imagem */}
+          <div
+            ref={rightContentRef}
+            className="absolute right-8 top-0 text-right z-10"
+          >
+            <div className="space-y-4 text-lg text-black font-semibold">
+              <div>email@allperspectives.com</div>
+              <div>+351 123 456 789</div>
+              <div>Porto, Portugal</div>
+            </div>
+
+            {/* Frase decorativa */}
+            <div className="mt-8">
+              <p className="text-xl md:text-2xl font-bold text-gray-300 italic">
+                Ready for lift-off?
+              </p>
             </div>
           </div>
 
-          {/* Frase decorativa */}
-          <div className="absolute right-8 top-32">
-            <p className="text-xl md:text-2xl font-bold text-gray-300 italic">
-              Ready for lift-off?
-            </p>
-          </div>
-
-          {/* Imagem do drone - Abaixo dos contactos */}
-          <div className="absolute right-0 top-48 w-[420px] h-80 lg:w-[480px] lg:h-96">
+          {/* Imagem do drone - ABAIXO dos contactos */}
+          <div
+            ref={droneRef}
+            className="absolute right-0 top-40 w-[400px] h-72 lg:w-[450px] lg:h-80 z-0"
+          >
             <div className="relative w-full h-full">
               <Image
                 src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
                 alt="Drone profissional"
                 fill
                 className="object-cover shadow-xl"
-                sizes="(max-width: 768px) 100vw, 400px"
+                sizes="(max-width: 768px) 100vw, 450px"
               />
             </div>
           </div>
@@ -184,7 +266,7 @@ export default function Contactos() {
         </div>
       </section>
 
-      {/* Espaço extra para breathing */}
+      {/* Espaço extra */}
       <section className="py-32"></section>
 
     </div>
