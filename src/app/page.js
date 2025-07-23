@@ -1,21 +1,38 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Hero from './components/Hero'
 import { client, urlFor } from '../lib/sanity'
 
+// GSAP imports
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SplitText } from 'gsap/SplitText'
+
 export default function Home() {
   const [hoveredService, setHoveredService] = useState(null)
   const [featuredProjects, setFeaturedProjects] = useState([])
+
+  // Refs para animações
+  const statementRef = useRef(null)
+  const servicesRef = useRef(null)
+  const reviewsRef = useRef(null)
+  const projectsRef = useRef(null)
+  const ctaRef = useRef(null)
+
+  // Register GSAP plugins
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger, SplitText)
+  }, [])
 
   // Fetch featured projects from Sanity
   useEffect(() => {
     const fetchProjects = async () => {
       try {
         const projects = await client.fetch(`
-          *[_type == "project" && featured == true][0...4]{
+          *[_type == "project" && featured == true][0...6]{
             _id,
             title,
             category,
@@ -33,7 +50,7 @@ export default function Home() {
             }
           }
         `)
-        console.log('Featured projects:', projects) // Debug
+        console.log('Featured projects:', projects)
         setFeaturedProjects(projects)
       } catch (error) {
         console.error('Error fetching projects:', error)
@@ -43,12 +60,256 @@ export default function Home() {
     fetchProjects()
   }, [])
 
+  // GSAP Animations
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+
+      // 1. Statement Split Text + Paragraph abaixo (HERO TYPE ANIMATION)
+      const statementSplit = new SplitText(statementRef.current, {
+        type: "lines,words",
+        linesClass: "overflow-hidden"
+      })
+
+      // Parágrafo abaixo do statement
+      const statementParagraph = statementRef.current.parentElement.querySelector('p')
+      const paragraphSplit = new SplitText(statementParagraph, {
+        type: "lines",
+        linesClass: "overflow-hidden"
+      })
+
+      gsap.set(statementSplit.words, { y: 100, opacity: 0 })
+      gsap.set(paragraphSplit.lines, { y: 50, opacity: 0 })
+
+      // ScrollTrigger para o statement (pode estar muito em cima)
+      ScrollTrigger.create({
+        trigger: statementRef.current,
+        start: "top 90%", // Mais tolerante
+        onEnter: () => {
+          gsap.to(statementSplit.words, {
+            y: 0,
+            opacity: 1,
+            duration: 1.2,
+            stagger: 0.08,
+            ease: "power4.out"
+          })
+
+          gsap.to(paragraphSplit.lines, {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out",
+            delay: 0.8
+          })
+        }
+      })
+
+      // 2. Services Section - TÍTULOS + SUBTÍTULO + TEXTO EM BLOCO
+      const serviceTitle = servicesRef.current.querySelector('.services-title')
+      const serviceSubtitle = servicesRef.current.querySelector('.services-subtitle')
+
+      const serviceTitleSplit = new SplitText(serviceTitle, {
+        type: "lines,words",
+        linesClass: "overflow-hidden"
+      })
+
+      const serviceSubtitleSplit = new SplitText(serviceSubtitle, {
+        type: "lines",
+        linesClass: "overflow-hidden"
+      })
+
+      gsap.set(serviceTitleSplit.words, { y: 100, opacity: 0 })
+      gsap.set(serviceSubtitleSplit.lines, { y: 30, opacity: 0 })
+
+      ScrollTrigger.create({
+        trigger: servicesRef.current,
+        start: "top 80%",
+        onEnter: () => {
+          gsap.to(serviceTitleSplit.words, {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.08,
+            ease: "power4.out"
+          })
+
+          gsap.to(serviceSubtitleSplit.lines, {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out",
+            delay: 0.6
+          })
+        }
+      })
+
+      // Service cards - TEXTO EM BLOCO (não gradual)
+      const serviceCards = servicesRef.current.querySelectorAll('.service-card')
+      serviceCards.forEach((card, cardIndex) => {
+
+        // Textos do serviço (título, subtítulo, descrição)
+        const serviceTexts = card.querySelectorAll('h3, p[class*="text-gray-600"], p[class*="text-gray-700"]')
+
+        gsap.set(serviceTexts, { y: 30, opacity: 0 })
+        gsap.set(card.querySelector('.relative'), { scale: 0.95, opacity: 0 })
+
+        ScrollTrigger.create({
+          trigger: card,
+          start: "top 75%",
+          onEnter: () => {
+            // Imagem primeiro
+            gsap.to(card.querySelector('.relative'), {
+              scale: 1,
+              opacity: 1,
+              duration: 0.8,
+              ease: "power3.out"
+            })
+
+            // Depois texto TODO AO MESMO TEMPO (sem stagger)
+            gsap.to(serviceTexts, {
+              y: 0,
+              opacity: 1,
+              duration: 0.8,
+              stagger: 0.05, // Stagger mínimo
+              ease: "power3.out",
+              delay: 0.2
+            })
+          }
+        })
+      })
+
+      // 3. Reviews Section - QUOTES EM BLOCO
+      const reviewQuotes = reviewsRef.current.querySelectorAll('.review-quote')
+      reviewQuotes.forEach((quote, index) => {
+        const quoteSplit = new SplitText(quote, {
+          type: "lines",
+          linesClass: "overflow-hidden"
+        })
+
+        gsap.set(quoteSplit.lines, { y: 30, opacity: 0 })
+
+        ScrollTrigger.create({
+          trigger: quote,
+          start: "top 85%",
+          onEnter: () => {
+            gsap.to(quoteSplit.lines, {
+              y: 0,
+              opacity: 1,
+              duration: 0.6,
+              stagger: 0.05, // Stagger mínimo
+              ease: "power2.out"
+            })
+          }
+        })
+      })
+
+      // 4. Projects Section - HERO TYPE ANIMATION
+      const projectTitle = projectsRef.current.querySelector('.projects-title')
+      const projectTitleSplit = new SplitText(projectTitle, {
+        type: "lines,words",
+        linesClass: "overflow-hidden"
+      })
+
+      const projectParagraph = projectsRef.current.querySelector('p')
+      const projectParagraphSplit = new SplitText(projectParagraph, {
+        type: "lines",
+        linesClass: "overflow-hidden"
+      })
+
+      gsap.set(projectTitleSplit.words, { y: 100, opacity: 0 })
+      gsap.set(projectParagraphSplit.lines, { y: 30, opacity: 0 })
+
+      ScrollTrigger.create({
+        trigger: projectsRef.current,
+        start: "top 80%",
+        onEnter: () => {
+          gsap.to(projectTitleSplit.words, {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.08,
+            ease: "power4.out"
+          })
+
+          gsap.to(projectParagraphSplit.lines, {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out",
+            delay: 0.6
+          })
+        }
+      })
+
+      // Project items
+      const projectItems = projectsRef.current.querySelectorAll('.project-item')
+      gsap.set(projectItems, { scale: 0.9, opacity: 0 })
+
+      gsap.to(projectItems, {
+        scale: 1,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "back.out(1.7)",
+        scrollTrigger: {
+          trigger: projectItems[0],
+          start: "top 70%",
+          toggleActions: "play none none reverse"
+        }
+      })
+
+      // 5. CTA - HERO TYPE ANIMATION
+      const ctaTitle = ctaRef.current.querySelector('.cta-title')
+      const ctaTitleSplit = new SplitText(ctaTitle, {
+        type: "lines,words",
+        linesClass: "overflow-hidden"
+      })
+
+      const ctaParagraph = ctaRef.current.querySelector('p')
+      const ctaParagraphSplit = new SplitText(ctaParagraph, {
+        type: "lines",
+        linesClass: "overflow-hidden"
+      })
+
+      gsap.set(ctaTitleSplit.words, { y: 100, opacity: 0 })
+      gsap.set(ctaParagraphSplit.lines, { y: 30, opacity: 0 })
+
+      ScrollTrigger.create({
+        trigger: ctaRef.current,
+        start: "top 80%",
+        onEnter: () => {
+          gsap.to(ctaTitleSplit.words, {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.08,
+            ease: "power4.out"
+          })
+
+          gsap.to(ctaParagraphSplit.lines, {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out",
+            delay: 0.6
+          })
+        }
+      })
+
+    })
+
+    return () => ctx.revert()
+  }, [featuredProjects])
+
   const services = [
     {
       id: 'inspecoes',
       title: 'Inspeções Técnicas',
       subtitle: 'Condomínios & Edifícios',
-      description: 'Relatórios detalhados de inspeções aéreas para telhados, fachadas e estruturas. Identificação precisa de problemas e documentação completa para condomínios e empresas.',
+      description: 'Relatórios detalhados de inspeções aéreas para telhados, fachadas e estruturas. Identificação precisa de problemas e documentação completa.',
       features: [
         'Inspeção de telhados e coberturas',
         'Análise de fachadas e estruturas',
@@ -62,7 +323,7 @@ export default function Home() {
       id: 'imobiliario',
       title: 'Marketing Imobiliário',
       subtitle: 'Vendas & Promoção',
-      description: 'Fotografia e vídeo aéreo para propriedades, criando material promocional impactante que destaca as características únicas de cada imóvel.',
+      description: 'Fotografia e vídeo aéreo para propriedades, criando material promocional impactante que destaca características únicas.',
       features: [
         'Fotografia aérea de propriedades',
         'Vídeos promocionais dinâmicos',
@@ -76,7 +337,7 @@ export default function Home() {
       id: 'eventos',
       title: 'Eventos & Institucional',
       subtitle: 'Corporativo & Municipal',
-      description: 'Cobertura aérea profissional para eventos, vídeos institucionais e projetos municipais com qualidade cinematográfica e storytelling envolvente.',
+      description: 'Cobertura aérea profissional para eventos, vídeos institucionais e projetos municipais com qualidade cinematográfica.',
       features: [
         'Cobertura de eventos corporativos',
         'Vídeos institucionais',
@@ -93,188 +354,292 @@ export default function Home() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Intro - Statement impactante */}
+      {/* Statement impactante - Char por char */}
       <section className="py-32 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-5xl">
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-12 leading-[0.9] text-black">
+            <h2
+              ref={statementRef}
+              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-12 leading-[0.9] text-black"
+              style={{ overflow: "hidden" }}
+            >
               Elevamos o seu conteúdo
             </h2>
             <p className="text-2xl md:text-3xl text-gray-700 leading-relaxed font-medium max-w-4xl">
               Combinamos tecnologia de ponta com experiência profissional para criar
-              imagens e vídeos aéreos que destacam o seu projeto, propriedade ou evento.
+              imagens e vídeos aéreos que destacam o seu projeto.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Serviços Section */}
-      <section id="servicos" className="py-32 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">
-              Os Nossos Serviços
-            </h2>
-            <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed font-medium">
-              Três áreas de especialização para responder a todas as suas necessidades
-              de captação aérea profissional.
-            </p>
+      {/* Serviços Section - Layout orgânico MELHORADO */}
+      <section id="servicos" className="py-32 px-4" ref={servicesRef}>
+        <div className="max-w-7xl mx-auto">
+
+          {/* Título e subtítulo à direita */}
+          <div className="flex justify-end mb-20">
+            <div className="max-w-2xl text-right">
+              <h2 className="services-title text-4xl md:text-5xl font-bold mb-6 text-black">
+                Os Nossos Serviços
+              </h2>
+              <p className="services-subtitle text-xl text-gray-700 leading-relaxed font-semibold">
+                Três áreas de especialização para responder a todas as suas necessidades
+                de captação aérea profissional.
+              </p>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {services.map((service) => (
-              <div
-                key={service.id}
-                className="group cursor-pointer"
-                onMouseEnter={() => setHoveredService(service.id)}
-                onMouseLeave={() => setHoveredService(null)}
-              >
-                {/* Image container with overlay effect */}
-                <div className="relative overflow-hidden rounded-lg mb-6 aspect-[4/3]">
+          {/* Cards em layout assimétrico - REBALANCEADOS */}
+          <div className="space-y-32">
+
+            {/* Primeiro serviço - Grande à esquerda (MANTÉM) */}
+            <div className="service-card grid grid-cols-1 lg:grid-cols-5 gap-8 items-center"
+                 onMouseEnter={() => setHoveredService(services[0].id)}
+                 onMouseLeave={() => setHoveredService(null)}>
+              <div className="lg:col-span-3">
+                <div className="relative overflow-hidden rounded-lg aspect-[4/3]">
                   <Image
-                    src={service.image}
-                    alt={service.title}
+                    src={services[0].image}
+                    alt={services[0].title}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-all duration-700 hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, 60vw"
                   />
 
-                  {/* Overlay que aparece no hover */}
-                  <div className={`absolute inset-0 bg-black/70 transition-opacity duration-300 ${
-                    hoveredService === service.id ? 'opacity-100' : 'opacity-0'
+                  {/* Overlay MELHORADO */}
+                  <div className={`absolute inset-0 bg-black/75 transition-all duration-500 ${
+                    hoveredService === services[0].id ? 'opacity-100' : 'opacity-0'
                   }`}>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center text-white p-6">
-                        <h4 className="text-lg font-bold mb-4">Características:</h4>
-                        <ul className="space-y-2 text-sm">
-                          {service.features.map((feature, index) => (
-                            <li key={index} className="opacity-90">• {feature}</li>
+                    <div className="absolute inset-0 flex items-center justify-center p-8">
+                      <div className="text-center text-white">
+                        <h4 className="text-2xl font-bold mb-6">Características:</h4>
+                        <ul className="space-y-3 text-lg">
+                          {services[0].features.map((feature, index) => (
+                            <li key={index} className="opacity-95 font-medium">• {feature}</li>
                           ))}
                         </ul>
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className="lg:col-span-2 space-y-4">
+                <p className="text-gray-600 text-sm font-medium">{services[0].subtitle}</p>
+                <h3 className="text-3xl font-bold text-black">{services[0].title}</h3>
+                <p className="text-gray-700 leading-relaxed font-medium text-lg">
+                  {services[0].description}
+                </p>
+              </div>
+            </div>
 
-                {/* Service info */}
-                <div>
-                  <p className="text-gray-600 text-sm mb-2 font-medium">{service.subtitle}</p>
-                  <h3 className="text-2xl font-bold mb-4 text-black group-hover:text-gray-700 transition-colors">
-                    {service.title}
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed font-medium">
-                    {service.description}
+            {/* Segundo serviço - MAIOR e mais à direita */}
+            <div className="service-card ml-auto lg:max-w-5xl"
+                 onMouseEnter={() => setHoveredService(services[1].id)}
+                 onMouseLeave={() => setHoveredService(null)}>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                <div className="lg:order-2 lg:col-span-2">
+                  <div className="relative overflow-hidden rounded-lg aspect-[4/3]">
+                    <Image
+                      src={services[1].image}
+                      alt={services[1].title}
+                      fill
+                      className="object-cover transition-all duration-700 hover:scale-110"
+                      sizes="(max-width: 768px) 100vw, 60vw"
+                    />
+
+                    {/* Overlay MELHORADO */}
+                    <div className={`absolute inset-0 bg-black/75 transition-all duration-500 ${
+                      hoveredService === services[1].id ? 'opacity-100' : 'opacity-0'
+                    }`}>
+                      <div className="absolute inset-0 flex items-center justify-center p-8">
+                        <div className="text-center text-white">
+                          <h4 className="text-2xl font-bold mb-6">Características:</h4>
+                          <ul className="space-y-3 text-lg">
+                            {services[1].features.map((feature, index) => (
+                              <li key={index} className="opacity-95 font-medium">• {feature}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="lg:order-1 lg:col-span-1 space-y-4 text-right">
+                  <p className="text-gray-600 text-sm font-medium">{services[1].subtitle}</p>
+                  <h3 className="text-3xl font-bold text-black">{services[1].title}</h3>
+                  <p className="text-gray-700 leading-relaxed font-medium text-lg">
+                    {services[1].description}
                   </p>
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Terceiro serviço - MAIOR e mais à esquerda */}
+            <div className="service-card mr-auto lg:max-w-5xl"
+                 onMouseEnter={() => setHoveredService(services[2].id)}
+                 onMouseLeave={() => setHoveredService(null)}>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                <div className="lg:col-span-2">
+                  <div className="relative overflow-hidden rounded-lg aspect-[4/3]">
+                    <Image
+                      src={services[2].image}
+                      alt={services[2].title}
+                      fill
+                      className="object-cover transition-all duration-700 hover:scale-110"
+                      sizes="(max-width: 768px) 100vw, 60vw"
+                    />
+
+                    {/* Overlay MELHORADO */}
+                    <div className={`absolute inset-0 bg-black/75 transition-all duration-500 ${
+                      hoveredService === services[2].id ? 'opacity-100' : 'opacity-0'
+                    }`}>
+                      <div className="absolute inset-0 flex items-center justify-center p-8">
+                        <div className="text-center text-white">
+                          <h4 className="text-2xl font-bold mb-6">Características:</h4>
+                          <ul className="space-y-3 text-lg">
+                            {services[2].features.map((feature, index) => (
+                              <li key={index} className="opacity-95 font-medium">• {feature}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="lg:col-span-1 space-y-4">
+                  <p className="text-gray-600 text-sm font-medium">{services[2].subtitle}</p>
+                  <h3 className="text-3xl font-bold text-black">{services[2].title}</h3>
+                  <p className="text-gray-700 leading-relaxed font-medium text-lg">
+                    {services[2].description}
+                  </p>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* Reviews + Featured Projects - Bloco cinza claro */}
-      <section className="py-32 px-4 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-black">
-            O Que Dizem os Nossos Clientes
-          </h2>
+      {/* Reviews Section - Layout orgânico */}
+      <section className="py-32 px-4 bg-gray-50" ref={reviewsRef}>
+        <div className="max-w-7xl mx-auto">
 
+          {/* Título à esquerda */}
+          <div className="mb-20">
+            <h2 className="text-3xl md:text-4xl font-bold text-black max-w-2xl">
+              O Que Dizem os Nossos Clientes
+            </h2>
+          </div>
+
+          {/* Reviews em linha (como estava) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Review 1 */}
-            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+
+            {/* Review 1 - Normal */}
+            <div className="review-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
               <div className="flex mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-400 text-xl">★</span>
                 ))}
               </div>
-              <p className="text-gray-700 mb-4 leading-relaxed">
+              <p className="review-quote text-gray-700 mb-6 leading-relaxed font-medium text-lg">
                 "Excelente trabalho na inspeção do nosso condomínio. Relatório muito detalhado
-                e imagens de alta qualidade que nos ajudaram a identificar todos os problemas."
+                e imagens de alta qualidade."
               </p>
               <div>
-                <p className="font-semibold text-black">Maria Santos</p>
+                <p className="font-bold text-black">Maria Santos</p>
                 <p className="text-gray-500 text-sm">Administradora de Condomínio</p>
               </div>
             </div>
 
-            {/* Review 2 */}
-            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+            {/* Review 2 - Normal */}
+            <div className="review-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
               <div className="flex mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-400 text-xl">★</span>
                 ))}
               </div>
-              <p className="text-gray-700 mb-4 leading-relaxed">
-                "As fotografias aéreas da nossa propriedade ficaram incríveis!
-                Vendemos a casa muito mais rápido graças ao material promocional."
+              <p className="review-quote text-gray-700 mb-6 leading-relaxed font-medium text-lg">
+                "As fotografias aéreas da nossa propriedade ficaram incríveis! Vendemos a casa muito mais rápido graças ao material promocional."
               </p>
               <div>
-                <p className="font-semibold text-black">Carlos Oliveira</p>
+                <p className="font-bold text-black">Carlos Oliveira</p>
                 <p className="text-gray-500 text-sm">Proprietário</p>
               </div>
             </div>
 
-            {/* Review 3 */}
-            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+            {/* Review 3 - Normal */}
+            <div className="review-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
               <div className="flex mb-4">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className="text-yellow-400 text-xl">★</span>
                 ))}
               </div>
-              <p className="text-gray-700 mb-4 leading-relaxed">
-                "Profissionalismo exemplar na cobertura do nosso evento corporativo.
-                O vídeo final superou todas as expectativas!"
+              <p className="review-quote text-gray-700 mb-6 leading-relaxed font-medium text-lg">
+                "Profissionalismo exemplar na cobertura do nosso evento corporativo. O vídeo final superou todas as expectativas!"
               </p>
               <div>
-                <p className="font-semibold text-black">Ana Rodrigues</p>
+                <p className="font-bold text-black">Ana Rodrigues</p>
                 <p className="text-gray-500 text-sm">Diretora de Marketing</p>
               </div>
             </div>
+
           </div>
         </div>
+      </section>
 
-        {/* Featured Projects Preview - Fundo branco com mais espaço */}
-        <div className="bg-white pt-32 pb-16">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-black">
-                Projetos em Destaque
-              </h2>
-              <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed font-medium">
-                Uma seleção dos nossos trabalhos mais recentes que demonstram
-                a qualidade e diversidade dos nossos serviços.
-              </p>
-            </div>
+      {/* Featured Projects Section - Grid assimétrico */}
+      <section className="py-32 px-4 bg-white" ref={projectsRef}>
+        <div className="max-w-7xl mx-auto">
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {featuredProjects.map((project) => (
-              <div key={project._id} className="group cursor-pointer">
-                <div className="relative aspect-square rounded-lg overflow-hidden mb-4">
-                  {/* Video que só reproduz no hover */}
-                  {project.video?.asset && (
+          {/* Título à esquerda */}
+          <div className="mb-16">
+            <h2 className="projects-title text-4xl md:text-5xl font-bold mb-6 text-black max-w-2xl">
+              Projetos em Destaque
+            </h2>
+            <p className="text-xl text-gray-700 max-w-3xl leading-relaxed font-medium">
+              Uma seleção dos nossos trabalhos mais recentes que demonstram
+              a qualidade e diversidade dos nossos serviços.
+            </p>
+          </div>
+
+          {/* Grid 4 projetos + espaços para futuros */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+
+            {/* Primeiros 4 projetos */}
+            {featuredProjects.slice(0, 4).map((project, index) => (
+              <div
+                key={project._id}
+                className={`project-item group cursor-pointer ${
+                  index === 0 ? 'lg:col-span-2 lg:row-span-2' :
+                  index === 3 ? 'lg:col-span-2' : ''
+                }`}
+              >
+                <div className="relative w-full h-full aspect-square rounded-lg overflow-hidden">
+
+                  {/* Só vídeo se existir, sem imagem de capa */}
+                  {project.video?.asset ? (
                     <video
-                      className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      autoPlay
+                      className="absolute inset-0 w-full h-full object-cover"
                       muted
                       loop
                       playsInline
+                      onMouseEnter={(e) => e.target.play()}
+                      onMouseLeave={(e) => e.target.pause()}
                     >
                       <source src={project.video.asset.url} type="video/mp4" />
                     </video>
-                  )}
-
-                  {/* Imagem principal ou fallback */}
-                  {project.mainImage ? (
+                  ) : project.mainImage ? (
                     <Image
                       src={project.mainImage.asset.url}
                       alt={project.title}
                       fill
-                      className="object-cover group-hover:opacity-0 transition-opacity duration-300"
+                      className="object-cover"
                       sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw"
                     />
                   ) : (
-                    <div className="absolute inset-0 bg-gray-200 group-hover:opacity-0 transition-opacity duration-300 flex items-center justify-center">
-                      <span className="text-gray-500 text-sm">Vídeo</span>
+                    <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500 text-sm">Sem mídia</span>
                     </div>
                   )}
 
@@ -284,52 +649,31 @@ export default function Home() {
                     </span>
                   </div>
                 </div>
-                <h3 className="font-bold text-sm text-black group-hover:text-gray-600 transition-colors">
-                  {project.title}
-                </h3>
               </div>
             ))}
 
-            {/* Se não há projetos, mostra placeholders */}
-            {featuredProjects.length === 0 && (
-              <>
-                <div className="group cursor-pointer">
-                  <div className="relative aspect-square rounded-lg overflow-hidden mb-4 bg-gray-200 flex items-center justify-center">
-                    <span className="text-gray-500">Projeto 1</span>
-                  </div>
-                  <h3 className="font-bold text-sm text-black">Carregando projetos...</h3>
-                </div>
-                <div className="group cursor-pointer">
-                  <div className="relative aspect-square rounded-lg overflow-hidden mb-4 bg-gray-200 flex items-center justify-center">
-                    <span className="text-gray-500">Projeto 2</span>
-                  </div>
-                  <h3 className="font-bold text-sm text-black">Carregando projetos...</h3>
-                </div>
-              </>
-            )}
           </div>
 
-            <div className="text-center">
-              <Link
-                href="/projects"
-                className="bg-black text-white px-8 py-4 rounded font-semibold hover:bg-gray-800 transition-colors duration-300 inline-block"
-              >
-                Ver Todos os Projetos
-              </Link>
-            </div>
+          <div className="text-center">
+            <Link
+              href="/projects"
+              className="bg-black text-white px-8 py-4 rounded font-semibold hover:bg-gray-800 transition-colors duration-300 inline-block"
+            >
+              Ver Todos os Projetos
+            </Link>
           </div>
         </div>
       </section>
 
       {/* CTA Final */}
-      <section className="py-32 px-4 bg-gray-50">
+      <section className="py-32 px-4 bg-gray-50" ref={ctaRef}>
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-black">
+          <h2 className="cta-title text-4xl md:text-5xl font-bold mb-8 text-black">
             Pronto para Elevar o Seu Projeto?
           </h2>
           <p className="text-xl text-gray-700 mb-12 leading-relaxed font-medium">
             Entre em contacto connosco hoje mesmo e descubra como podemos
-            transformar a sua visão em realidade com captação aérea profissional.
+            transformar a sua visão em realidade.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

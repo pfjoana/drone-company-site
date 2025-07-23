@@ -11,7 +11,8 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
+      // Muda quando sai da viewport do hero (altura da tela)
+      setIsScrolled(window.scrollY > window.innerHeight * 0.8)
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
@@ -25,28 +26,33 @@ export default function Navbar() {
   ]
 
   const isActiveLink = (href, isAnchor = false) => {
-    if (isAnchor) return false // Anchors nunca ficam ativos (sublinhados)
+    if (isAnchor) return false
     return pathname === href
   }
 
+  // Determinar se estamos na homepage
+  const isHomePage = pathname === '/'
+
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled || !isHomePage
           ? 'bg-white/95 backdrop-blur-md border-b border-black/10 shadow-sm'
           : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-24">
-          {/* Logo - Maior */}
+          {/* Logo - Muda de cor baseado no estado */}
           <Link href="/" className="flex items-center">
             <Image
               src="/logo_horizontal.png"
               alt="All Perspectives"
               width={240}
               height={55}
-              className="h-12 w-auto"
+              className={`h-12 w-auto transition-all duration-500 ${
+                isScrolled || !isHomePage ? 'brightness-100' : 'brightness-0 invert'
+              }`}
             />
           </Link>
 
@@ -56,38 +62,53 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative text-black hover:text-gray-600 transition-all duration-300 text-base font-semibold group ${
-                  isActiveLink(link.href, link.isAnchor) ? 'text-black' : 'text-black/80'
+                className={`relative hover:text-gray-600 transition-all duration-500 text-base font-semibold group ${
+                  isScrolled || !isHomePage
+                    ? 'text-black/80'
+                    : 'text-white/90 hover:text-white'
+                } ${
+                  isActiveLink(link.href, link.isAnchor) ?
+                    (isScrolled || !isHomePage ? 'text-black' : 'text-white') : ''
                 }`}
               >
                 {link.label}
-                {/* Hover underline */}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all duration-300 group-hover:w-full" />
-                {/* Active underline */}
+                {/* Hover underline - cor dinâmica */}
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                  isScrolled || !isHomePage ? 'bg-black' : 'bg-white'
+                }`} />
+                {/* Active underline - cor dinâmica */}
                 {isActiveLink(link.href, link.isAnchor) && (
-                  <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-black" />
+                  <span className={`absolute -bottom-1 left-0 w-full h-0.5 ${
+                    isScrolled || !isHomePage ? 'bg-black' : 'bg-white'
+                  }`} />
                 )}
               </Link>
             ))}
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile menu button - cor dinâmica */}
           <button
             className="md:hidden flex flex-col justify-center items-center w-6 h-6"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             <span
-              className={`bg-black block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${
+              className={`block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${
+                isScrolled || !isHomePage ? 'bg-black' : 'bg-white'
+              } ${
                 isMobileMenuOpen ? 'rotate-45 translate-y-1' : '-translate-y-0.5'
               }`}
             />
             <span
-              className={`bg-black block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm my-0.5 ${
+              className={`block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm my-0.5 ${
+                isScrolled || !isHomePage ? 'bg-black' : 'bg-white'
+              } ${
                 isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
               }`}
             />
             <span
-              className={`bg-black block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${
+              className={`block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${
+                isScrolled || !isHomePage ? 'bg-black' : 'bg-white'
+              } ${
                 isMobileMenuOpen ? '-rotate-45 -translate-y-1' : 'translate-y-0.5'
               }`}
             />
@@ -107,8 +128,13 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`block py-2 hover:text-black transition-colors duration-200 font-semibold ${
-                  isActiveLink(link.href, link.isAnchor) ? 'text-black' : 'text-black/80'
+                className={`block py-2 transition-colors duration-200 font-semibold ${
+                  isScrolled || !isHomePage
+                    ? 'text-black/80 hover:text-black'
+                    : 'text-white/90 hover:text-white'
+                } ${
+                  isActiveLink(link.href, link.isAnchor) ?
+                    (isScrolled || !isHomePage ? 'text-black' : 'text-white') : ''
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
