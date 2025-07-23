@@ -1,13 +1,29 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { client } from '../../lib/sanity'
+import CTASection from '../components/CTASection'
+
+// GSAP imports
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SplitText } from 'gsap/SplitText'
 
 export default function Projetos() {
   const [hoveredProject, setHoveredProject] = useState(null)
   const [projects, setProjects] = useState([])
+
+  // Refs para animações
+  const headerRef = useRef(null)
+  const headerParagraphRef = useRef(null)
+  const projectsGridRef = useRef(null)
+
+  // Register GSAP plugins
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger, SplitText)
+  }, [])
 
   // Fetch all projects from Sanity
   useEffect(() => {
@@ -32,7 +48,7 @@ export default function Projetos() {
             }
           }
         `)
-        console.log('All projects:', data) // Debug
+        console.log('All projects:', data)
         setProjects(data)
       } catch (error) {
         console.error('Error fetching projects:', error)
@@ -42,127 +58,192 @@ export default function Projetos() {
     fetchProjects()
   }, [])
 
+  // GSAP Animations - HERO TYPE + CONSISTENT
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+
+      // 1. Header - HERO TYPE ANIMATION
+      if (headerRef.current && headerParagraphRef.current) {
+        const headerSplit = new SplitText(headerRef.current, {
+          type: "lines,words",
+          linesClass: "overflow-hidden"
+        })
+
+        const headerParagraphSplit = new SplitText(headerParagraphRef.current, {
+          type: "lines",
+          linesClass: "overflow-hidden"
+        })
+
+        gsap.set(headerSplit.words, { y: 100, opacity: 0 })
+        gsap.set(headerParagraphSplit.lines, { y: 50, opacity: 0 })
+
+        ScrollTrigger.create({
+          trigger: headerRef.current,
+          start: "top 90%",
+          onEnter: () => {
+            gsap.to(headerSplit.words, {
+              y: 0,
+              opacity: 1,
+              duration: 1.2,
+              stagger: 0.08,
+              ease: "power4.out"
+            })
+
+            gsap.to(headerParagraphSplit.lines, {
+              y: 0,
+              opacity: 1,
+              duration: 0.8,
+              stagger: 0.1,
+              ease: "power3.out",
+              delay: 0.8
+            })
+          }
+        })
+      }
+
+      // 2. Projects Grid - animações como homepage
+      if (projectsGridRef.current && projects.length > 0) {
+        const projectItems = projectsGridRef.current.querySelectorAll('.project-item')
+
+        if (projectItems.length > 0) {
+          gsap.set(projectItems, { scale: 0.9, opacity: 0 })
+
+          ScrollTrigger.create({
+            trigger: projectsGridRef.current,
+            start: "top 70%",
+            onEnter: () => {
+              gsap.to(projectItems, {
+                scale: 1,
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: "back.out(1.7)"
+              })
+            }
+          })
+        }
+      }
+
+    })
+
+    return () => ctx.revert()
+  }, [projects])
+
   return (
     <div className="pt-24">
-      {/* Hero Section */}
+
+      {/* Header Section - HERO TYPE */}
       <section className="py-24 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-black">
-            Nossos Projetos
-          </h1>
-          <p className="text-xl text-gray-600 leading-relaxed">
-            Uma seleção dos nossos trabalhos mais recentes em inspeções,
-            imobiliário e eventos. Cada projeto representa o nosso compromisso
-            com a excelência e inovação.
-          </p>
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-5xl">
+            <h1
+              ref={headerRef}
+              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-12 leading-[0.9] text-black"
+            >
+              Nossos Projetos
+            </h1>
+            <p
+              ref={headerParagraphRef}
+              className="text-2xl md:text-3xl text-gray-700 leading-relaxed font-medium max-w-4xl"
+            >
+              Uma seleção dos nossos trabalhos mais recentes em inspeções, imobiliário e eventos. Cada projeto representa o nosso compromisso com a excelência e inovação.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Projects Grid - 2 Columns */}
+      {/* Projects Grid - Vídeos em Destaque */}
       <section className="pb-24 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {projects.map((project) => (
-              <div
-                key={project._id}
-                className="group cursor-pointer"
-                onMouseEnter={() => setHoveredProject(project._id)}
-                onMouseLeave={() => setHoveredProject(null)}
-              >
-                {/* Image/Video Container */}
-                <div className="relative overflow-hidden rounded-lg mb-6 aspect-[4/3] bg-gray-100 w-full">
-                  {/* Video que reproduz no hover */}
-                  {project.video?.asset?.url && (
-                    <video
-                      className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                    >
-                      <source src={project.video.asset.url} type="video/mp4" />
-                    </video>
-                  )}
+        <div className="max-w-7xl mx-auto">
 
-                  {/* Imagem principal se existir */}
-                  {project.mainImage?.asset?.url && (
-                    <Image
-                      src={project.mainImage.asset.url}
-                      alt={project.title || 'Projeto'}
-                      fill
-                      className="object-cover transition-opacity duration-500 group-hover:opacity-0"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                  )}
-
-                  {/* Fallback se não há imagem nem vídeo */}
-                  {!project.mainImage?.asset?.url && !project.video?.asset?.url && (
-                    <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-500 text-lg">Sem mídia</span>
-                    </div>
-                  )}
-
-                  {/* Category badge */}
-                  {project.category && (
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-black/70 backdrop-blur-sm text-white text-sm px-3 py-1 rounded-full">
-                        {project.category}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Project Info */}
-                <div className="px-2">
-                  <h3 className="text-xl lg:text-2xl font-bold mb-3 text-black group-hover:text-gray-600 transition-colors">
-                    {project.title || 'Projeto sem título'}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed text-sm lg:text-base">
-                    {project.category ?
-                      `Projeto de ${project.category.toLowerCase()} com captação aérea profissional.` :
-                      'Projeto de captação aérea profissional.'
-                    }
-                  </p>
+          {/* Loading state */}
+          {projects.length === 0 && (
+            <div className="text-center py-20">
+              <div className="animate-pulse space-y-8">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  {[...Array(6)].map((_, i) => (
+                    <div
+                      key={i}
+                      className={`bg-gray-200 rounded-lg ${
+                        i === 0 ? 'lg:col-span-2 lg:row-span-2 aspect-square' :
+                        i === 3 ? 'lg:col-span-2 aspect-[2/1]' : 'aspect-square'
+                      }`}
+                    ></div>
+                  ))}
                 </div>
               </div>
-            ))}
+              <p className="text-gray-500 text-xl mt-8 font-medium">Carregando projetos...</p>
+            </div>
+          )}
 
-            {/* Loading state */}
-            {projects.length === 0 && (
-              <div className="col-span-2 text-center py-20">
-                <p className="text-gray-500 text-lg">Carregando projetos...</p>
-              </div>
-            )}
-          </div>
+          {/* Projects Grid com Destaque */}
+          {projects.length > 0 && (
+            <div ref={projectsGridRef} className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+
+              {projects.map((project, index) => (
+                <div
+                  key={project._id}
+                  className={`project-item group ${
+                    index === 0 ? 'lg:col-span-2 lg:row-span-2' : // Primeiro grande
+                    index === 3 ? 'lg:col-span-2' : // Quarto wide
+                    index === 7 ? 'lg:col-span-2' : // Oitavo wide
+                    ''
+                  }`}
+                >
+                  <div className="image-container relative w-full h-full aspect-square rounded-lg overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+
+                    {/* Vídeo - igual à homepage */}
+                    {project.video?.asset?.url ? (
+                      <video
+                        className="project-video absolute inset-0 w-full h-full object-cover"
+                        muted
+                        loop
+                        playsInline
+                        onMouseEnter={(e) => e.target.play()}
+                        onMouseLeave={(e) => e.target.pause()}
+                      >
+                        <source src={project.video.asset.url} type="video/mp4" />
+                      </video>
+                    ) : project.mainImage?.asset?.url ? (
+                      <Image
+                        src={project.mainImage.asset.url}
+                        alt={project.title || 'Projeto'}
+                        fill
+                        className="project-image object-cover"
+                        sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-500 text-sm">Sem mídia</span>
+                      </div>
+                    )}
+
+                    {/* Título no hover - NO TOPO */}
+                    {project.title && (
+                      <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
+                        <h3 className={`font-bold text-white leading-tight ${
+                          index === 0 ? 'text-lg lg:text-xl' : 'text-sm lg:text-base'
+                        }`}>
+                          {project.title}
+                        </h3>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+
+            </div>
+          )}
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 px-4 bg-gray-50">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-black">
-            Pronto para o Seu Próximo Projeto?
-          </h2>
-          <p className="text-xl text-gray-600 mb-12 leading-relaxed">
-            Entre em contacto connosco e vamos discutir como podemos
-            elevar o seu projeto com captação aérea profissional.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contacts"
-              className="bg-black text-white px-8 py-4 rounded font-semibold hover:bg-gray-800 transition-colors duration-300"
-            >
-              Começar Projeto
-            </Link>
-            <Link
-              href="/#servicos"
-              className="border border-black text-black px-8 py-4 rounded font-semibold hover:bg-black/5 transition-colors duration-300"
-            >
-              Ver Serviços
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* CTA Section - Componente Reutilizável */}
+      <CTASection
+        title="Pronto para o Seu Próximo Projeto?"
+        description="Entre em contacto connosco e vamos discutir como podemos elevar o seu projeto com captação aérea profissional."
+        primaryButton={{ text: "Começar Projeto", href: "/contacts" }}
+        secondaryButton={{ text: "Ver Serviços", href: "/#servicos" }}
+      />
     </div>
   )
 }
