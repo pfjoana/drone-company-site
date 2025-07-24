@@ -115,9 +115,9 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - COM FUNDO */}
         <div
-          className={`md:hidden transition-all duration-300 ease-in-out ${
+          className={`md:hidden transition-all duration-300 ease-in-out bg-white border-t border-gray-200 ${
             isMobileMenuOpen
               ? 'max-h-screen opacity-100 pb-4'
               : 'max-h-0 opacity-0 overflow-hidden'

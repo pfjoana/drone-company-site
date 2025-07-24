@@ -58,7 +58,7 @@ export default function Projetos() {
     fetchProjects()
   }, [])
 
-  // GSAP Animations - HERO TYPE + CONSISTENT
+  // GSAP Animations
   useEffect(() => {
     const ctx = gsap.context(() => {
 
@@ -101,7 +101,7 @@ export default function Projetos() {
         })
       }
 
-      // 2. Projects Grid - animações como homepage
+      // 2. Projects Grid - animações desktop
       if (projectsGridRef.current && projects.length > 0) {
         const projectItems = projectsGridRef.current.querySelectorAll('.project-item')
 
@@ -152,7 +152,7 @@ export default function Projetos() {
         </div>
       </section>
 
-      {/* Projects Grid - Vídeos em Destaque */}
+      {/* Projects Grid - Desktop/Mobile Separado */}
       <section className="pb-24 px-4">
         <div className="max-w-7xl mx-auto">
 
@@ -176,68 +176,119 @@ export default function Projetos() {
             </div>
           )}
 
-          {/* Projects Grid com Destaque */}
+          {/* Projects Grid - Desktop/Mobile */}
           {projects.length > 0 && (
-            <div ref={projectsGridRef} className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+            <>
+              {/* Desktop Grid - INTACTO */}
+              <div ref={projectsGridRef} className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
 
-              {projects.map((project, index) => (
-                <div
-                  key={project._id}
-                  className={`project-item group ${
-                    index === 0 ? 'lg:col-span-2 lg:row-span-2' : // Primeiro grande
-                    index === 3 ? 'lg:col-span-2' : // Quarto wide
-                    index === 7 ? 'lg:col-span-2' : // Oitavo wide
-                    ''
-                  }`}
-                >
-                  <div className="image-container relative w-full h-full aspect-square rounded-lg overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                {projects.map((project, index) => (
+                  <div
+                    key={project._id}
+                    className={`project-item group ${
+                      index === 0 ? 'lg:col-span-2 lg:row-span-2' :
+                      index === 3 ? 'lg:col-span-2' :
+                      index === 7 ? 'lg:col-span-2' : ''
+                    }`}
+                  >
+                    <div className="image-container relative w-full h-full aspect-square rounded-lg overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow duration-300">
 
-                    {/* Vídeo - igual à homepage */}
-                    {project.video?.asset?.url ? (
-                      <video
-                        className="project-video absolute inset-0 w-full h-full object-cover"
-                        muted
-                        loop
-                        playsInline
-                        onMouseEnter={(e) => e.target.play()}
-                        onMouseLeave={(e) => e.target.pause()}
-                      >
-                        <source src={project.video.asset.url} type="video/mp4" />
-                      </video>
-                    ) : project.mainImage?.asset?.url ? (
-                      <Image
-                        src={project.mainImage.asset.url}
-                        alt={project.title || 'Projeto'}
-                        fill
-                        className="project-image object-cover"
-                        sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-500 text-sm">Sem mídia</span>
-                      </div>
-                    )}
+                      {/* Vídeo - hover desktop */}
+                      {project.video?.asset?.url ? (
+                        <video
+                          className="project-video absolute inset-0 w-full h-full object-cover"
+                          muted
+                          loop
+                          playsInline
+                          onMouseEnter={(e) => e.target.play()}
+                          onMouseLeave={(e) => e.target.pause()}
+                        >
+                          <source src={project.video.asset.url} type="video/mp4" />
+                        </video>
+                      ) : project.mainImage?.asset?.url ? (
+                        <Image
+                          src={project.mainImage.asset.url}
+                          alt={project.title || 'Projeto'}
+                          fill
+                          className="project-image object-cover"
+                          sizes="(max-width: 1024px) 50vw, 25vw"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                          <span className="text-gray-500 text-sm">Sem mídia</span>
+                        </div>
+                      )}
 
-                    {/* Título no hover - NO TOPO */}
-                    {project.title && (
-                      <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
-                        <h3 className={`font-bold text-white leading-tight ${
-                          index === 0 ? 'text-lg lg:text-xl' : 'text-sm lg:text-base'
-                        }`}>
-                          {project.title}
-                        </h3>
-                      </div>
-                    )}
+                      {/* Título hover desktop */}
+                      {project.title && (
+                        <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
+                          <h3 className={`font-bold text-white leading-tight ${
+                            index === 0 ? 'text-lg lg:text-xl' : 'text-sm lg:text-base'
+                          }`}>
+                            {project.title}
+                          </h3>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
 
-            </div>
+              </div>
+
+              {/* Mobile Grid - 1 coluna, vídeos altos */}
+              <div className="md:hidden space-y-4 mb-12">
+
+                {projects.map((project, index) => (
+                  <div
+                    key={`mobile-${project._id}`}
+                    className="project-item h-[70vh]" // 70% da altura da tela
+                  >
+                    <div className="image-container relative w-full h-full rounded-lg overflow-hidden shadow-lg">
+
+                      {/* Vídeo autoplay mobile */}
+                      {project.video?.asset?.url ? (
+                        <video
+                          className="project-video absolute inset-0 w-full h-full object-cover"
+                          muted
+                          loop
+                          playsInline
+                          autoPlay
+                        >
+                          <source src={project.video.asset.url} type="video/mp4" />
+                        </video>
+                      ) : project.mainImage?.asset?.url ? (
+                        <Image
+                          src={project.mainImage.asset.url}
+                          alt={project.title || 'Projeto'}
+                          fill
+                          className="project-image object-cover"
+                          sizes="100vw"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                          <span className="text-gray-500 text-sm">Sem mídia</span>
+                        </div>
+                      )}
+
+                      {/* Título sempre visível mobile */}
+                      {project.title && (
+                        <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent p-4">
+                          <h3 className="font-bold text-white leading-tight text-lg">
+                            {project.title}
+                          </h3>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+
+              </div>
+            </>
           )}
         </div>
       </section>
 
-      {/* CTA Section - Componente Reutilizável */}
+      {/* CTA Section */}
       <CTASection
         title="Pronto para o Seu Próximo Projeto?"
         description="Entre em contacto connosco e vamos discutir como podemos elevar o seu projeto com captação aérea profissional."

@@ -14,12 +14,16 @@ export default function Sobre() {
 
   // Refs para animações
   const statementRef = useRef(null)
+  const mobileImageRef = useRef(null)
+  const mobileDecorativeRef = useRef(null)
+  const mobileTitleRef = useRef(null)
+  const mobileSubtitleRef = useRef(null)
+  const mobileTextRefs = useRef([])
+  const desktopImageRef = useRef(null)
   const decorativeRef = useRef(null)
-  const imageRef = useRef(null)
   const titleRef = useRef(null)
   const subtitleRef = useRef(null)
   const textRefs = useRef([])
-  const certificationRef = useRef(null)
   const skillsRef = useRef(null)
 
   // Register GSAP plugins
@@ -51,7 +55,7 @@ export default function Sobre() {
     fetchAboutData()
   }, [])
 
-  // GSAP Animations - HERO TYPE + CONSISTENT
+  // GSAP Animations
   useEffect(() => {
     if (!aboutData) return
 
@@ -79,54 +83,76 @@ export default function Sobre() {
         }
       })
 
-      // 2. Layout principal - imagem + conteúdo em bloco
-      gsap.set(imageRef.current, { x: -100, opacity: 0, scale: 0.9 })
-      gsap.set(decorativeRef.current, { x: 50, opacity: 0 })
-      gsap.set(titleRef.current, { y: 50, opacity: 0 })
-      gsap.set(subtitleRef.current, { y: 30, opacity: 0 })
-      gsap.set(textRefs.current, { y: 30, opacity: 0 })
+      // 2. Mobile Layout Animation
+      if (mobileImageRef.current) {
+        gsap.set([mobileImageRef.current, mobileDecorativeRef.current, mobileTitleRef.current, mobileSubtitleRef.current, ...mobileTextRefs.current], { y: 50, opacity: 0 })
 
-      ScrollTrigger.create({
-        trigger: imageRef.current,
-        start: "top 80%",
-        onEnter: () => {
-          // Timeline para layout principal
-          const tl = gsap.timeline()
+        ScrollTrigger.create({
+          trigger: mobileImageRef.current,
+          start: "top 80%",
+          onEnter: () => {
+            const tl = gsap.timeline()
 
-          tl.to(imageRef.current, {
-            x: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 1.2,
-            ease: "power3.out"
-          })
-          .to(decorativeRef.current, {
-            x: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: "power3.out"
-          }, "-=0.8")
-          .to([titleRef.current, subtitleRef.current], {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.2,
-            ease: "power3.out"
-          }, "-=0.6")
-          .to(textRefs.current, {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: "power3.out"
-          }, "-=0.4")
-        }
-      })
+            tl.to(mobileImageRef.current, {
+              y: 0,
+              opacity: 1,
+              duration: 1,
+              ease: "power3.out"
+            })
+            .to([mobileDecorativeRef.current, mobileTitleRef.current, mobileSubtitleRef.current], {
+              y: 0,
+              opacity: 1,
+              duration: 0.8,
+              stagger: 0.2,
+              ease: "power3.out"
+            }, "-=0.6")
+            .to(mobileTextRefs.current, {
+              y: 0,
+              opacity: 1,
+              duration: 0.8,
+              stagger: 0.15,
+              ease: "power3.out"
+            }, "-=0.4")
+          }
+        })
+      }
 
-      // 3. Skills section - HERO TYPE
+      // 3. Desktop Layout Animation
+      if (desktopImageRef.current) {
+        gsap.set(desktopImageRef.current, { x: -100, opacity: 0, scale: 0.9 })
+        gsap.set([decorativeRef.current, titleRef.current, subtitleRef.current, ...textRefs.current], { x: 50, y: 30, opacity: 0 })
+
+        ScrollTrigger.create({
+          trigger: desktopImageRef.current,
+          start: "top 80%",
+          onEnter: () => {
+            const tl = gsap.timeline()
+
+            tl.to(desktopImageRef.current, {
+              x: 0,
+              opacity: 1,
+              scale: 1,
+              duration: 1.2,
+              ease: "power3.out"
+            })
+            .to([decorativeRef.current, titleRef.current, subtitleRef.current, ...textRefs.current], {
+              x: 0,
+              y: 0,
+              opacity: 1,
+              duration: 0.8,
+              stagger: 0.15,
+              ease: "power3.out"
+            }, "-=0.6")
+          }
+        })
+      }
+
+      // 4. Skills + Quote section
       if (skillsRef.current) {
         const skillsTitle = skillsRef.current.querySelector('h3')
         const skillsList = skillsRef.current.querySelectorAll('li')
+        const quote = document.querySelector('blockquote')
+        const quoteAuthor = quote?.nextElementSibling
 
         if (skillsTitle) {
           const skillsTitleSplit = new SplitText(skillsTitle, {
@@ -136,27 +162,35 @@ export default function Sobre() {
 
           gsap.set(skillsTitleSplit.words, { y: 50, opacity: 0 })
           gsap.set(skillsList, { x: 30, opacity: 0 })
+          gsap.set([quote, quoteAuthor], { y: 50, opacity: 0 })
 
           ScrollTrigger.create({
             trigger: skillsRef.current,
             start: "top 80%",
             onEnter: () => {
-              gsap.to(skillsTitleSplit.words, {
+              const tl = gsap.timeline()
+
+              tl.to(skillsTitleSplit.words, {
                 y: 0,
                 opacity: 1,
                 duration: 0.8,
                 stagger: 0.08,
                 ease: "power4.out"
               })
-
-              gsap.to(skillsList, {
+              .to(skillsList, {
                 x: 0,
                 opacity: 1,
                 duration: 0.6,
                 stagger: 0.1,
-                ease: "power3.out",
-                delay: 0.4
-              })
+                ease: "power3.out"
+              }, "-=0.4")
+              .to([quote, quoteAuthor], {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "power3.out"
+              }, "-=0.6")
             }
           })
         }
@@ -167,7 +201,6 @@ export default function Sobre() {
     return () => ctx.revert()
   }, [aboutData])
 
-  // Dados estáticos melhorados
   const staticData = {
     name: "Paulo Silva",
     title: "Piloto Certificado & Editor de Vídeo",
@@ -188,13 +221,13 @@ export default function Sobre() {
   return (
     <div className="pt-24">
 
-      {/* Statement gigante - HERO TYPE */}
-      <section className="py-24 px-4">
+      {/* Statement - GAP REDUZIDO */}
+      <section className="py-12 md:py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-5xl">
             <h1
               ref={statementRef}
-              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-12 leading-[0.9] text-black"
+              className="text-4xl md:text-7xl lg:text-8xl font-bold mb-6 md:mb-8 leading-[0.9] text-black"
             >
               Transformamos perspectivas em experiências
             </h1>
@@ -202,96 +235,147 @@ export default function Sobre() {
         </div>
       </section>
 
-      {/* Layout orgânico principal */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto relative">
+      {/* Layout principal - MOBILE FIRST */}
+      <section className="py-12 md:py-20 px-4">
+        <div className="max-w-7xl mx-auto">
 
-          {/* Foto grande - posição otimizada */}
-          <div
-            ref={imageRef}
-            className="absolute left-8 top-0 w-80 h-96 lg:w-[400px] lg:h-[480px] xl:w-[450px] xl:h-[540px]"
-          >
-            <div className="relative w-full h-full overflow-hidden rounded-lg shadow-2xl">
-              {aboutData?.profileImage?.asset?.url ? (
-                <Image
-                  src={aboutData.profileImage.asset.url}
-                  alt={staticData.name}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 320px, (max-width: 1024px) 400px, 450px"
-                />
-              ) : (
-                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                  <span className="text-8xl">👨‍✈️</span>
-                </div>
-              )}
+          {/* Mobile Layout - Stack vertical */}
+          <div className="block md:hidden space-y-8">
+
+            {/* Imagem mobile */}
+            <div className="w-full max-w-sm mx-auto">
+              <div ref={mobileImageRef} className="relative w-full h-80 overflow-hidden rounded-lg shadow-xl">
+                {aboutData?.profileImage?.asset?.url ? (
+                  <Image
+                    src={aboutData.profileImage.asset.url}
+                    alt={staticData.name}
+                    fill
+                    className="object-cover"
+                    sizes="320px"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                    <span className="text-6xl">👨‍✈️</span>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* Conteúdo à direita - rebalanceado */}
-          <div className="ml-auto max-w-2xl pl-8 pt-12 text-right">
-
-            {/* Frase decorativa */}
-            <div className="mb-12">
-              <p
-                ref={decorativeRef}
-                className="text-xl md:text-2xl font-bold text-gray-300 italic mb-8"
-              >
+            {/* Conteúdo mobile */}
+            <div className="text-center space-y-6">
+              <p ref={mobileDecorativeRef} className="text-lg font-bold text-gray-300 italic">
                 Conheça o piloto, editor, storyteller
               </p>
 
-              {/* Nome e título agrupados */}
               <div>
-                <h2
-                  ref={titleRef}
-                  className="text-4xl lg:text-5xl font-bold text-black mb-4"
-                >
+                <h2 ref={mobileTitleRef} className="text-3xl font-bold text-black mb-3">
                   {staticData.name}
                 </h2>
-                <div ref={subtitleRef}>
-                  <p className="text-xl text-gray-700 font-semibold mb-2">
+                <div ref={mobileSubtitleRef}>
+                  <p className="text-lg text-gray-700 font-semibold mb-1">
                     {staticData.title}
                   </p>
-                  <p className="text-base text-gray-600 font-medium">
+                  <p className="text-sm text-gray-600 font-medium">
                     {staticData.certification}
                   </p>
                 </div>
               </div>
+
+              <div className="space-y-4 text-base text-gray-800 leading-relaxed max-w-md mx-auto">
+                {staticData.description.map((paragraph, index) => (
+                  <p
+                    key={index}
+                    ref={el => mobileTextRefs.current[index] = el}
+                    className="font-semibold"
+                    dangerouslySetInnerHTML={{
+                      __html: paragraph.replace(/^([^.]+\.)/, '<strong>$1</strong>')
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Layout - Original */}
+          <div className="hidden md:block relative">
+
+            {/* Foto grande */}
+            <div
+              ref={desktopImageRef}
+              className="absolute left-8 top-0 w-80 h-96 lg:w-[400px] lg:h-[480px] xl:w-[450px] xl:h-[540px]"
+            >
+              <div className="relative w-full h-full overflow-hidden rounded-lg shadow-2xl">
+                {aboutData?.profileImage?.asset?.url ? (
+                  <Image
+                    src={aboutData.profileImage.asset.url}
+                    alt={staticData.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 400px, 450px"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                    <span className="text-8xl">👨‍✈️</span>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Descrição principal */}
-            <div className="space-y-6 text-lg text-gray-800 leading-relaxed text-right mb-12">
-              {staticData.description.map((paragraph, index) => (
-                <p
-                  key={index}
-                  ref={el => textRefs.current[index] = el}
-                  className="font-semibold"
-                  dangerouslySetInnerHTML={{
-                    __html: paragraph.replace(/^([^.]+\.)/, '<strong>$1</strong>')
-                  }}
-                />
-              ))}
-            </div>
+            {/* Conteúdo à direita */}
+            <div className="ml-auto max-w-2xl pl-8 pt-12 text-right">
 
+              <div className="mb-12">
+                <p ref={decorativeRef} className="text-xl md:text-2xl font-bold text-gray-300 italic mb-8">
+                  Conheça o piloto, editor, storyteller
+                </p>
+
+                <div>
+                  <h2 ref={titleRef} className="text-4xl lg:text-5xl font-bold text-black mb-4">
+                    {staticData.name}
+                  </h2>
+                  <div ref={subtitleRef}>
+                    <p className="text-xl text-gray-700 font-semibold mb-2">
+                      {staticData.title}
+                    </p>
+                    <p className="text-base text-gray-600 font-medium">
+                      {staticData.certification}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-6 text-lg text-gray-800 leading-relaxed text-right mb-12">
+                {staticData.description.map((paragraph, index) => (
+                  <p
+                    key={index}
+                    ref={el => textRefs.current[index] = el}
+                    className="font-semibold"
+                    dangerouslySetInnerHTML={{
+                      __html: paragraph.replace(/^([^.]+\.)/, '<strong>$1</strong>')
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Skills Section - novo layout orgânico */}
-      <section className="py-24 px-4 bg-gray-50">
+      {/* Skills Section - COM ANIMAÇÕES */}
+      <section className="py-16 md:py-24 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
-            {/* Skills à esquerda */}
+            {/* Skills */}
             <div ref={skillsRef}>
-              <h3 className="text-3xl md:text-4xl font-bold text-black mb-8">
+              <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-black mb-6 md:mb-8 text-center lg:text-left">
                 Especialidades & Skills
               </h3>
-              <ul className="space-y-4">
+              <ul className="space-y-3 md:space-y-4 max-w-md mx-auto lg:mx-0">
                 {staticData.skills.map((skill, index) => (
                   <li
                     key={index}
-                    className="flex items-center text-lg text-gray-700 font-medium"
+                    className="flex items-center text-base md:text-lg text-gray-700 font-medium"
                   >
                     <span className="w-2 h-2 bg-black rounded-full mr-4 flex-shrink-0"></span>
                     {skill}
@@ -300,13 +384,13 @@ export default function Sobre() {
               </ul>
             </div>
 
-            {/* Texto motivacional à direita */}
-            <div className="text-right">
-              <blockquote className="text-2xl md:text-3xl font-bold text-gray-800 leading-relaxed italic">
+            {/* Citação - COM ANIMAÇÃO */}
+            <div className="text-center lg:text-right">
+              <blockquote className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 leading-relaxed italic">
                 "Cada voo é uma oportunidade de capturar algo único.
                 Cada frame conta uma história."
               </blockquote>
-              <p className="text-lg text-gray-600 mt-6 font-medium">
+              <p className="text-base md:text-lg text-gray-600 mt-4 md:mt-6 font-medium">
                 — Filosofia de trabalho que guia cada projeto
               </p>
             </div>
@@ -315,8 +399,7 @@ export default function Sobre() {
         </div>
       </section>
 
-      {/* Espaço para breathing */}
-      <section className="py-20"></section>
+      <section className="py-12 md:py-20"></section>
 
     </div>
   )
