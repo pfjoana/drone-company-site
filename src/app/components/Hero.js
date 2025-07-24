@@ -7,10 +7,10 @@ import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
 
 export default function Hero() {
-  const videoRef = useRef(null)
+  const videoDesktopRef = useRef(null)
+  const videoMobileRef = useRef(null)
   const titleRef = useRef(null)
   const subtitleRef = useRef(null)
-  const buttonsRef = useRef(null)
   const scrollIndicatorRef = useRef(null)
   const [heroData, setHeroData] = useState(null)
 
@@ -21,6 +21,12 @@ export default function Hero() {
         const data = await client.fetch(`
           *[_type == "hero"][0]{
             backgroundVideo{
+              asset->{
+                _id,
+                url
+              }
+            },
+            backgroundVideoMobile{
               asset->{
                 _id,
                 url
@@ -45,13 +51,16 @@ export default function Hero() {
   }, [])
 
   useEffect(() => {
-    // Auto-play video when loaded
-    if (videoRef.current) {
-      videoRef.current.play().catch(console.error)
+    // Auto-play videos when loaded
+    if (videoDesktopRef.current) {
+      videoDesktopRef.current.play().catch(console.error)
+    }
+    if (videoMobileRef.current) {
+      videoMobileRef.current.play().catch(console.error)
     }
   }, [heroData])
 
-  // GSAP Animations com timing para o logo
+  // GSAP Animations
   useEffect(() => {
     const ctx = gsap.context(() => {
 
@@ -66,13 +75,12 @@ export default function Hero() {
         linesClass: "overflow-hidden"
       })
 
-      // Set initial states - COM BOTÕES
+      // Set initial states
       gsap.set(titleSplit.words, { y: 100, opacity: 0 })
       gsap.set(subtitleSplit.lines, { y: 50, opacity: 0 })
-      gsap.set(buttonsRef.current, { y: 30, opacity: 0 })
       gsap.set(scrollIndicatorRef.current, { opacity: 0 })
 
-      // Animation timeline - COMPLETA
+      // Animation timeline
       const tl = gsap.timeline({ delay: 0.5 })
 
       tl.to(titleSplit.words, {
@@ -89,12 +97,6 @@ export default function Hero() {
         stagger: 0.1,
         ease: "power3.out"
       }, "-=0.6")
-      .to(buttonsRef.current, {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: "power3.out"
-      }, "-=0.4")
       .to(scrollIndicatorRef.current, {
         opacity: 1,
         duration: 0.6,
@@ -109,18 +111,17 @@ export default function Hero() {
   // Get video URL helper
   const getVideoUrl = (videoAsset) => {
     if (!videoAsset?.asset) return null
-    console.log('Video URL:', videoAsset.asset.url)
     return videoAsset.asset.url
   }
 
   return (
     <section className="relative h-screen w-full overflow-hidden">
 
-      {/* Video or Image Background - CENTRO LIVRE PARA LOGO */}
-      {heroData?.backgroundVideo ? (
+      {/* Desktop Video - usa o campo existente backgroundVideo */}
+      {heroData?.backgroundVideo && (
         <video
-          ref={videoRef}
-          className="absolute top-0 left-0 w-full h-full object-cover"
+          ref={videoDesktopRef}
+          className="hidden md:block absolute top-0 left-0 w-full h-full object-cover"
           autoPlay
           muted
           loop
@@ -129,28 +130,49 @@ export default function Hero() {
           <source src={getVideoUrl(heroData.backgroundVideo)} type="video/mp4" />
           O seu browser não suporta vídeos HTML5.
         </video>
-      ) : heroData?.backgroundImage ? (
+      )}
+
+      {/* Mobile Video - novo campo backgroundVideoMobile */}
+      {heroData?.backgroundVideoMobile && (
+        <video
+          ref={videoMobileRef}
+          className="md:hidden absolute top-0 left-0 w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        >
+          <source src={getVideoUrl(heroData.backgroundVideoMobile)} type="video/mp4" />
+          O seu browser não suporta vídeos HTML5.
+        </video>
+      )}
+
+      {/* Fallback - só se não tiver nenhum vídeo */}
+      {!heroData?.backgroundVideo && !heroData?.backgroundVideoMobile && heroData?.backgroundImage && (
         <div
           className="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: `url('${urlFor(heroData.backgroundImage).url()}')`
           }}
         />
-      ) : (
-        // SEM FALLBACK - só vídeo escuro até carregar
+      )}
+
+      {/* Fallback final - fundo preto */}
+      {!heroData?.backgroundVideo && !heroData?.backgroundVideoMobile && !heroData?.backgroundImage && (
         <div className="absolute top-0 left-0 w-full h-full bg-black" />
       )}
 
-      {/* Overlay de contraste no canto esquerdo */}
+      {/* Overlay de contraste */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/15 to-transparent" />
 
-      {/* Content - UM POUCO MAIS ABAIXO + Caixa semi-transparente */}
+      {/* Content - Caixa semi-transparente */}
       <div className="relative z-10 h-full flex flex-col justify-start pt-40 px-4">
         <div className="max-w-7xl mx-auto w-full">
-          {/* Contentor com fundo semi-transparente - CENTRADO + SOMBRA */}
+
+          {/* Caixa com fundo semi-transparente */}
           <div className="max-w-sm lg:max-w-md bg-black/40 backdrop-blur-sm shadow-2xl p-6 lg:p-8 text-center">
 
-            {/* Título menor e centrado */}
+            {/* Título */}
             <h1
               ref={titleRef}
               className="text-2xl md:text-3xl lg:text-4xl font-bold mb-5 leading-[0.9] text-white"
@@ -163,7 +185,7 @@ export default function Hero() {
               <span className="font-extrabold">Profissional</span>
             </h1>
 
-            {/* Subtítulo - SÓ UMA FRASE */}
+            {/* Subtítulo */}
             <div ref={subtitleRef} className="mb-6">
               <p
                 className="text-sm md:text-base lg:text-lg text-white font-semibold"
@@ -175,8 +197,8 @@ export default function Hero() {
               </p>
             </div>
 
-            {/* Botões maiores para melhor usabilidade */}
-            <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-3 justify-center">
+            {/* Botões */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/projects"
                 className="bg-white text-black px-6 py-3 font-bold hover:bg-white/90 transition-all duration-300 shadow-lg text-sm"
@@ -186,6 +208,9 @@ export default function Hero() {
               <Link
                 href="/#servicos"
                 className="border-2 border-white text-white px-6 py-3 font-bold hover:bg-white/20 transition-all duration-300 text-sm"
+                style={{
+                  textShadow: '1px 1px 4px rgba(0,0,0,0.6)'
+                }}
               >
                 Nossos Serviços
               </Link>
@@ -194,7 +219,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator melhorado */}
+      {/* Scroll indicator */}
       <div ref={scrollIndicatorRef} className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
         <div className="flex flex-col items-center space-y-2">
           <div className="w-6 h-10 border-2 border-white/80 rounded-full flex justify-center">
