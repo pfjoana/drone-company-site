@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Hero from './components/Hero'
+import CTASection from './components/CTASection'
 import { client, urlFor } from '../lib/sanity'
 
 // GSAP imports
@@ -20,7 +21,6 @@ export default function Home() {
   const servicesRef = useRef(null)
   const reviewsRef = useRef(null)
   const projectsRef = useRef(null)
-  const ctaRef = useRef(null)
 
   // Register GSAP plugins
   useEffect(() => {
@@ -67,23 +67,27 @@ export default function Home() {
       // 1. Statement Split Text + Paragraph abaixo (HERO TYPE ANIMATION)
       const statementSplit = new SplitText(statementRef.current, {
         type: "lines,words",
-        linesClass: "overflow-hidden"
+        linesClass: "overflow-visible"
       })
 
       // Parágrafo abaixo do statement
       const statementParagraph = statementRef.current.parentElement.querySelector('p')
       const paragraphSplit = new SplitText(statementParagraph, {
         type: "lines",
-        linesClass: "overflow-hidden"
+        linesClass: "overflow-visible"
       })
 
       gsap.set(statementSplit.words, { y: 100, opacity: 0 })
       gsap.set(paragraphSplit.lines, { y: 50, opacity: 0 })
 
-      // ScrollTrigger para o statement (pode estar muito em cima)
+      // Remover overflow hidden das linhas
+      gsap.set(statementSplit.lines, { overflow: "visible" })
+      gsap.set(paragraphSplit.lines, { overflow: "visible" })
+
+      // ScrollTrigger para o statement
       ScrollTrigger.create({
         trigger: statementRef.current,
-        start: "top 90%", // Mais tolerante
+        start: "top 90%",
         onEnter: () => {
           gsap.to(statementSplit.words, {
             y: 0,
@@ -144,36 +148,23 @@ export default function Home() {
         }
       })
 
-      // Service cards - TEXTO EM BLOCO (não gradual)
+      // Service cards - GRID DE 6 CARDS
       const serviceCards = servicesRef.current.querySelectorAll('.service-card')
       serviceCards.forEach((card, cardIndex) => {
 
-        // Textos do serviço (título, subtítulo, descrição)
-        const serviceTexts = card.querySelectorAll('h3, p[class*="text-gray-600"], p[class*="text-gray-700"]')
-
-        gsap.set(serviceTexts, { y: 30, opacity: 0 })
-        gsap.set(card.querySelector('.relative'), { scale: 0.95, opacity: 0 })
+        gsap.set(card, { y: 50, opacity: 0, scale: 0.95 })
 
         ScrollTrigger.create({
           trigger: card,
-          start: "top 75%",
+          start: "top 80%",
           onEnter: () => {
-            // Imagem primeiro
-            gsap.to(card.querySelector('.relative'), {
-              scale: 1,
-              opacity: 1,
-              duration: 0.8,
-              ease: "power3.out"
-            })
-
-            // Depois texto TODO AO MESMO TEMPO (sem stagger)
-            gsap.to(serviceTexts, {
+            gsap.to(card, {
               y: 0,
               opacity: 1,
+              scale: 1,
               duration: 0.8,
-              stagger: 0.05, // Stagger mínimo
-              ease: "power3.out",
-              delay: 0.2
+              ease: "back.out(1.7)",
+              delay: cardIndex * 0.1
             })
           }
         })
@@ -197,7 +188,7 @@ export default function Home() {
               y: 0,
               opacity: 1,
               duration: 0.6,
-              stagger: 0.05, // Stagger mínimo
+              stagger: 0.05,
               ease: "power2.out"
             })
           }
@@ -243,61 +234,44 @@ export default function Home() {
         }
       })
 
-      // Project items
-      const projectItems = projectsRef.current.querySelectorAll('.project-item')
-      gsap.set(projectItems, { scale: 0.9, opacity: 0 })
+      // Project items - DESKTOP ONLY
+      const projectItems = projectsRef.current.querySelectorAll('.project-item-desktop')
+      if (projectItems.length > 0) {
+        gsap.set(projectItems, { scale: 0.9, opacity: 0 })
 
-      gsap.to(projectItems, {
-        scale: 1,
-        opacity: 1,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "back.out(1.7)",
-        scrollTrigger: {
-          trigger: projectItems[0],
-          start: "top 70%",
-          toggleActions: "play none none reverse"
-        }
-      })
+        gsap.to(projectItems, {
+          scale: 1,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: projectItems[0],
+            start: "top 70%",
+            toggleActions: "play none none reverse"
+          }
+        })
+      }
 
-      // 5. CTA - HERO TYPE ANIMATION
-      const ctaTitle = ctaRef.current.querySelector('.cta-title')
-      const ctaTitleSplit = new SplitText(ctaTitle, {
-        type: "lines,words",
-        linesClass: "overflow-hidden"
-      })
+      // Project items - MOBILE ONLY
+      const projectItemsMobile = projectsRef.current.querySelectorAll('.project-item-mobile')
+      if (projectItemsMobile.length > 0) {
+        gsap.set(projectItemsMobile, { y: 50, opacity: 0 })
 
-      const ctaParagraph = ctaRef.current.querySelector('p')
-      const ctaParagraphSplit = new SplitText(ctaParagraph, {
-        type: "lines",
-        linesClass: "overflow-hidden"
-      })
-
-      gsap.set(ctaTitleSplit.words, { y: 100, opacity: 0 })
-      gsap.set(ctaParagraphSplit.lines, { y: 30, opacity: 0 })
-
-      ScrollTrigger.create({
-        trigger: ctaRef.current,
-        start: "top 80%",
-        onEnter: () => {
-          gsap.to(ctaTitleSplit.words, {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            stagger: 0.08,
-            ease: "power4.out"
-          })
-
-          gsap.to(ctaParagraphSplit.lines, {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: "power3.out",
-            delay: 0.6
-          })
-        }
-      })
+        ScrollTrigger.create({
+          trigger: projectItemsMobile[0],
+          start: "top 80%",
+          onEnter: () => {
+            gsap.to(projectItemsMobile, {
+              y: 0,
+              opacity: 1,
+              duration: 0.6,
+              stagger: 0.1,
+              ease: "power3.out"
+            })
+          }
+        })
+      }
 
     })
 
@@ -306,46 +280,52 @@ export default function Home() {
 
   const services = [
     {
-      id: 'inspecoes',
-      title: 'Inspeções Técnicas',
-      subtitle: 'Condomínios & Edifícios',
-      description: 'Relatórios detalhados de inspeções aéreas para telhados, fachadas e estruturas. Identificação precisa de problemas e documentação completa.',
-      features: [
-        'Inspeção de telhados e coberturas',
-        'Análise de fachadas e estruturas',
-        'Relatórios técnicos detalhados',
-        'Documentação fotográfica HD',
-        'Mapeamento de problemas estruturais'
-      ],
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'
+      id: 'inspecoes-aereas',
+      title: 'Inspeções Técnicas Aéreas',
+      subtitle: 'Estruturas & Coberturas',
+      description: 'Inspeções visuais de estruturas de difícil acesso com relatório técnico ilustrado.',
+      features: ['Coberturas, caleiras, claraboias', 'Telhados industriais', 'Equipamentos AVAC e chaminés'],
+      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
     },
     {
-      id: 'imobiliario',
-      title: 'Marketing Imobiliário',
-      subtitle: 'Vendas & Promoção',
-      description: 'Fotografia e vídeo aéreo para propriedades, criando material promocional impactante que destaca características únicas.',
-      features: [
-        'Fotografia aérea de propriedades',
-        'Vídeos promocionais dinâmicos',
-        'Tours virtuais aéreos',
-        'Material para redes sociais',
-        'Packages completos de marketing'
-      ],
-      image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'
+      id: 'acompanhamento-obras',
+      title: 'Acompanhamento de Obras',
+      subtitle: 'Monitorização & Progresso',
+      description: 'Monitorização da evolução de obras através de fotografias aéreas periódicas.',
+      features: ['Fotografias antes/depois', 'Relatórios de progresso', 'Documentação temporal'],
+      image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
     },
     {
-      id: 'eventos',
-      title: 'Eventos & Institucional',
-      subtitle: 'Corporativo & Municipal',
-      description: 'Cobertura aérea profissional para eventos, vídeos institucionais e projetos municipais com qualidade cinematográfica.',
-      features: [
-        'Cobertura de eventos corporativos',
-        'Vídeos institucionais',
-        'Projetos para câmaras municipais',
-        'Documentação de obras públicas',
-        'Conteúdo para campanhas'
-      ],
-      image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'
+      id: 'paineis-solares',
+      title: 'Inspeção de Painéis Solares',
+      subtitle: 'Energia & Eficiência',
+      description: 'Verificação visual de instalações fotovoltaicas para máxima eficiência energética.',
+      features: ['Identificação de sujidade/danos', 'Inspeção pós-limpeza', 'Verificação pós-eventos extremos'],
+      image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+    },
+    {
+      id: 'espacos-exteriores',
+      title: 'Levantamento de Espaços Exteriores',
+      subtitle: 'Parques & Jardins',
+      description: 'Levantamentos visuais de parques de estacionamento, jardins e zonas técnicas.',
+      features: ['Parques de estacionamento', 'Jardins e zonas verdes', 'Áreas técnicas'],
+      image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+    },
+    {
+      id: 'seguranca-perimetros',
+      title: 'Verificação de Segurança',
+      subtitle: 'Perímetros & Vedações',
+      description: 'Sobrevoos para verificação de cercas, vedações e áreas remotas.',
+      features: ['Inspeção de cercas', 'Verificação de vedações', 'Monitorização de perímetros'],
+      image: 'https://images.unsplash.com/photo-1569163139394-de44cb984263?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+    },
+    {
+      id: 'conteudos-visuais',
+      title: 'Conteúdos Visuais',
+      subtitle: 'Vídeos & Apresentações',
+      description: 'Vídeos e imagens aéreas para apresentações, relatórios e material promocional.',
+      features: ['Vídeos para apresentações', 'Material para relatórios', 'Conteúdo para redes sociais'],
+      image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
     }
   ]
 
@@ -354,188 +334,105 @@ export default function Home() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Statement impactante - Char por char */}
+      {/* Statement impactante - NOVO TEXTO ORIGINAL */}
       <section className="py-32 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-5xl">
             <h2
               ref={statementRef}
-              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-12 leading-[0.9] text-black"
-              style={{ overflow: "hidden" }}
+              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-12 leading-[1.1] text-black"
             >
-              Elevamos o seu conteúdo
+              Soluções técnicas com precisão aérea
             </h2>
             <p className="text-2xl md:text-3xl text-gray-700 leading-relaxed font-medium max-w-4xl">
-              Combinamos tecnologia de ponta com experiência profissional para criar
-              imagens e vídeos aéreos que destacam o seu projeto.
+              Onde os métodos tradicionais encontram limitações, a nossa tecnologia aérea
+              revela problemas, documenta progressos e otimiza operações com uma perspetiva
+              que transforma a gestão de ativos.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Serviços Section - Layout orgânico MELHORADO */}
+      {/* Serviços Section - OPÇÃO 2: 6 CARDS INDIVIDUAIS */}
       <section id="servicos" className="py-32 px-4" ref={servicesRef}>
         <div className="max-w-7xl mx-auto">
 
-          {/* Título e subtítulo à direita */}
           <div className="flex justify-end mb-20">
             <div className="max-w-2xl text-right">
               <h2 className="services-title text-4xl md:text-5xl font-bold mb-6 text-black">
-                Os Nossos Serviços
+                Expertise Técnico Especializado
               </h2>
               <p className="services-subtitle text-xl text-gray-700 leading-relaxed font-semibold">
-                Três áreas de especialização para responder a todas as suas necessidades
-                de captação aérea profissional.
+                Da inspeção à documentação, cada serviço é concebido para resolver
+                desafios específicos da gestão moderna de infraestruturas.
               </p>
             </div>
           </div>
 
-          {/* Cards em layout assimétrico - REBALANCEADOS */}
-          <div className="space-y-32">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {services.map((service, index) => (
+              <div
+                key={service.id}
+                className="service-card group cursor-pointer"
+                onMouseEnter={() => setHoveredService(service.id)}
+                onMouseLeave={() => setHoveredService(null)}
+              >
+                <div className="bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden h-full">
 
-            {/* Primeiro serviço - Grande à esquerda (MANTÉM) */}
-            <div className="service-card grid grid-cols-1 lg:grid-cols-5 gap-8 items-center"
-                 onMouseEnter={() => setHoveredService(services[0].id)}
-                 onMouseLeave={() => setHoveredService(null)}>
-              <div className="lg:col-span-3">
-                <div className="relative overflow-hidden rounded-lg aspect-[4/3]">
-                  <Image
-                    src={services[0].image}
-                    alt={services[0].title}
-                    fill
-                    className="object-cover transition-all duration-700 hover:scale-110"
-                    sizes="(max-width: 768px) 100vw, 60vw"
-                  />
-
-                  {/* Overlay MELHORADO */}
-                  <div className={`absolute inset-0 bg-black/75 transition-all duration-500 ${
-                    hoveredService === services[0].id ? 'opacity-100' : 'opacity-0'
-                  }`}>
-                    <div className="absolute inset-0 flex items-center justify-center p-8">
-                      <div className="text-center text-white">
-                        <h4 className="text-2xl font-bold mb-6">Características:</h4>
-                        <ul className="space-y-3 text-lg">
-                          {services[0].features.map((feature, index) => (
-                            <li key={index} className="opacity-95 font-medium">• {feature}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="lg:col-span-2 space-y-4">
-                <p className="text-gray-600 text-sm font-medium">{services[0].subtitle}</p>
-                <h3 className="text-3xl font-bold text-black">{services[0].title}</h3>
-                <p className="text-gray-700 leading-relaxed font-medium text-lg">
-                  {services[0].description}
-                </p>
-              </div>
-            </div>
-
-            {/* Segundo serviço - MAIOR e mais à direita */}
-            <div className="service-card ml-auto lg:max-w-5xl"
-                 onMouseEnter={() => setHoveredService(services[1].id)}
-                 onMouseLeave={() => setHoveredService(null)}>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-                <div className="lg:order-2 lg:col-span-2">
-                  <div className="relative overflow-hidden rounded-lg aspect-[4/3]">
+                  <div className="relative h-48 overflow-hidden">
                     <Image
-                      src={services[1].image}
-                      alt={services[1].title}
+                      src={service.image}
+                      alt={service.title}
                       fill
-                      className="object-cover transition-all duration-700 hover:scale-110"
-                      sizes="(max-width: 768px) 100vw, 60vw"
+                      className="object-cover transition-all duration-700 group-hover:scale-110"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
 
-                    {/* Overlay MELHORADO */}
                     <div className={`absolute inset-0 bg-black/75 transition-all duration-500 ${
-                      hoveredService === services[1].id ? 'opacity-100' : 'opacity-0'
+                      hoveredService === service.id ? 'opacity-100' : 'opacity-0'
                     }`}>
-                      <div className="absolute inset-0 flex items-center justify-center p-8">
+                      <div className="absolute inset-0 flex items-center justify-center p-4">
                         <div className="text-center text-white">
-                          <h4 className="text-2xl font-bold mb-6">Características:</h4>
-                          <ul className="space-y-3 text-lg">
-                            {services[1].features.map((feature, index) => (
-                              <li key={index} className="opacity-95 font-medium">• {feature}</li>
+                          <h4 className="text-lg font-bold mb-4">Características:</h4>
+                          <ul className="space-y-2 text-sm">
+                            {service.features.map((feature, fIndex) => (
+                              <li key={fIndex} className="opacity-95 font-medium">• {feature}</li>
                             ))}
                           </ul>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="lg:order-1 lg:col-span-1 space-y-4 text-right">
-                  <p className="text-gray-600 text-sm font-medium">{services[1].subtitle}</p>
-                  <h3 className="text-3xl font-bold text-black">{services[1].title}</h3>
-                  <p className="text-gray-700 leading-relaxed font-medium text-lg">
-                    {services[1].description}
-                  </p>
-                </div>
-              </div>
-            </div>
 
-            {/* Terceiro serviço - MAIOR e mais à esquerda */}
-            <div className="service-card mr-auto lg:max-w-5xl"
-                 onMouseEnter={() => setHoveredService(services[2].id)}
-                 onMouseLeave={() => setHoveredService(null)}>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-                <div className="lg:col-span-2">
-                  <div className="relative overflow-hidden rounded-lg aspect-[4/3]">
-                    <Image
-                      src={services[2].image}
-                      alt={services[2].title}
-                      fill
-                      className="object-cover transition-all duration-700 hover:scale-110"
-                      sizes="(max-width: 768px) 100vw, 60vw"
-                    />
-
-                    {/* Overlay MELHORADO */}
-                    <div className={`absolute inset-0 bg-black/75 transition-all duration-500 ${
-                      hoveredService === services[2].id ? 'opacity-100' : 'opacity-0'
-                    }`}>
-                      <div className="absolute inset-0 flex items-center justify-center p-8">
-                        <div className="text-center text-white">
-                          <h4 className="text-2xl font-bold mb-6">Características:</h4>
-                          <ul className="space-y-3 text-lg">
-                            {services[2].features.map((feature, index) => (
-                              <li key={index} className="opacity-95 font-medium">• {feature}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
+                  <div className="p-6 space-y-3">
+                    <p className="text-gray-600 text-sm font-medium">{service.subtitle}</p>
+                    <h3 className="text-xl font-bold text-black">{service.title}</h3>
+                    <p className="text-gray-700 leading-relaxed font-medium">
+                      {service.description}
+                    </p>
                   </div>
                 </div>
-                <div className="lg:col-span-1 space-y-4">
-                  <p className="text-gray-600 text-sm font-medium">{services[2].subtitle}</p>
-                  <h3 className="text-3xl font-bold text-black">{services[2].title}</h3>
-                  <p className="text-gray-700 leading-relaxed font-medium text-lg">
-                    {services[2].description}
-                  </p>
-                </div>
               </div>
-            </div>
-
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Reviews Section - Layout orgânico */}
+      {/* Reviews Section - NOVOS TEXTOS ORIGINAIS */}
       <section className="py-32 px-4 bg-gray-50" ref={reviewsRef}>
         <div className="max-w-7xl mx-auto">
 
           {/* Título à esquerda */}
           <div className="mb-20">
             <h2 className="text-3xl md:text-4xl font-bold text-black max-w-2xl">
-              O Que Dizem os Nossos Clientes
+              Resultados que Falam por Si
             </h2>
           </div>
 
-          {/* Reviews em linha (como estava) */}
+          {/* Reviews com novos textos originais */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-            {/* Review 1 - Normal */}
+            {/* Review 1 - Facility Manager */}
             <div className="review-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
               <div className="flex mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -543,16 +440,15 @@ export default function Home() {
                 ))}
               </div>
               <p className="review-quote text-gray-700 mb-6 leading-relaxed font-medium text-lg">
-                "Excelente trabalho na inspeção do nosso condomínio. Relatório muito detalhado
-                e imagens de alta qualidade."
+                "Descobriram infiltrações no telhado que passavam despercebidas há meses. O relatório técnico foi fundamental para priorizar as reparações."
               </p>
               <div>
-                <p className="font-bold text-black">Maria Santos</p>
-                <p className="text-gray-500 text-sm">Administradora de Condomínio</p>
+                <p className="font-bold text-black">Ricardo Silva</p>
+                <p className="text-gray-500 text-sm">Facility Manager</p>
               </div>
             </div>
 
-            {/* Review 2 - Normal */}
+            {/* Review 2 - Administradora */}
             <div className="review-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
               <div className="flex mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -560,15 +456,15 @@ export default function Home() {
                 ))}
               </div>
               <p className="review-quote text-gray-700 mb-6 leading-relaxed font-medium text-lg">
-                "As fotografias aéreas da nossa propriedade ficaram incríveis! Vendemos a casa muito mais rápido graças ao material promocional."
+                "O acompanhamento fotográfico da requalificação do edifício permitiu-nos documentar cada etapa e justificar o investimento aos condóminos."
               </p>
               <div>
-                <p className="font-bold text-black">Carlos Oliveira</p>
-                <p className="text-gray-500 text-sm">Proprietário</p>
+                <p className="font-bold text-black">Marina Oliveira</p>
+                <p className="text-gray-500 text-sm">Administradora Predial</p>
               </div>
             </div>
 
-            {/* Review 3 - Normal */}
+            {/* Review 3 - Gestor de Energia */}
             <div className="review-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
               <div className="flex mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -576,11 +472,11 @@ export default function Home() {
                 ))}
               </div>
               <p className="review-quote text-gray-700 mb-6 leading-relaxed font-medium text-lg">
-                "Profissionalismo exemplar na cobertura do nosso evento corporativo. O vídeo final superou todas as expectativas!"
+                "A análise aérea dos painéis solares identificou 12% de perda de eficiência que não era visível do solo. ROI imediato na correção."
               </p>
               <div>
-                <p className="font-bold text-black">Ana Rodrigues</p>
-                <p className="text-gray-500 text-sm">Diretora de Marketing</p>
+                <p className="font-bold text-black">João Pereira</p>
+                <p className="text-gray-500 text-sm">Gestor de Manutenção</p>
               </div>
             </div>
 
@@ -588,36 +484,34 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Projects Section - Grid assimétrico */}
+      {/* Featured Projects Section - NOVOS TEXTOS */}
       <section className="py-32 px-4 bg-white" ref={projectsRef}>
         <div className="max-w-7xl mx-auto">
 
           {/* Título à esquerda */}
           <div className="mb-16">
             <h2 className="projects-title text-4xl md:text-5xl font-bold mb-6 text-black max-w-2xl">
-              Projetos em Destaque
+              Casos de Estudo Reais
             </h2>
             <p className="text-xl text-gray-700 max-w-3xl leading-relaxed font-medium">
-              Uma seleção dos nossos trabalhos mais recentes que demonstram
-              a qualidade e diversidade dos nossos serviços.
+              Cada projeto resolve um desafio específico. Desde diagnósticos preventivos
+              a acompanhamentos de obra, descubra como a perspetiva aérea otimiza operações.
             </p>
           </div>
 
-          {/* Grid 4 projetos + espaços para futuros */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+          {/* Desktop Grid - MANTÉM ORIGINAL */}
+          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
 
-            {/* Primeiros 4 projetos */}
             {featuredProjects.slice(0, 4).map((project, index) => (
               <div
                 key={project._id}
-                className={`project-item group cursor-pointer ${
+                className={`project-item-desktop group cursor-pointer ${
                   index === 0 ? 'lg:col-span-2 lg:row-span-2' :
                   index === 3 ? 'lg:col-span-2' : ''
                 }`}
               >
                 <div className="relative w-full h-full aspect-square rounded-lg overflow-hidden">
 
-                  {/* Só vídeo se existir, sem imagem de capa */}
                   {project.video?.asset ? (
                     <video
                       className="absolute inset-0 w-full h-full object-cover"
@@ -654,43 +548,72 @@ export default function Home() {
 
           </div>
 
+          {/* Mobile Grid - NOVO COMPORTAMENTO IGUAL À PÁGINA DE PROJETOS */}
+          <div className="md:hidden space-y-4 mb-12">
+
+            {featuredProjects.map((project, index) => (
+              <div
+                key={`mobile-${project._id}`}
+                className="project-item-mobile h-[70vh]"
+              >
+                <div className="relative w-full h-full rounded-lg overflow-hidden shadow-lg">
+
+                  {project.video?.asset ? (
+                    <video
+                      className="absolute inset-0 w-full h-full object-cover"
+                      muted
+                      loop
+                      playsInline
+                      autoPlay
+                    >
+                      <source src={project.video.asset.url} type="video/mp4" />
+                    </video>
+                  ) : project.mainImage ? (
+                    <Image
+                      src={project.mainImage.asset.url}
+                      alt={project.title}
+                      fill
+                      className="object-cover"
+                      sizes="100vw"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500 text-sm">Sem mídia</span>
+                    </div>
+                  )}
+
+                  {/* Título sempre visível mobile */}
+                  {project.title && (
+                    <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent p-4">
+                      <h3 className="font-bold text-white leading-tight text-lg">
+                        {project.title}
+                      </h3>
+                      {project.category && (
+                        <span className="text-white/90 text-sm font-medium">
+                          {project.category}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+
+          </div>
+
           <div className="text-center">
             <Link
               href="/projects"
               className="bg-black text-white px-8 py-4 rounded font-semibold hover:bg-gray-800 transition-colors duration-300 inline-block"
             >
-              Ver Todos os Projetos
+              Explorar Todos os Casos
             </Link>
           </div>
         </div>
       </section>
 
-      {/* CTA Final */}
-      <section className="py-32 px-4 bg-gray-50" ref={ctaRef}>
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="cta-title text-4xl md:text-5xl font-bold mb-8 text-black">
-            Pronto para Elevar o Seu Projeto?
-          </h2>
-          <p className="text-xl text-gray-700 mb-12 leading-relaxed font-medium">
-            Entre em contacto connosco hoje mesmo e descubra como podemos
-            transformar a sua visão em realidade.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contacts"
-              className="bg-black text-white px-8 py-4 rounded font-semibold hover:bg-gray-800 transition-colors duration-300"
-            >
-              Solicitar Orçamento
-            </Link>
-            <Link
-              href="#servicos"
-              className="border border-black text-black px-8 py-4 rounded font-semibold hover:bg-black/5 transition-colors duration-300"
-            >
-              Conhecer Serviços
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* CTA Final - Usando componente */}
+      <CTASection />
     </div>
   )
 }

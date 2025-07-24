@@ -39,16 +39,20 @@ export default function Contactos() {
       // 1. Header - HERO TYPE ANIMATION
       const headerSplit = new SplitText(headerRef.current, {
         type: "lines,words",
-        linesClass: "overflow-hidden"
+        linesClass: "overflow-visible"
       })
 
       const headerParagraphSplit = new SplitText(headerParagraphRef.current, {
         type: "lines",
-        linesClass: "overflow-hidden"
+        linesClass: "overflow-visible"
       })
 
       gsap.set(headerSplit.words, { y: 100, opacity: 0 })
       gsap.set(headerParagraphSplit.lines, { y: 50, opacity: 0 })
+
+      // Remover overflow hidden das linhas
+      gsap.set(headerSplit.lines, { overflow: "visible" })
+      gsap.set(headerParagraphSplit.lines, { overflow: "visible" })
 
       ScrollTrigger.create({
         trigger: headerRef.current,
@@ -160,13 +164,13 @@ export default function Contactos() {
   return (
     <div className="pt-24">
 
-      {/* Header - GAP REDUZIDO */}
+      {/* Header - Subtítulo atualizado */}
       <section className="py-12 md:py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-5xl">
             <h1
               ref={headerRef}
-              className="text-4xl md:text-7xl lg:text-8xl font-bold mb-8 md:mb-10 leading-[0.9] text-black"
+              className="text-4xl md:text-7xl lg:text-8xl font-bold mb-8 md:mb-10 leading-[1.1] text-black"
             >
               Entre em contacto
             </h1>
@@ -174,17 +178,18 @@ export default function Contactos() {
               ref={headerParagraphRef}
               className="text-xl md:text-2xl lg:text-3xl text-gray-700 leading-relaxed font-medium max-w-4xl"
             >
-              Solicite o seu orçamento personalizado. Vamos conversar sobre como podemos elevar o seu projeto com captação aérea profissional.
+              Tem um desafio técnico por resolver? Vamos conversar sobre como
+              a perspetiva aérea pode otimizar a sua operação.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Layout - Mobile sem sobreposição */}
+      {/* Layout - Mobile melhorado */}
       <section className="py-8 md:py-16 px-4">
         <div className="max-w-7xl mx-auto">
 
-          {/* Mobile Layout - Stack sem sobreposição */}
+          {/* Mobile Layout - Reorganizado */}
           <div className="block md:hidden space-y-8">
 
             {/* Contactos diretos mobile - NO TOPO */}
@@ -198,9 +203,6 @@ export default function Contactos() {
               <div className="text-gray-700 font-semibold">
                 Porto, Portugal
               </div>
-              <p className="text-xl font-bold text-gray-300 italic mt-4">
-                Ready for lift-off?
-              </p>
             </div>
 
             {/* Formulário mobile - SEPARADO */}
@@ -269,9 +271,12 @@ export default function Contactos() {
                       className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black focus:border-black focus:outline-none transition-all duration-300 text-lg"
                     >
                       <option value="" className="bg-white">Tipo de serviço</option>
-                      <option value="inspecoes" className="bg-white">Inspeções Técnicas</option>
-                      <option value="imobiliario" className="bg-white">Marketing Imobiliário</option>
-                      <option value="eventos" className="bg-white">Eventos & Institucional</option>
+                      <option value="inspecoes" className="bg-white">Inspeções Técnicas Aéreas</option>
+                      <option value="acompanhamento" className="bg-white">Acompanhamento de Obras</option>
+                      <option value="paineis" className="bg-white">Inspeção de Painéis Solares</option>
+                      <option value="espacos" className="bg-white">Levantamento de Espaços Exteriores</option>
+                      <option value="seguranca" className="bg-white">Verificação de Segurança</option>
+                      <option value="conteudos" className="bg-white">Conteúdos Visuais</option>
                       <option value="outro" className="bg-white">Outro</option>
                     </select>
                   </div>
@@ -287,7 +292,7 @@ export default function Contactos() {
                     required
                     rows={4}
                     className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 resize-none text-lg"
-                    placeholder="Conte-nos sobre o seu projeto..."
+                    placeholder="Conte-nos sobre o seu desafio técnico..."
                   />
                 </div>
 
@@ -304,16 +309,26 @@ export default function Contactos() {
               </form>
             </div>
 
-            {/* Imagem drone mobile - NO FINAL */}
-            <div className="w-full max-w-sm mx-auto">
-              <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
-                <Image
-                  src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                  alt="Drone profissional"
-                  fill
-                  className="object-cover"
-                  sizes="320px"
-                />
+            {/* Imagem drone mobile - REORGANIZADA com frase */}
+            <div className="relative">
+              {/* Frase "Ready for lift-off?" sobre a imagem */}
+              <div className="text-center mb-4">
+                <p className="text-2xl font-bold text-gray-400 italic">
+                  Ready for lift-off?
+                </p>
+              </div>
+
+              {/* Imagem */}
+              <div className="w-full max-w-sm mx-auto">
+                <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
+                  <Image
+                    src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                    alt="Drone profissional"
+                    fill
+                    className="object-cover"
+                    sizes="320px"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -384,9 +399,12 @@ export default function Contactos() {
                       className="w-full px-0 py-5 bg-transparent border-0 border-b-2 border-gray-200 text-black focus:border-black focus:outline-none transition-all duration-300 text-xl"
                     >
                       <option value="" className="bg-white">Tipo de serviço</option>
-                      <option value="inspecoes" className="bg-white">Inspeções Técnicas</option>
-                      <option value="imobiliario" className="bg-white">Marketing Imobiliário</option>
-                      <option value="eventos" className="bg-white">Eventos & Institucional</option>
+                      <option value="inspecoes" className="bg-white">Inspeções Técnicas Aéreas</option>
+                      <option value="acompanhamento" className="bg-white">Acompanhamento de Obras</option>
+                      <option value="paineis" className="bg-white">Inspeção de Painéis Solares</option>
+                      <option value="espacos" className="bg-white">Levantamento de Espaços Exteriores</option>
+                      <option value="seguranca" className="bg-white">Verificação de Segurança</option>
+                      <option value="conteudos" className="bg-white">Conteúdos Visuais</option>
                       <option value="outro" className="bg-white">Outro</option>
                     </select>
                   </div>
@@ -401,7 +419,7 @@ export default function Contactos() {
                     required
                     rows={5}
                     className="w-full px-0 py-5 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 resize-none text-xl"
-                    placeholder="Conte-nos sobre o seu projeto..."
+                    placeholder="Conte-nos sobre o seu desafio técnico..."
                   />
                 </div>
 
