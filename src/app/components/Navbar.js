@@ -1,13 +1,14 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
+  const mobileMenuRef = useRef(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,6 +18,25 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  // Fechar menu ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('touchstart', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('touchstart', handleClickOutside)
+    }
+  }, [isMobileMenuOpen])
 
   const navLinks = [
     { href: '/about', label: 'Sobre' },
@@ -35,6 +55,7 @@ export default function Navbar() {
 
   return (
     <nav
+      ref={mobileMenuRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled || !isHomePage
           ? 'bg-white/95 backdrop-blur-md border-b border-black/10 shadow-sm'
@@ -115,26 +136,21 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Navigation - COM FUNDO */}
+        {/* Mobile Navigation - ESPAÇAMENTO MELHORADO */}
         <div
           className={`md:hidden transition-all duration-300 ease-in-out bg-white border-t border-gray-200 ${
             isMobileMenuOpen
-              ? 'max-h-screen opacity-100 pb-4'
+              ? 'max-h-screen opacity-100 pb-6'
               : 'max-h-0 opacity-0 overflow-hidden'
           }`}
         >
-          <div className="pt-4 space-y-2">
+          <div className="pt-6 px-4 space-y-4">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`block py-2 transition-colors duration-200 font-semibold ${
-                  isScrolled || !isHomePage
-                    ? 'text-black/80 hover:text-black'
-                    : 'text-white/90 hover:text-white'
-                } ${
-                  isActiveLink(link.href, link.isAnchor) ?
-                    (isScrolled || !isHomePage ? 'text-black' : 'text-white') : ''
+                className={`block py-3 px-2 transition-colors duration-200 font-semibold text-lg text-black/80 hover:text-black hover:bg-gray-50 rounded-md ${
+                  isActiveLink(link.href, link.isAnchor) ? 'text-black bg-gray-50' : ''
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >

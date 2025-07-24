@@ -66,16 +66,20 @@ export default function Projetos() {
       if (headerRef.current && headerParagraphRef.current) {
         const headerSplit = new SplitText(headerRef.current, {
           type: "lines,words",
-          linesClass: "overflow-hidden"
+          linesClass: "overflow-visible"
         })
 
         const headerParagraphSplit = new SplitText(headerParagraphRef.current, {
           type: "lines",
-          linesClass: "overflow-hidden"
+          linesClass: "overflow-visible"
         })
 
         gsap.set(headerSplit.words, { y: 100, opacity: 0 })
         gsap.set(headerParagraphSplit.lines, { y: 50, opacity: 0 })
+
+        // Remover overflow hidden das linhas
+        gsap.set(headerSplit.lines, { overflow: "visible" })
+        gsap.set(headerParagraphSplit.lines, { overflow: "visible" })
 
         ScrollTrigger.create({
           trigger: headerRef.current,
@@ -132,21 +136,23 @@ export default function Projetos() {
   return (
     <div className="pt-24">
 
-      {/* Header Section - HERO TYPE */}
+      {/* Header Section - NOVOS TEXTOS */}
       <section className="py-24 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-5xl">
             <h1
               ref={headerRef}
-              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-12 leading-[0.9] text-black"
+              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-12 leading-[1.1] text-black"
             >
-              Nossos Projetos
+              Casos de Estudo Reais
             </h1>
             <p
               ref={headerParagraphRef}
               className="text-2xl md:text-3xl text-gray-700 leading-relaxed font-medium max-w-4xl"
             >
-              Uma seleção dos nossos trabalhos mais recentes em inspeções, imobiliário e eventos. Cada projeto representa o nosso compromisso com a excelência e inovação.
+              Cada projeto documenta uma solução técnica específica. Desde diagnósticos
+              preventivos até acompanhamentos complexos, descubra como resolvemos
+              desafios reais de gestão e manutenção.
             </p>
           </div>
         </div>
@@ -172,7 +178,7 @@ export default function Projetos() {
                   ))}
                 </div>
               </div>
-              <p className="text-gray-500 text-xl mt-8 font-medium">Carregando projetos...</p>
+              <p className="text-gray-500 text-xl mt-8 font-medium">Carregando casos de estudo...</p>
             </div>
           )}
 
@@ -288,13 +294,8 @@ export default function Projetos() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <CTASection
-        title="Pronto para o Seu Próximo Projeto?"
-        description="Entre em contacto connosco e vamos discutir como podemos elevar o seu projeto com captação aérea profissional."
-        primaryButton={{ text: "Começar Projeto", href: "/contacts" }}
-        secondaryButton={{ text: "Ver Serviços", href: "/#servicos" }}
-      />
+      {/* CTA Section - Usando componente reutilizável com textos padrão */}
+      <CTASection />
     </div>
   )
 }

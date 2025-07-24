@@ -165,14 +165,14 @@ export default function Hero() {
       {/* Overlay de contraste */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/15 to-transparent" />
 
-      {/* Content - Caixa semi-transparente */}
+      {/* Content - Título original + novo subtítulo */}
       <div className="relative z-10 h-full flex flex-col justify-start pt-40 px-4">
         <div className="max-w-7xl mx-auto w-full">
 
           {/* Caixa com fundo semi-transparente */}
           <div className="max-w-sm lg:max-w-md bg-black/40 backdrop-blur-sm shadow-2xl p-6 lg:p-8 text-center">
 
-            {/* Título */}
+            {/* Título - MANTÉM O ORIGINAL */}
             <h1
               ref={titleRef}
               className="text-2xl md:text-3xl lg:text-4xl font-bold mb-5 leading-[0.9] text-white"
@@ -185,7 +185,7 @@ export default function Hero() {
               <span className="font-extrabold">Profissional</span>
             </h1>
 
-            {/* Subtítulo */}
+            {/* Subtítulo - INFORMATIVO E ESPECÍFICO */}
             <div ref={subtitleRef} className="mb-6">
               <p
                 className="text-sm md:text-base lg:text-lg text-white font-semibold"
@@ -193,11 +193,11 @@ export default function Hero() {
                   textShadow: '1px 1px 6px rgba(0,0,0,0.8)'
                 }}
               >
-                Transformamos perspectivas em experiências cinematográficas
+                Imagens aéreas para gestão técnica e energética
               </p>
             </div>
 
-            {/* Botões */}
+            {/* Botões - ATUALIZADOS */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/projects"
@@ -212,7 +212,7 @@ export default function Hero() {
                   textShadow: '1px 1px 4px rgba(0,0,0,0.6)'
                 }}
               >
-                Nossos Serviços
+                Conhecer Serviços
               </Link>
             </div>
           </div>

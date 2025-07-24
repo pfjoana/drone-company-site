@@ -64,10 +64,13 @@ export default function Sobre() {
       // 1. Statement Principal - HERO TYPE
       const statementSplit = new SplitText(statementRef.current, {
         type: "lines,words",
-        linesClass: "overflow-hidden"
+        linesClass: "overflow-visible" // Mudar para visible
       })
 
       gsap.set(statementSplit.words, { y: 100, opacity: 0 })
+
+      // Remover overflow hidden das linhas após criar o split
+      gsap.set(statementSplit.lines, { overflow: "visible" })
 
       ScrollTrigger.create({
         trigger: statementRef.current,
@@ -203,33 +206,36 @@ export default function Sobre() {
 
   const staticData = {
     name: "Paulo Silva",
-    title: "Piloto Certificado & Editor de Vídeo",
-    certification: "ANAC A1/A3 • Operador Registado",
+    credentials: [
+      "Facility Management • Porto Business School",
+      "Piloto Certificado ANAC A1/A3"
+    ],
     description: [
-      "Da pilotagem à pós-produção. Especialista que combina skills técnicos de voo com storytelling visual cinematográfico.",
-      "Processo completo. Da planificação do voo até ao cut final. Cada projeto é uma narrativa visual que supera expectativas."
+      "Formado em Facility Management e piloto certificado, Paulo combina conhecimento técnico de gestão de ativos com a capacidade de capturar dados aéreos precisos. Esta dupla competência permite identificar problemas que métodos convencionais não conseguem detetar, oferecendo soluções visuais que transformam a forma como as operações são geridas."
     ],
     skills: [
-      "Pilotagem Profissional de Drones",
-      "Edição de Vídeo & Pós-Produção",
-      "Fotografia Aérea & Cinematografia",
-      "Inspeções Técnicas Especializadas",
-      "Storytelling Visual"
+      "Gestão Técnica de Ativos",
+      "Operação Profissional de Drones",
+      "Análise e Diagnóstico Aéreo",
+      "Relatórios Técnicos Especializados",
+      "Monitorização de Infraestruturas",
+      "Otimização de Operações"
     ]
   }
 
   return (
     <div className="pt-24">
 
-      {/* Statement - GAP REDUZIDO */}
+      {/* Statement - NOVO TÍTULO */}
       <section className="py-12 md:py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-5xl">
             <h1
               ref={statementRef}
-              className="text-4xl md:text-7xl lg:text-8xl font-bold mb-6 md:mb-8 leading-[0.9] text-black"
+              className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 md:mb-8 leading-[1.2] text-black"
+              style={{ paddingBottom: '0.1em' }}
             >
-              Transformamos perspectivas em experiências
+              Da gestão ao voo:<br />uma abordagem única
             </h1>
           </div>
         </div>
@@ -254,9 +260,7 @@ export default function Sobre() {
                     sizes="320px"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                    <span className="text-6xl">👨‍✈️</span>
-                  </div>
+                  <div className="w-full h-full bg-gray-200"></div>
                 )}
               </div>
             </div>
@@ -264,20 +268,19 @@ export default function Sobre() {
             {/* Conteúdo mobile */}
             <div className="text-center space-y-6">
               <p ref={mobileDecorativeRef} className="text-lg font-bold text-gray-300 italic">
-                Conheça o piloto, editor, storyteller
+                Conheça quem está por trás da All Perspectives
               </p>
 
               <div>
                 <h2 ref={mobileTitleRef} className="text-3xl font-bold text-black mb-3">
                   {staticData.name}
                 </h2>
-                <div ref={mobileSubtitleRef}>
-                  <p className="text-lg text-gray-700 font-semibold mb-1">
-                    {staticData.title}
-                  </p>
-                  <p className="text-sm text-gray-600 font-medium">
-                    {staticData.certification}
-                  </p>
+                <div ref={mobileSubtitleRef} className="space-y-1">
+                  {staticData.credentials.map((credential, index) => (
+                    <p key={index} className="text-base text-gray-600 font-medium">
+                      {credential}
+                    </p>
+                  ))}
                 </div>
               </div>
 
@@ -286,17 +289,16 @@ export default function Sobre() {
                   <p
                     key={index}
                     ref={el => mobileTextRefs.current[index] = el}
-                    className="font-semibold"
-                    dangerouslySetInnerHTML={{
-                      __html: paragraph.replace(/^([^.]+\.)/, '<strong>$1</strong>')
-                    }}
-                  />
+                    className="font-medium"
+                  >
+                    {paragraph}
+                  </p>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Desktop Layout - Original */}
+          {/* Desktop Layout - Adaptado */}
           <div className="hidden md:block relative">
 
             {/* Foto grande */}
@@ -314,9 +316,7 @@ export default function Sobre() {
                     sizes="(max-width: 1024px) 400px, 450px"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                    <span className="text-8xl">👨‍✈️</span>
-                  </div>
+                  <div className="w-full h-full bg-gray-200"></div>
                 )}
               </div>
             </div>
@@ -326,20 +326,19 @@ export default function Sobre() {
 
               <div className="mb-12">
                 <p ref={decorativeRef} className="text-xl md:text-2xl font-bold text-gray-300 italic mb-8">
-                  Conheça o piloto, editor, storyteller
+                  Conheça quem está por trás da All Perspectives
                 </p>
 
                 <div>
                   <h2 ref={titleRef} className="text-4xl lg:text-5xl font-bold text-black mb-4">
                     {staticData.name}
                   </h2>
-                  <div ref={subtitleRef}>
-                    <p className="text-xl text-gray-700 font-semibold mb-2">
-                      {staticData.title}
-                    </p>
-                    <p className="text-base text-gray-600 font-medium">
-                      {staticData.certification}
-                    </p>
+                  <div ref={subtitleRef} className="space-y-2">
+                    {staticData.credentials.map((credential, index) => (
+                      <p key={index} className="text-base text-gray-600 font-medium">
+                        {credential}
+                      </p>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -349,11 +348,10 @@ export default function Sobre() {
                   <p
                     key={index}
                     ref={el => textRefs.current[index] = el}
-                    className="font-semibold"
-                    dangerouslySetInnerHTML={{
-                      __html: paragraph.replace(/^([^.]+\.)/, '<strong>$1</strong>')
-                    }}
-                  />
+                    className="font-medium"
+                  >
+                    {paragraph}
+                  </p>
                 ))}
               </div>
             </div>
@@ -361,7 +359,7 @@ export default function Sobre() {
         </div>
       </section>
 
-      {/* Skills Section - COM ANIMAÇÕES */}
+      {/* Skills Section - Renovadas */}
       <section className="py-16 md:py-24 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
@@ -369,7 +367,7 @@ export default function Sobre() {
             {/* Skills */}
             <div ref={skillsRef}>
               <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-black mb-6 md:mb-8 text-center lg:text-left">
-                Especialidades & Skills
+                Áreas de Especialização
               </h3>
               <ul className="space-y-3 md:space-y-4 max-w-md mx-auto lg:mx-0">
                 {staticData.skills.map((skill, index) => (
@@ -384,15 +382,61 @@ export default function Sobre() {
               </ul>
             </div>
 
-            {/* Citação - COM ANIMAÇÃO */}
+            {/* Citação - Completamente nova */}
             <div className="text-center lg:text-right">
               <blockquote className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 leading-relaxed italic">
-                "Cada voo é uma oportunidade de capturar algo único.
-                Cada frame conta uma história."
+                "A verdadeira inovação acontece quando unimos conhecimento técnico
+                com uma perspetiva diferente. É isso que fazemos todos os dias."
               </blockquote>
               <p className="text-base md:text-lg text-gray-600 mt-4 md:mt-6 font-medium">
-                — Filosofia de trabalho que guia cada projeto
+                — A abordagem que define cada projeto da All Perspectives
               </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Seção adicional - Renovada */}
+      <section className="py-16 md:py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+
+            {/* Abordagem */}
+            <div className="text-center md:text-left">
+              <h3 className="text-2xl md:text-3xl font-bold text-black mb-6">
+                A Nossa Abordagem
+              </h3>
+              <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
+                <p className="font-medium">
+                  Cada desafio técnico tem características únicas. Por isso,
+                  combinamos conhecimento especializado com tecnologia de ponta
+                  para criar soluções à medida.
+                </p>
+                <p className="font-medium">
+                  Não oferecemos apenas um serviço de drone - oferecemos uma
+                  perspetiva estratégica que transforma dados aéreos em decisões
+                  operacionais inteligentes.
+                </p>
+              </div>
+            </div>
+
+            {/* Missão */}
+            <div className="text-center md:text-right">
+              <h3 className="text-2xl md:text-3xl font-bold text-black mb-6">
+                Missão & Valores
+              </h3>
+              <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
+                <p className="font-medium">
+                  Democratizar o acesso a informações técnicas de alta qualidade,
+                  tornando a gestão de ativos mais eficiente e preventiva.
+                </p>
+                <p className="font-medium">
+                  Priorizamos a precisão, transparência e impacto real nos resultados
+                  dos nossos clientes. Cada projeto é uma oportunidade de gerar
+                  valor concreto.
+                </p>
+              </div>
             </div>
 
           </div>

@@ -1,5 +1,4 @@
 'use client'
-
 import { useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { gsap } from 'gsap'
@@ -7,9 +6,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 
 export default function CTASection({
-  title = "Pronto para Elevar o Seu Projeto?",
-  description = "Entre em contacto connosco hoje mesmo e descubra como podemos transformar a sua visão em realidade.",
-  primaryButton = { text: "Solicitar Orçamento", href: "/contacts" },
+  title = "Tem um Desafio Técnico por Resolver?",
+  description = "Cada estrutura, cada projeto, cada problema tem uma solução aérea. Vamos conversar sobre como podemos elevar a eficiência da sua operação.",
+  primaryButton = { text: "Pedir Orçamento", href: "/contacts" },
   secondaryButton = { text: "Conhecer Serviços", href: "/#servicos" },
   background = "bg-gray-50"
 }) {
