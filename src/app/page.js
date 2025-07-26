@@ -154,6 +154,12 @@ export default function Home() {
 
         gsap.set(card, { y: 50, opacity: 0, scale: 0.95 })
 
+        // Para mobile - mostrar overlay com scroll
+        const overlay = card.querySelector('.service-overlay')
+        if (overlay) {
+          gsap.set(overlay, { opacity: 0 })
+        }
+
         ScrollTrigger.create({
           trigger: card,
           start: "top 80%",
@@ -166,6 +172,15 @@ export default function Home() {
               ease: "back.out(1.7)",
               delay: cardIndex * 0.1
             })
+
+            // Em mobile, mostrar overlay após a animação do card
+            if (overlay && window.innerWidth < 768) {
+              gsap.to(overlay, {
+                opacity: 1,
+                duration: 0.6,
+                delay: cardIndex * 0.1 + 0.5
+              })
+            }
           }
         })
       })
@@ -388,8 +403,8 @@ export default function Home() {
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
 
-                    <div className={`absolute inset-0 bg-black/75 transition-all duration-500 ${
-                      hoveredService === service.id ? 'opacity-100' : 'opacity-0'
+                    <div className={`service-overlay absolute inset-0 bg-black/75 transition-all duration-500 ${
+                      hoveredService === service.id ? 'opacity-100' : 'opacity-0 md:opacity-0'
                     }`}>
                       <div className="absolute inset-0 flex items-center justify-center p-4">
                         <div className="text-center text-white">
@@ -537,11 +552,16 @@ export default function Home() {
                     </div>
                   )}
 
-                  <div className="absolute top-2 left-2">
-                    <span className="bg-black/60 text-white text-xs px-2 py-1 rounded">
-                      {project.category}
-                    </span>
-                  </div>
+                  {/* Título hover desktop */}
+                  {project.title && (
+                    <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
+                      <h3 className={`font-bold text-white leading-tight ${
+                        index === 0 ? 'text-lg lg:text-xl' : 'text-sm lg:text-base'
+                      }`}>
+                        {project.title}
+                      </h3>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
