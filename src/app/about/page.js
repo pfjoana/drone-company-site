@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { client, urlFor } from '../../lib/sanity'
 
-// GSAP imports
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
@@ -64,7 +63,7 @@ export default function Sobre() {
       // 1. Statement Principal - HERO TYPE
       const statementSplit = new SplitText(statementRef.current, {
         type: "lines,words",
-        linesClass: "overflow-visible" // Mudar para visible
+        linesClass: "overflow-visible"
       })
 
       gsap.set(statementSplit.words, { y: 100, opacity: 0 })
@@ -216,8 +215,6 @@ export default function Sobre() {
     skills: [
       "Gestão Técnica de Ativos",
       "Operação Profissional de Drones",
-      "Análise e Diagnóstico Aéreo",
-      "Relatórios Técnicos Especializados",
       "Monitorização de Infraestruturas",
       "Otimização de Operações"
     ]
@@ -226,7 +223,6 @@ export default function Sobre() {
   return (
     <div className="pt-24">
 
-      {/* Statement - NOVO TÍTULO */}
       <section className="py-12 md:py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-5xl">
@@ -260,7 +256,7 @@ export default function Sobre() {
                     sizes="320px"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gray-200"></div>
+                  <div className="w-full h-full bg-gray-200">Não foi possível carregar imagem</div>
                 )}
               </div>
             </div>
@@ -298,10 +294,9 @@ export default function Sobre() {
             </div>
           </div>
 
-          {/* Desktop Layout - Adaptado */}
+          {/* Desktop Layout*/}
           <div className="hidden md:block relative">
 
-            {/* Foto grande */}
             <div
               ref={desktopImageRef}
               className="absolute left-8 top-0 w-80 h-96 lg:w-[400px] lg:h-[480px] xl:w-[450px] xl:h-[540px]"
@@ -316,7 +311,7 @@ export default function Sobre() {
                     sizes="(max-width: 1024px) 400px, 450px"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gray-200"></div>
+                  <div className="w-full h-full bg-gray-200">Não foi possível carregar imagem</div>
                 )}
               </div>
             </div>
@@ -359,12 +354,11 @@ export default function Sobre() {
         </div>
       </section>
 
-      {/* Skills Section - Renovadas */}
+      {/* Skills Section */}
       <section className="py-16 md:py-24 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
-            {/* Skills */}
             <div ref={skillsRef}>
               <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-black mb-6 md:mb-8 text-center lg:text-left">
                 Áreas de Especialização
@@ -382,7 +376,6 @@ export default function Sobre() {
               </ul>
             </div>
 
-            {/* Citação - Completamente nova */}
             <div className="text-center lg:text-right">
               <blockquote className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 leading-relaxed italic">
                 "A verdadeira inovação acontece quando unimos conhecimento técnico
@@ -397,7 +390,7 @@ export default function Sobre() {
         </div>
       </section>
 
-      {/* Seção adicional - Renovada */}
+      {/* Seção adicional */}
       <section className="py-16 md:py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
@@ -409,9 +402,7 @@ export default function Sobre() {
               </h3>
               <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
                 <p className="font-medium">
-                  Cada desafio técnico tem características únicas. Por isso,
-                  combinamos conhecimento especializado com tecnologia de ponta
-                  para criar soluções à medida.
+                  Cada desafio tem características únicas.
                 </p>
                 <p className="font-medium">
                   Não oferecemos apenas um serviço de drone - oferecemos uma
@@ -428,13 +419,7 @@ export default function Sobre() {
               </h3>
               <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
                 <p className="font-medium">
-                  Democratizar o acesso a informações técnicas de alta qualidade,
-                  tornando a gestão de ativos mais eficiente e preventiva.
-                </p>
-                <p className="font-medium">
-                  Priorizamos a precisão, transparência e impacto real nos resultados
-                  dos nossos clientes. Cada projeto é uma oportunidade de gerar
-                  valor concreto.
+                  Oferecer soluções de captação aérea que combinam precisão técnica e criatividade visual, acrescentando valor real à gestão de edifícios, infraestruturas e comunicação institucional. Ajudamos os nossos clientes a ver melhor, decidir melhor e agir com confiança.
                 </p>
               </div>
             </div>

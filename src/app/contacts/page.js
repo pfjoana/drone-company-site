@@ -444,10 +444,10 @@ export default function Contactos() {
                 className="space-y-6 text-xl text-black font-bold mb-12"
               >
                 <div className="hover:text-gray-600 transition-colors cursor-pointer">
-                  email@allperspectives.com
+                  geral@allperspectives.pt
                 </div>
                 <div className="hover:text-gray-600 transition-colors cursor-pointer">
-                  +351 123 456 789
+                  +351 919 490 318
                 </div>
                 <div className="text-gray-700 font-semibold">
                   Porto, Portugal
@@ -463,7 +463,7 @@ export default function Contactos() {
             </div>
 
             {/* Imagem drone - desktop */}
-            <div
+            {/* <div
               ref={droneRef}
               className="absolute right-0 top-64 w-[380px] h-64 lg:w-[420px] lg:h-72 xl:w-[450px] xl:h-80 z-0"
             >
@@ -476,7 +476,7 @@ export default function Contactos() {
                   sizes="(max-width: 1024px) 420px, 450px"
                 />
               </div>
-            </div>
+            </div> */}
 
           </div>
         </div>

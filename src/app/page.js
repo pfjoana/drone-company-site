@@ -7,7 +7,6 @@ import Hero from './components/Hero'
 import CTASection from './components/CTASection'
 import { client, urlFor } from '../lib/sanity'
 
-// GSAP imports
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
@@ -16,7 +15,6 @@ export default function Home() {
   const [hoveredService, setHoveredService] = useState(null)
   const [featuredProjects, setFeaturedProjects] = useState([])
 
-  // Refs para animações
   const statementRef = useRef(null)
   const servicesRef = useRef(null)
   const reviewsRef = useRef(null)
@@ -108,7 +106,7 @@ export default function Home() {
         }
       })
 
-      // 2. Services Section - TÍTULOS + SUBTÍTULO + TEXTO EM BLOCO
+      // 2. Services Section
       const serviceTitle = servicesRef.current.querySelector('.services-title')
       const serviceSubtitle = servicesRef.current.querySelector('.services-subtitle')
 
@@ -185,108 +183,108 @@ export default function Home() {
         })
       })
 
-      // 3. Reviews Section - QUOTES EM BLOCO
-      const reviewQuotes = reviewsRef.current.querySelectorAll('.review-quote')
-      reviewQuotes.forEach((quote, index) => {
-        const quoteSplit = new SplitText(quote, {
-          type: "lines",
-          linesClass: "overflow-hidden"
-        })
+      // // 3. Reviews Section - QUOTES EM BLOCO
+      // const reviewQuotes = reviewsRef.current.querySelectorAll('.review-quote')
+      // reviewQuotes.forEach((quote, index) => {
+      //   const quoteSplit = new SplitText(quote, {
+      //     type: "lines",
+      //     linesClass: "overflow-hidden"
+      //   })
 
-        gsap.set(quoteSplit.lines, { y: 30, opacity: 0 })
+      //   gsap.set(quoteSplit.lines, { y: 30, opacity: 0 })
 
-        ScrollTrigger.create({
-          trigger: quote,
-          start: "top 85%",
-          onEnter: () => {
-            gsap.to(quoteSplit.lines, {
-              y: 0,
-              opacity: 1,
-              duration: 0.6,
-              stagger: 0.05,
-              ease: "power2.out"
-            })
-          }
-        })
-      })
+      //   ScrollTrigger.create({
+      //     trigger: quote,
+      //     start: "top 85%",
+      //     onEnter: () => {
+      //       gsap.to(quoteSplit.lines, {
+      //         y: 0,
+      //         opacity: 1,
+      //         duration: 0.6,
+      //         stagger: 0.05,
+      //         ease: "power2.out"
+      //       })
+      //     }
+      //   })
+      // })
 
-      // 4. Projects Section - HERO TYPE ANIMATION
-      const projectTitle = projectsRef.current.querySelector('.projects-title')
-      const projectTitleSplit = new SplitText(projectTitle, {
-        type: "lines,words",
-        linesClass: "overflow-hidden"
-      })
+      // // 4. Projects Section - HERO TYPE ANIMATION
+      // const projectTitle = projectsRef.current.querySelector('.projects-title')
+      // const projectTitleSplit = new SplitText(projectTitle, {
+      //   type: "lines,words",
+      //   linesClass: "overflow-hidden"
+      // })
 
-      const projectParagraph = projectsRef.current.querySelector('p')
-      const projectParagraphSplit = new SplitText(projectParagraph, {
-        type: "lines",
-        linesClass: "overflow-hidden"
-      })
+      // const projectParagraph = projectsRef.current.querySelector('p')
+      // const projectParagraphSplit = new SplitText(projectParagraph, {
+      //   type: "lines",
+      //   linesClass: "overflow-hidden"
+      // })
 
-      gsap.set(projectTitleSplit.words, { y: 100, opacity: 0 })
-      gsap.set(projectParagraphSplit.lines, { y: 30, opacity: 0 })
+      // gsap.set(projectTitleSplit.words, { y: 100, opacity: 0 })
+      // gsap.set(projectParagraphSplit.lines, { y: 30, opacity: 0 })
 
-      ScrollTrigger.create({
-        trigger: projectsRef.current,
-        start: "top 80%",
-        onEnter: () => {
-          gsap.to(projectTitleSplit.words, {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            stagger: 0.08,
-            ease: "power4.out"
-          })
+      // ScrollTrigger.create({
+      //   trigger: projectsRef.current,
+      //   start: "top 80%",
+      //   onEnter: () => {
+      //     gsap.to(projectTitleSplit.words, {
+      //       y: 0,
+      //       opacity: 1,
+      //       duration: 1,
+      //       stagger: 0.08,
+      //       ease: "power4.out"
+      //     })
 
-          gsap.to(projectParagraphSplit.lines, {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: "power3.out",
-            delay: 0.6
-          })
-        }
-      })
+      //     gsap.to(projectParagraphSplit.lines, {
+      //       y: 0,
+      //       opacity: 1,
+      //       duration: 0.8,
+      //       stagger: 0.1,
+      //       ease: "power3.out",
+      //       delay: 0.6
+      //     })
+      //   }
+      // })
 
-      // Project items - DESKTOP ONLY
-      const projectItems = projectsRef.current.querySelectorAll('.project-item-desktop')
-      if (projectItems.length > 0) {
-        gsap.set(projectItems, { scale: 0.9, opacity: 0 })
+      // // Project items - DESKTOP ONLY
+      // const projectItems = projectsRef.current.querySelectorAll('.project-item-desktop')
+      // if (projectItems.length > 0) {
+      //   gsap.set(projectItems, { scale: 0.9, opacity: 0 })
 
-        gsap.to(projectItems, {
-          scale: 1,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "back.out(1.7)",
-          scrollTrigger: {
-            trigger: projectItems[0],
-            start: "top 70%",
-            toggleActions: "play none none reverse"
-          }
-        })
-      }
+      //   gsap.to(projectItems, {
+      //     scale: 1,
+      //     opacity: 1,
+      //     duration: 0.8,
+      //     stagger: 0.1,
+      //     ease: "back.out(1.7)",
+      //     scrollTrigger: {
+      //       trigger: projectItems[0],
+      //       start: "top 70%",
+      //       toggleActions: "play none none reverse"
+      //     }
+      //   })
+      // }
 
-      // Project items - MOBILE ONLY
-      const projectItemsMobile = projectsRef.current.querySelectorAll('.project-item-mobile')
-      if (projectItemsMobile.length > 0) {
-        gsap.set(projectItemsMobile, { y: 50, opacity: 0 })
+      // // Project items - MOBILE ONLY
+      // const projectItemsMobile = projectsRef.current.querySelectorAll('.project-item-mobile')
+      // if (projectItemsMobile.length > 0) {
+      //   gsap.set(projectItemsMobile, { y: 50, opacity: 0 })
 
-        ScrollTrigger.create({
-          trigger: projectItemsMobile[0],
-          start: "top 80%",
-          onEnter: () => {
-            gsap.to(projectItemsMobile, {
-              y: 0,
-              opacity: 1,
-              duration: 0.6,
-              stagger: 0.1,
-              ease: "power3.out"
-            })
-          }
-        })
-      }
+      //   ScrollTrigger.create({
+      //     trigger: projectItemsMobile[0],
+      //     start: "top 80%",
+      //     onEnter: () => {
+      //       gsap.to(projectItemsMobile, {
+      //         y: 0,
+      //         opacity: 1,
+      //         duration: 0.6,
+      //         stagger: 0.1,
+      //         ease: "power3.out"
+      //       })
+      //     }
+      //   })
+      // }
 
     })
 
@@ -298,7 +296,7 @@ export default function Home() {
       id: 'inspecoes-aereas',
       title: 'Inspeções Técnicas Aéreas',
       subtitle: 'Estruturas & Coberturas',
-      description: 'Inspeções visuais de estruturas de difícil acesso com relatório técnico ilustrado.',
+      description: 'Inspeções visuais de estruturas de difícil acesso.',
       features: ['Coberturas, caleiras, claraboias', 'Telhados industriais', 'Equipamentos AVAC e chaminés'],
       image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
     },
@@ -375,11 +373,10 @@ export default function Home() {
           <div className="flex justify-end mb-20">
             <div className="max-w-2xl text-right">
               <h2 className="services-title text-4xl md:text-5xl font-bold mb-6 text-black">
-                Expertise Técnico Especializado
+                Especialização técnica ao serviço da gestão
               </h2>
               <p className="services-subtitle text-xl text-gray-700 leading-relaxed font-semibold">
-                Da inspeção à documentação, cada serviço é concebido para resolver
-                desafios específicos da gestão moderna de infraestruturas.
+                Cada serviço é concebido para resolver desafios específicos da gestão moderna de infraestruturas.
               </p>
             </div>
           </div>
@@ -434,20 +431,17 @@ export default function Home() {
       </section>
 
       {/* Reviews Section - NOVOS TEXTOS ORIGINAIS */}
-      <section className="py-32 px-4 bg-gray-50" ref={reviewsRef}>
+      {/* <section className="py-32 px-4 bg-gray-50" ref={reviewsRef}>
         <div className="max-w-7xl mx-auto">
 
-          {/* Título à esquerda */}
           <div className="mb-20">
             <h2 className="text-3xl md:text-4xl font-bold text-black max-w-2xl">
               Resultados que Falam por Si
             </h2>
           </div>
 
-          {/* Reviews com novos textos originais */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-            {/* Review 1 - Facility Manager */}
             <div className="review-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
               <div className="flex mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -463,7 +457,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Review 2 - Administradora */}
             <div className="review-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
               <div className="flex mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -479,7 +472,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Review 3 - Gestor de Energia */}
             <div className="review-card bg-white rounded-lg p-6 shadow-sm border border-gray-100">
               <div className="flex mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -497,13 +489,12 @@ export default function Home() {
 
           </div>
         </div>
-      </section>
+      </section> */}
 
-      {/* Featured Projects Section - NOVOS TEXTOS */}
-      <section className="py-32 px-4 bg-white" ref={projectsRef}>
+      {/* Featured Projects Section */}
+      {/* <section className="py-32 px-4 bg-white" ref={projectsRef}>
         <div className="max-w-7xl mx-auto">
 
-          {/* Título à esquerda */}
           <div className="mb-16">
             <h2 className="projects-title text-4xl md:text-5xl font-bold mb-6 text-black max-w-2xl">
               Casos de Estudo Reais
@@ -514,7 +505,6 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Desktop Grid - MANTÉM ORIGINAL */}
           <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
 
             {featuredProjects.slice(0, 4).map((project, index) => (
@@ -552,7 +542,6 @@ export default function Home() {
                     </div>
                   )}
 
-                  {/* Título hover desktop */}
                   {project.title && (
                     <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
                       <h3 className={`font-bold text-white leading-tight ${
@@ -566,10 +555,10 @@ export default function Home() {
               </div>
             ))}
 
-          </div>
+          </div> */}
 
           {/* Mobile Grid - NOVO COMPORTAMENTO IGUAL À PÁGINA DE PROJETOS */}
-          <div className="md:hidden space-y-4 mb-12">
+          {/* <div className="md:hidden space-y-4 mb-12">
 
             {featuredProjects.map((project, index) => (
               <div
@@ -602,7 +591,6 @@ export default function Home() {
                     </div>
                   )}
 
-                  {/* Título sempre visível mobile */}
                   {project.title && (
                     <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent p-4">
                       <h3 className="font-bold text-white leading-tight text-lg">
@@ -630,7 +618,7 @@ export default function Home() {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* CTA Final - Usando componente */}
       <CTASection />
