@@ -346,7 +346,7 @@ export default function Sobre() {
                     sizes="320px"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gray-200">Não foi possível carregar imagem</div>
+                  <div className="w-full h-full bg-gray-200"></div>
                 )}
               </div>
             </div>
@@ -401,7 +401,7 @@ export default function Sobre() {
                     sizes="(max-width: 1024px) 400px, 450px"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gray-200">Não foi possível carregar imagem</div>
+                  <div className="w-full h-full bg-gray-200"></div>
                 )}
               </div>
             </div>
