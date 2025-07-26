@@ -44,10 +44,10 @@ export default function Footer() {
             <h4 className="font-semibold mb-4 text-white">Contacto</h4>
             <div className="space-y-2 text-gray-400">
               <p className="hover:text-white transition-colors cursor-pointer">
-                email@allperspectives.com
+                geral@allperspectives.pt
               </p>
               <p className="hover:text-white transition-colors cursor-pointer">
-                +351 123 456 789
+                +351 919 490 318
               </p>
               <p className="text-gray-300 font-medium">
                 Porto, Portugal

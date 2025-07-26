@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { client, urlFor } from '../../lib/sanity'
 
-// GSAP imports
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
@@ -25,6 +24,8 @@ export default function Sobre() {
   const subtitleRef = useRef(null)
   const textRefs = useRef([])
   const skillsRef = useRef(null)
+  const valuesRef = useRef(null)
+  const missionSectionRef = useRef(null) // NOVA REF PARA MISSÃO/ABORDAGEM
 
   // Register GSAP plugins
   useEffect(() => {
@@ -59,12 +60,14 @@ export default function Sobre() {
   useEffect(() => {
     if (!aboutData) return
 
-    const ctx = gsap.context(() => {
+    // Aguardar um frame para garantir que as refs estão disponíveis
+    requestAnimationFrame(() => {
+      const ctx = gsap.context(() => {
 
       // 1. Statement Principal - HERO TYPE
       const statementSplit = new SplitText(statementRef.current, {
         type: "lines,words",
-        linesClass: "overflow-visible" // Mudar para visible
+        linesClass: "overflow-visible"
       })
 
       gsap.set(statementSplit.words, { y: 100, opacity: 0 })
@@ -199,9 +202,95 @@ export default function Sobre() {
         }
       }
 
-    })
+      // 5. Mission Section Animation - SIMPLIFICADA
+      // Aguardar um pouco mais para garantir que o DOM está pronto
+      setTimeout(() => {
+        const missionSection = document.querySelector('[data-section="mission"]')
+        console.log('Mission section by selector:', missionSection)
 
-    return () => ctx.revert()
+        if (missionSection) {
+          const missionTitles = missionSection.querySelectorAll('h3')
+          const missionParagraphs = missionSection.querySelectorAll('p')
+
+          console.log('Mission titles found:', missionTitles.length)
+          console.log('Mission paragraphs found:', missionParagraphs.length)
+
+          if (missionTitles.length > 0 && missionParagraphs.length > 0) {
+            // Set initial states
+            gsap.set(missionTitles, { y: 50, opacity: 0 })
+            gsap.set(missionParagraphs, { y: 30, opacity: 0 })
+
+            ScrollTrigger.create({
+              trigger: missionSection,
+              start: "top 80%",
+              onEnter: () => {
+                console.log('Mission section animation triggered!')
+
+                gsap.to(missionTitles, {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.8,
+                  stagger: 0.2,
+                  ease: "power3.out"
+                })
+
+                gsap.to(missionParagraphs, {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.8,
+                  stagger: 0.1,
+                  ease: "power3.out",
+                  delay: 0.4
+                })
+              }
+            })
+          }
+        }
+      }, 500)
+
+      // 6. Values Section Animation - NOVA ESTRUTURA
+      if (valuesRef.current) {
+        const valuesTitle = valuesRef.current.querySelector('.values-title')
+        const valueCards = valuesRef.current.querySelectorAll('.value-card')
+
+        if (valuesTitle) {
+          const valuesTitleSplit = new SplitText(valuesTitle, {
+            type: "lines,words",
+            linesClass: "overflow-hidden"
+          })
+
+          gsap.set(valuesTitleSplit.words, { y: 100, opacity: 0 })
+          gsap.set(valueCards, { y: 50, opacity: 0, scale: 0.95 })
+
+          ScrollTrigger.create({
+            trigger: valuesRef.current,
+            start: "top 80%",
+            onEnter: () => {
+              gsap.to(valuesTitleSplit.words, {
+                y: 0,
+                opacity: 1,
+                duration: 1,
+                stagger: 0.08,
+                ease: "power4.out"
+              })
+
+              gsap.to(valueCards, {
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                duration: 0.8,
+                stagger: 0.15,
+                ease: "back.out(1.7)",
+                delay: 0.6
+              })
+            }
+          })
+        }
+        }
+      })
+
+      return () => ctx.revert()
+    })
   }, [aboutData])
 
   const staticData = {
@@ -216,8 +305,6 @@ export default function Sobre() {
     skills: [
       "Gestão Técnica de Ativos",
       "Operação Profissional de Drones",
-      "Análise e Diagnóstico Aéreo",
-      "Relatórios Técnicos Especializados",
       "Monitorização de Infraestruturas",
       "Otimização de Operações"
     ]
@@ -226,7 +313,6 @@ export default function Sobre() {
   return (
     <div className="pt-24">
 
-      {/* Statement - NOVO TÍTULO */}
       <section className="py-12 md:py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-5xl">
@@ -260,7 +346,7 @@ export default function Sobre() {
                     sizes="320px"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gray-200"></div>
+                  <div className="w-full h-full bg-gray-200">Não foi possível carregar imagem</div>
                 )}
               </div>
             </div>
@@ -298,10 +384,9 @@ export default function Sobre() {
             </div>
           </div>
 
-          {/* Desktop Layout - Adaptado */}
+          {/* Desktop Layout*/}
           <div className="hidden md:block relative">
 
-            {/* Foto grande */}
             <div
               ref={desktopImageRef}
               className="absolute left-8 top-0 w-80 h-96 lg:w-[400px] lg:h-[480px] xl:w-[450px] xl:h-[540px]"
@@ -316,7 +401,7 @@ export default function Sobre() {
                     sizes="(max-width: 1024px) 400px, 450px"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gray-200"></div>
+                  <div className="w-full h-full bg-gray-200">Não foi possível carregar imagem</div>
                 )}
               </div>
             </div>
@@ -359,12 +444,11 @@ export default function Sobre() {
         </div>
       </section>
 
-      {/* Skills Section - Renovadas */}
+      {/* Skills Section */}
       <section className="py-16 md:py-24 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
-            {/* Skills */}
             <div ref={skillsRef}>
               <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-black mb-6 md:mb-8 text-center lg:text-left">
                 Áreas de Especialização
@@ -382,7 +466,6 @@ export default function Sobre() {
               </ul>
             </div>
 
-            {/* Citação - Completamente nova */}
             <div className="text-center lg:text-right">
               <blockquote className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 leading-relaxed italic">
                 "A verdadeira inovação acontece quando unimos conhecimento técnico
@@ -397,7 +480,7 @@ export default function Sobre() {
         </div>
       </section>
 
-      {/* Seção adicional - Renovada */}
+      {/* Seção adicional - Missão & Abordagem */}
       <section className="py-16 md:py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
@@ -409,9 +492,7 @@ export default function Sobre() {
               </h3>
               <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
                 <p className="font-medium">
-                  Cada desafio técnico tem características únicas. Por isso,
-                  combinamos conhecimento especializado com tecnologia de ponta
-                  para criar soluções à medida.
+                  Cada desafio tem características únicas.
                 </p>
                 <p className="font-medium">
                   Não oferecemos apenas um serviço de drone - oferecemos uma
@@ -424,19 +505,62 @@ export default function Sobre() {
             {/* Missão */}
             <div className="text-center md:text-right">
               <h3 className="text-2xl md:text-3xl font-bold text-black mb-6">
-                Missão & Valores
+                Missão & Objetivos
               </h3>
               <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
                 <p className="font-medium">
-                  Democratizar o acesso a informações técnicas de alta qualidade,
-                  tornando a gestão de ativos mais eficiente e preventiva.
-                </p>
-                <p className="font-medium">
-                  Priorizamos a precisão, transparência e impacto real nos resultados
-                  dos nossos clientes. Cada projeto é uma oportunidade de gerar
-                  valor concreto.
+                  Oferecer soluções de captação aérea que combinam precisão técnica e criatividade visual, acrescentando valor real à gestão de edifícios, infraestruturas e comunicação institucional. Ajudamos os nossos clientes a ver melhor, decidir melhor e agir com confiança.
                 </p>
               </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* SECÇÃO DE VALORES - VERSÃO ANTERIOR COM ALINHAMENTO CENTRO */}
+      <section className="py-20 md:py-32 px-4 bg-gray-50" ref={valuesRef}>
+        <div className="max-w-7xl mx-auto">
+
+          <div className="text-center mb-16 md:mb-20">
+            <h2 className="values-title text-4xl md:text-5xl lg:text-6xl font-bold text-black">
+              Valores
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+
+            {/* Perspetiva */}
+            <div className="value-card text-center space-y-4">
+              <h3 className="text-2xl md:text-3xl font-bold text-black">
+                Perspetiva
+              </h3>
+              <p className="text-lg text-gray-700 leading-relaxed font-medium">
+                Acreditamos que ver de outro ângulo é essencial para resolver problemas,
+                comunicar com impacto e antecipar decisões.
+              </p>
+            </div>
+
+            {/* Confiança */}
+            <div className="value-card text-center space-y-4">
+              <h3 className="text-2xl md:text-3xl font-bold text-black">
+                Confiança
+              </h3>
+              <p className="text-lg text-gray-700 leading-relaxed font-medium">
+                Construímos relações com base na transparência, fiabilidade e foco
+                no que realmente importa para os nossos clientes.
+              </p>
+            </div>
+
+            {/* Eficiência */}
+            <div className="value-card text-center space-y-4">
+              <h3 className="text-2xl md:text-3xl font-bold text-black">
+                Eficiência
+              </h3>
+              <p className="text-lg text-gray-700 leading-relaxed font-medium">
+                Valorizamos o tempo e os recursos dos nossos clientes — entregamos
+                o essencial, sem desperdício.
+              </p>
             </div>
 
           </div>

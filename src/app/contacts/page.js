@@ -80,56 +80,40 @@ export default function Contactos() {
       // 2. Form animation
       gsap.set(formRef.current, { x: -50, opacity: 0 })
 
-      // Desktop - elementos à direita
-      if (rightContentRef.current && droneRef.current) {
-        gsap.set(rightContentRef.current, { x: 50, opacity: 0 })
-        gsap.set(droneRef.current, { y: 50, opacity: 0, scale: 0.9 })
-      }
-
       ScrollTrigger.create({
         trigger: formRef.current,
         start: "top 75%",
         onEnter: () => {
-          const tl = gsap.timeline()
-
-          tl.to(formRef.current, {
+          gsap.to(formRef.current, {
             x: 0,
             opacity: 1,
             duration: 1,
             ease: "power3.out"
           })
-
-          // Desktop elements
-          if (rightContentRef.current && droneRef.current) {
-            tl.to(rightContentRef.current, {
-              x: 0,
-              opacity: 1,
-              duration: 0.8,
-              ease: "power3.out"
-            }, "-=0.6")
-            .to(droneRef.current, {
-              y: 0,
-              opacity: 1,
-              scale: 1,
-              duration: 1,
-              ease: "power3.out"
-            }, "-=0.4")
-          }
         }
       })
 
-      // 3. Parallax na imagem (só desktop)
-      if (droneRef.current) {
-        gsap.to(droneRef.current, {
-          yPercent: -20,
-          ease: "none",
-          scrollTrigger: {
-            trigger: droneRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1
-          }
-        })
+      // 3. Desktop contactos animation - SÓ SE EXISTIR
+      if (rightContentRef.current) {
+        const contactItems = rightContentRef.current.querySelectorAll('.contact-item')
+
+        if (contactItems.length > 0) {
+          gsap.set(contactItems, { y: 30, opacity: 0 })
+
+          ScrollTrigger.create({
+            trigger: rightContentRef.current,
+            start: "top 80%",
+            onEnter: () => {
+              gsap.to(contactItems, {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.15,
+                ease: "power3.out"
+              })
+            }
+          })
+        }
       }
 
     })
@@ -192,16 +176,29 @@ export default function Contactos() {
           {/* Mobile Layout - Reorganizado */}
           <div className="block md:hidden space-y-8">
 
-            {/* Contactos diretos mobile - NO TOPO */}
+            {/* Contactos diretos mobile - NO TOPO COM INSTAGRAM */}
             <div className="text-center space-y-4 text-lg text-black font-bold bg-gray-50 p-6 rounded-lg">
               <div className="hover:text-gray-600 transition-colors">
-                email@allperspectives.com
+                geral@allperspectives.pt
               </div>
               <div className="hover:text-gray-600 transition-colors">
-                +351 123 456 789
+                +351 919 490 318
               </div>
               <div className="text-gray-700 font-semibold">
                 Porto, Portugal
+              </div>
+              <div className="border-t border-gray-200 pt-4 mt-4">
+                <a
+                  href="https://instagram.com/allperspectives.pt"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-2 text-gray-600 hover:text-black transition-colors font-medium"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                  <span>@allperspectives.pt</span>
+                </a>
               </div>
             </div>
 
@@ -319,7 +316,7 @@ export default function Contactos() {
               </div>
 
               {/* Imagem */}
-              <div className="w-full max-w-sm mx-auto">
+              {/* <div className="w-full max-w-sm mx-auto">
                 <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
                   <Image
                     src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
@@ -329,11 +326,11 @@ export default function Contactos() {
                     sizes="320px"
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
-          {/* Desktop Layout - Original INTACTO */}
+          {/* Desktop Layout - ANIMAÇÕES CORRIGIDAS */}
           <div className="hidden md:block relative">
 
             {/* Formulário à esquerda */}
@@ -435,22 +432,32 @@ export default function Contactos() {
               </form>
             </div>
 
-            {/* Conteúdo à direita - desktop */}
+            {/* Conteúdo à direita - desktop COM INSTAGRAM */}
             <div className="absolute right-8 top-0 text-right z-10">
 
-              {/* Contactos diretos */}
-              <div
-                ref={rightContentRef}
-                className="space-y-6 text-xl text-black font-bold mb-12"
-              >
-                <div className="hover:text-gray-600 transition-colors cursor-pointer">
-                  email@allperspectives.com
+              {/* Contactos diretos - COM CLASSES INDIVIDUAIS E INSTAGRAM */}
+              <div ref={rightContentRef} className="space-y-6 text-xl text-black font-bold mb-12">
+                <div className="contact-item hover:text-gray-600 transition-colors cursor-pointer">
+                  geral@allperspectives.pt
                 </div>
-                <div className="hover:text-gray-600 transition-colors cursor-pointer">
-                  +351 123 456 789
+                <div className="contact-item hover:text-gray-600 transition-colors cursor-pointer">
+                  +351 919 490 318
                 </div>
-                <div className="text-gray-700 font-semibold">
+                <div className="contact-item text-gray-700 font-semibold">
                   Porto, Portugal
+                </div>
+                <div className="contact-item border-t border-gray-200 pt-6">
+                  <a
+                    href="https://instagram.com/allperspectives.pt"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center space-x-3 text-gray-600 hover:text-black transition-colors font-medium text-lg"
+                  >
+                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                    <span>@allperspectives.pt</span>
+                  </a>
                 </div>
               </div>
 
@@ -459,22 +466,6 @@ export default function Contactos() {
                 <p className="text-2xl md:text-3xl font-bold text-gray-300 italic">
                   Ready for lift-off?
                 </p>
-              </div>
-            </div>
-
-            {/* Imagem drone - desktop */}
-            <div
-              ref={droneRef}
-              className="absolute right-0 top-64 w-[380px] h-64 lg:w-[420px] lg:h-72 xl:w-[450px] xl:h-80 z-0"
-            >
-              <div className="relative w-full h-full">
-                <Image
-                  src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                  alt="Drone profissional"
-                  fill
-                  className="object-cover rounded-lg shadow-2xl"
-                  sizes="(max-width: 1024px) 420px, 450px"
-                />
               </div>
             </div>
 

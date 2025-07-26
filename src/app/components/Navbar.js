@@ -41,7 +41,7 @@ export default function Navbar() {
   const navLinks = [
     { href: '/about', label: 'Sobre' },
     { href: '/#servicos', label: 'Serviços', isAnchor: true },
-    { href: '/projects', label: 'Projetos' },
+    // { href: '/projects', label: 'Projetos' },
     { href: '/contacts', label: 'Contactos' },
   ]
 
