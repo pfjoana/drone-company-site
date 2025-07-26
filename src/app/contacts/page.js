@@ -131,18 +131,38 @@ export default function Contactos() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setSubmitStatus(null)
 
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setSubmitStatus('success')
-      setFormData({
-        nome: '',
-        email: '',
-        telefone: '',
-        servico: '',
-        mensagem: ''
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       })
-    }, 2000)
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setSubmitStatus('success')
+        setFormData({
+          nome: '',
+          email: '',
+          telefone: '',
+          servico: '',
+          mensagem: ''
+        })
+      } else {
+        setSubmitStatus('error')
+        console.error('Erro do servidor:', data.error)
+      }
+    } catch (error) {
+      setSubmitStatus('error')
+      console.error('Erro de rede:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -205,11 +225,18 @@ export default function Contactos() {
             {/* Formulário mobile - SEPARADO */}
             <div ref={formRef}>
 
-              {/* Success message */}
+              {/* Success/Error messages */}
               {submitStatus === 'success' && (
                 <div className="bg-green-50 border border-green-200 text-green-700 p-6 rounded-lg mb-8 shadow-sm">
-                  <h4 className="font-bold mb-2">Mensagem enviada com sucesso!</h4>
+                  <h4 className="font-bold mb-2">✅ Mensagem enviada com sucesso!</h4>
                   <p>Entraremos em contacto em breve. Obrigado pelo seu interesse.</p>
+                </div>
+              )}
+
+              {submitStatus === 'error' && (
+                <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-lg mb-8 shadow-sm">
+                  <h4 className="font-bold mb-2">❌ Erro ao enviar mensagem</h4>
+                  <p>Ocorreu um erro. Tente novamente ou contacte-nos diretamente por email.</p>
                 </div>
               )}
 
@@ -316,7 +343,7 @@ export default function Contactos() {
               </div>
 
               {/* Imagem */}
-              {/* <div className="w-full max-w-sm mx-auto">
+              <div className="w-full max-w-sm mx-auto">
                 <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
                   <Image
                     src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
@@ -326,7 +353,7 @@ export default function Contactos() {
                     sizes="320px"
                   />
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
 
@@ -338,8 +365,15 @@ export default function Contactos() {
 
               {submitStatus === 'success' && (
                 <div className="bg-green-50 border border-green-200 text-green-700 p-6 rounded-lg mb-12 shadow-sm">
-                  <h4 className="font-bold mb-2">Mensagem enviada com sucesso!</h4>
+                  <h4 className="font-bold mb-2">✅ Mensagem enviada com sucesso!</h4>
                   <p>Entraremos em contacto em breve. Obrigado pelo seu interesse.</p>
+                </div>
+              )}
+
+              {submitStatus === 'error' && (
+                <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-lg mb-12 shadow-sm">
+                  <h4 className="font-bold mb-2">❌ Erro ao enviar mensagem</h4>
+                  <p>Ocorreu um erro. Tente novamente ou contacte-nos diretamente por email.</p>
                 </div>
               )}
 
