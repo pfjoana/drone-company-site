@@ -191,19 +191,19 @@ export default function Hero() {
             {/* Botões */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
-                href="/contacts"
+                href="/#servicos"
                 className="bg-white text-black px-6 py-3 font-bold hover:bg-white/90 transition-all duration-300 shadow-lg text-sm"
               >
-                Pedir Orçamento
+                Conhecer Serviços
               </Link>
               <Link
-                href="/#servicos"
+                href="/contacts"
                 className="border-2 border-white text-white px-6 py-3 font-bold hover:bg-white/20 transition-all duration-300 text-sm"
                 style={{
                   textShadow: '1px 1px 4px rgba(0,0,0,0.6)'
                 }}
               >
-                Conhecer Serviços
+                Entre em Contacto
               </Link>
             </div>
           </div>
