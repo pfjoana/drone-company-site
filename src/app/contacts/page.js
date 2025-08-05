@@ -93,7 +93,7 @@ export default function Contactos() {
         }
       })
 
-      // 3. Desktop contactos animation - SÓ SE EXISTIR
+      // 3. Desktop contactos animation
       if (rightContentRef.current) {
         const contactItems = rightContentRef.current.querySelectorAll('.contact-item')
 
@@ -134,17 +134,23 @@ export default function Contactos() {
     setSubmitStatus(null)
 
     try {
-      const response = await fetch('/api/send-email', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.nome,
+          email: formData.email,
+          phone: formData.telefone,
+          service: formData.servico,
+          message: formData.mensagem
+        }),
       })
 
       const data = await response.json()
 
-      if (response.ok && data.success) {
+      if (response.ok) {
         setSubmitStatus('success')
         setFormData({
           nome: '',
