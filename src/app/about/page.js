@@ -456,8 +456,8 @@ export default function Sobre() {
 
             <div className="text-center lg:text-right">
               <blockquote className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 leading-relaxed italic">
-                "A verdadeira inovação acontece quando unimos conhecimento técnico
-                com uma perspetiva diferente. É isso que fazemos todos os dias."
+                &ldquo; A verdadeira inovação acontece quando unimos conhecimento técnico
+                com uma perspetiva diferente. É isso que fazemos todos os dias.&rdquo;
               </blockquote>
               <p className="text-base md:text-lg text-gray-600 mt-4 md:mt-6 font-medium">
                 — A abordagem que define cada projeto da All Perspectives
