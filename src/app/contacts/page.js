@@ -36,7 +36,7 @@ export default function Contactos() {
   useEffect(() => {
     const ctx = gsap.context(() => {
 
-      // 1. Header - HERO TYPE ANIMATION
+      // 1. Header
       const headerSplit = new SplitText(headerRef.current, {
         type: "lines,words",
         linesClass: "overflow-visible"
@@ -174,7 +174,7 @@ export default function Contactos() {
   return (
     <div className="pt-24">
 
-      {/* Header - Subtítulo atualizado */}
+      {/* Header */}
       <section className="py-12 md:py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-5xl">
@@ -195,14 +195,10 @@ export default function Contactos() {
         </div>
       </section>
 
-      {/* Layout - Mobile melhorado */}
+      {/* Layout - Mobile */}
       <section className="py-8 md:py-16 px-4">
         <div className="max-w-7xl mx-auto">
-
-          {/* Mobile Layout - Reorganizado */}
           <div className="block md:hidden space-y-8">
-
-            {/* Contactos diretos mobile - NO TOPO COM INSTAGRAM */}
             <div className="text-center space-y-4 text-lg text-black font-bold bg-gray-50 p-6 rounded-lg">
               <div className="hover:text-gray-600 transition-colors">
                 geral@allperspectives.pt
@@ -228,27 +224,24 @@ export default function Contactos() {
               </div>
             </div>
 
-            {/* Formulário mobile - SEPARADO */}
+            {/* Formulário mobile */}
             <div ref={formRef}>
 
-              {/* Success/Error messages */}
               {submitStatus === 'success' && (
                 <div className="bg-green-50 border border-green-200 text-green-700 p-6 rounded-lg mb-8 shadow-sm">
-                  <h4 className="font-bold mb-2">✅ Mensagem enviada com sucesso!</h4>
+                  <h4 className="font-bold mb-2">Mensagem enviada com sucesso!</h4>
                   <p>Entraremos em contacto em breve. Obrigado pelo seu interesse.</p>
                 </div>
               )}
 
               {submitStatus === 'error' && (
                 <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-lg mb-8 shadow-sm">
-                  <h4 className="font-bold mb-2">❌ Erro ao enviar mensagem</h4>
+                  <h4 className="font-bold mb-2">Erro ao enviar mensagem</h4>
                   <p>Ocorreu um erro. Tente novamente ou contacte-nos diretamente por email.</p>
                 </div>
               )}
 
               <form onSubmit={handleSubmit} className="space-y-6">
-
-                {/* Nome e Email */}
                 <div className="space-y-6">
                   <div>
                     <input
@@ -277,7 +270,6 @@ export default function Contactos() {
                   </div>
                 </div>
 
-                {/* Telefone e Serviço */}
                 <div className="space-y-6">
                   <div>
                     <input
@@ -312,7 +304,6 @@ export default function Contactos() {
                   </div>
                 </div>
 
-                {/* Message */}
                 <div>
                   <textarea
                     id="mensagem"
@@ -326,7 +317,6 @@ export default function Contactos() {
                   />
                 </div>
 
-                {/* Submit */}
                 <div className="pt-4 text-center">
                   <button
                     type="submit"
@@ -339,9 +329,7 @@ export default function Contactos() {
               </form>
             </div>
 
-            {/* Imagem drone mobile - REORGANIZADA com frase */}
             <div className="relative">
-              {/* Frase "Ready for lift-off?" sobre a imagem */}
               <div className="text-center mb-4">
                 <p className="text-2xl font-bold text-gray-400 italic">
                   Ready for lift-off?
@@ -349,7 +337,7 @@ export default function Contactos() {
               </div>
 
               {/* Imagem */}
-              <div className="w-full max-w-sm mx-auto">
+              {/* <div className="w-full max-w-sm mx-auto">
                 <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
                   <Image
                     src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
@@ -359,26 +347,24 @@ export default function Contactos() {
                     sizes="320px"
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
-          {/* Desktop Layout - ANIMAÇÕES CORRIGIDAS */}
+          {/* Desktop Layout */}
           <div className="hidden md:block relative">
-
-            {/* Formulário à esquerda */}
             <div ref={formRef} className="max-w-2xl">
 
               {submitStatus === 'success' && (
                 <div className="bg-green-50 border border-green-200 text-green-700 p-6 rounded-lg mb-12 shadow-sm">
-                  <h4 className="font-bold mb-2">✅ Mensagem enviada com sucesso!</h4>
+                  <h4 className="font-bold mb-2">Mensagem enviada com sucesso!</h4>
                   <p>Entraremos em contacto em breve. Obrigado pelo seu interesse.</p>
                 </div>
               )}
 
               {submitStatus === 'error' && (
                 <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-lg mb-12 shadow-sm">
-                  <h4 className="font-bold mb-2">❌ Erro ao enviar mensagem</h4>
+                  <h4 className="font-bold mb-2">Erro ao enviar mensagem</h4>
                   <p>Ocorreu um erro. Tente novamente ou contacte-nos diretamente por email.</p>
                 </div>
               )}
@@ -472,10 +458,9 @@ export default function Contactos() {
               </form>
             </div>
 
-            {/* Conteúdo à direita - desktop COM INSTAGRAM */}
             <div className="absolute right-8 top-0 text-right z-10">
 
-              {/* Contactos diretos - COM CLASSES INDIVIDUAIS E INSTAGRAM */}
+              {/* Contactos diretos */}
               <div ref={rightContentRef} className="space-y-6 text-xl text-black font-bold mb-12">
                 <div className="contact-item hover:text-gray-600 transition-colors cursor-pointer">
                   geral@allperspectives.pt
@@ -501,7 +486,6 @@ export default function Contactos() {
                 </div>
               </div>
 
-              {/* Frase decorativa */}
               <div className="mb-16">
                 <p className="text-2xl md:text-3xl font-bold text-gray-300 italic">
                   Ready for lift-off?

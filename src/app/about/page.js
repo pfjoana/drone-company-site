@@ -25,7 +25,7 @@ export default function Sobre() {
   const textRefs = useRef([])
   const skillsRef = useRef(null)
   const valuesRef = useRef(null)
-  const missionSectionRef = useRef(null) // NOVA REF PARA MISSÃO/ABORDAGEM
+  const missionSectionRef = useRef(null)
 
   // Register GSAP plugins
   useEffect(() => {
@@ -46,7 +46,6 @@ export default function Sobre() {
             }
           }
         `)
-        console.log('About data:', data)
         setAboutData(data)
       } catch (error) {
         console.error('Error fetching about data:', error)
@@ -64,7 +63,7 @@ export default function Sobre() {
     requestAnimationFrame(() => {
       const ctx = gsap.context(() => {
 
-      // 1. Statement Principal - HERO TYPE
+      // 1. Statement Principal
       const statementSplit = new SplitText(statementRef.current, {
         type: "lines,words",
         linesClass: "overflow-visible"
@@ -202,21 +201,15 @@ export default function Sobre() {
         }
       }
 
-      // 5. Mission Section Animation - SIMPLIFICADA
+      // 5. Mission Section Animation
       // Aguardar um pouco mais para garantir que o DOM está pronto
       setTimeout(() => {
         const missionSection = document.querySelector('[data-section="mission"]')
-        console.log('Mission section by selector:', missionSection)
-
         if (missionSection) {
           const missionTitles = missionSection.querySelectorAll('h3')
           const missionParagraphs = missionSection.querySelectorAll('p')
-
-          console.log('Mission titles found:', missionTitles.length)
-          console.log('Mission paragraphs found:', missionParagraphs.length)
-
           if (missionTitles.length > 0 && missionParagraphs.length > 0) {
-            // Set initial states
+            //initial states
             gsap.set(missionTitles, { y: 50, opacity: 0 })
             gsap.set(missionParagraphs, { y: 30, opacity: 0 })
 
@@ -224,8 +217,6 @@ export default function Sobre() {
               trigger: missionSection,
               start: "top 80%",
               onEnter: () => {
-                console.log('Mission section animation triggered!')
-
                 gsap.to(missionTitles, {
                   y: 0,
                   opacity: 1,
@@ -233,7 +224,6 @@ export default function Sobre() {
                   stagger: 0.2,
                   ease: "power3.out"
                 })
-
                 gsap.to(missionParagraphs, {
                   y: 0,
                   opacity: 1,
@@ -248,17 +238,15 @@ export default function Sobre() {
         }
       }, 500)
 
-      // 6. Values Section Animation - NOVA ESTRUTURA
+      // 6. Values Section Animation
       if (valuesRef.current) {
         const valuesTitle = valuesRef.current.querySelector('.values-title')
         const valueCards = valuesRef.current.querySelectorAll('.value-card')
-
         if (valuesTitle) {
           const valuesTitleSplit = new SplitText(valuesTitle, {
             type: "lines,words",
             linesClass: "overflow-hidden"
           })
-
           gsap.set(valuesTitleSplit.words, { y: 100, opacity: 0 })
           gsap.set(valueCards, { y: 50, opacity: 0, scale: 0.95 })
 
@@ -484,8 +472,6 @@ export default function Sobre() {
       <section className="py-16 md:py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
-
-            {/* Abordagem */}
             <div className="text-center md:text-left">
               <h3 className="text-2xl md:text-3xl font-bold text-black mb-6">
                 A Nossa Abordagem
@@ -501,8 +487,6 @@ export default function Sobre() {
                 </p>
               </div>
             </div>
-
-            {/* Missão */}
             <div className="text-center md:text-right">
               <h3 className="text-2xl md:text-3xl font-bold text-black mb-6">
                 Missão & Objetivos
@@ -518,19 +502,15 @@ export default function Sobre() {
         </div>
       </section>
 
-      {/* SECÇÃO DE VALORES - VERSÃO ANTERIOR COM ALINHAMENTO CENTRO */}
+      {/* SECÇÃO DE VALORES */}
       <section className="py-20 md:py-32 px-4 bg-gray-50" ref={valuesRef}>
         <div className="max-w-7xl mx-auto">
-
           <div className="text-center mb-16 md:mb-20">
             <h2 className="values-title text-4xl md:text-5xl lg:text-6xl font-bold text-black">
               Valores
             </h2>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
-
-            {/* Perspetiva */}
             <div className="value-card text-center space-y-4">
               <h3 className="text-2xl md:text-3xl font-bold text-black">
                 Perspetiva
@@ -540,8 +520,6 @@ export default function Sobre() {
                 comunicar com impacto e antecipar decisões.
               </p>
             </div>
-
-            {/* Confiança */}
             <div className="value-card text-center space-y-4">
               <h3 className="text-2xl md:text-3xl font-bold text-black">
                 Confiança
@@ -551,8 +529,6 @@ export default function Sobre() {
                 no que realmente importa para os nossos clientes.
               </p>
             </div>
-
-            {/* Eficiência */}
             <div className="value-card text-center space-y-4">
               <h3 className="text-2xl md:text-3xl font-bold text-black">
                 Eficiência
@@ -562,13 +538,10 @@ export default function Sobre() {
                 o essencial, sem desperdício.
               </p>
             </div>
-
           </div>
         </div>
       </section>
-
       <section className="py-12 md:py-20"></section>
-
     </div>
   )
 }

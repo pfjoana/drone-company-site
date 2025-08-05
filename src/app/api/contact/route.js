@@ -23,7 +23,6 @@ export async function POST(request) {
 
     const serviceLabel = serviceLabels[service] || service || 'Não especificado';
 
-    // Configuração simples do Nodemailer
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -84,7 +83,6 @@ export async function POST(request) {
       `,
     };
 
-    // Email de confirmação para o cliente
     const mailToClient = {
       from: process.env.EMAIL_USER,
       to: email,

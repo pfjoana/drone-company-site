@@ -12,7 +12,6 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Muda quando sai da viewport do hero (altura da tela)
       setIsScrolled(window.scrollY > window.innerHeight * 0.8)
     }
     window.addEventListener('scroll', handleScroll)
@@ -93,11 +92,11 @@ export default function Navbar() {
                 }`}
               >
                 {link.label}
-                {/* Hover underline - cor dinâmica */}
+                {/* Hover underline */}
                 <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
                   isScrolled || !isHomePage ? 'bg-black' : 'bg-white'
                 }`} />
-                {/* Active underline - cor dinâmica */}
+                {/* Active underline */}
                 {isActiveLink(link.href, link.isAnchor) && (
                   <span className={`absolute -bottom-1 left-0 w-full h-0.5 ${
                     isScrolled || !isHomePage ? 'bg-black' : 'bg-white'
@@ -107,7 +106,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Mobile menu button - cor dinâmica */}
+          {/* Mobile menu button */}
           <button
             className="md:hidden flex flex-col justify-center items-center w-6 h-6"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -136,7 +135,7 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Navigation - ESPAÇAMENTO MELHORADO */}
+        {/* Mobile Navigation */}
         <div
           className={`md:hidden transition-all duration-300 ease-in-out bg-white border-t border-gray-200 ${
             isMobileMenuOpen

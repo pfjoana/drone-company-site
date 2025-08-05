@@ -27,39 +27,39 @@ export default function Home() {
   }, [])
 
   // Fetch featured projects from Sanity
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const projects = await client.fetch(`
-          *[_type == "project" && featured == true][0...6]{
-            _id,
-            title,
-            category,
-            mainImage{
-              asset->{
-                _id,
-                url
-              }
-            },
-            video{
-              asset->{
-                _id,
-                url
-              }
-            }
-          }
-        `)
-        console.log('Featured projects:', projects)
-        setFeaturedProjects(projects)
-      } catch (error) {
-        console.error('Error fetching projects:', error)
-      }
-    }
+  // useEffect(() => {
+  //   const fetchProjects = async () => {
+  //     try {
+  //       const projects = await client.fetch(`
+  //         *[_type == "project" && featured == true][0...6]{
+  //           _id,
+  //           title,
+  //           category,
+  //           mainImage{
+  //             asset->{
+  //               _id,
+  //               url
+  //             }
+  //           },
+  //           video{
+  //             asset->{
+  //               _id,
+  //               url
+  //             }
+  //           }
+  //         }
+  //       `)
+  //       setFeaturedProjects(projects)
+  //     } catch (error) {
+  //       console.error('Error fetching projects:', error)
+  //     }
+  //   }
 
-    fetchProjects()
-  }, [])
+  //   fetchProjects()
+  // }, [])
 
   // Fetch APENAS IMAGENS dos serviços do Sanity
+
   useEffect(() => {
     const fetchServiceImages = async () => {
       try {
@@ -74,9 +74,7 @@ export default function Home() {
             }
           }
         `)
-        console.log('Service images from Sanity:', images)
 
-        // Converter para objeto com ID como chave
         const imageMap = {}
         images.forEach(service => {
           if (service.id && service.image) {
@@ -96,7 +94,7 @@ export default function Home() {
   useEffect(() => {
     const ctx = gsap.context(() => {
 
-      // 1. Statement Split Text + Paragraph abaixo (HERO TYPE ANIMATION)
+      // 1. Statement Split Text
       const statementSplit = new SplitText(statementRef.current, {
         type: "lines,words",
         linesClass: "overflow-visible"
@@ -180,13 +178,13 @@ export default function Home() {
         }
       })
 
-      // Service cards - GRID DE 6 CARDS
+      // Service cards
       const serviceCards = servicesRef.current.querySelectorAll('.service-card')
       serviceCards.forEach((card, cardIndex) => {
 
         gsap.set(card, { y: 50, opacity: 0, scale: 0.95 })
 
-        // Para mobile - mostrar overlay com scroll
+        // mobile - overlay com scroll
         const overlay = card.querySelector('.service-overlay')
         if (overlay) {
           gsap.set(overlay, { opacity: 0 })
@@ -205,7 +203,7 @@ export default function Home() {
               delay: cardIndex * 0.1
             })
 
-            // Em mobile, mostrar overlay após a animação do card
+            // mobile, overlay após a animação do card
             if (overlay && window.innerWidth < 768) {
               gsap.to(overlay, {
                 opacity: 1,
@@ -216,7 +214,6 @@ export default function Home() {
           }
         })
       })
-
     })
 
     return () => ctx.revert()
@@ -263,7 +260,7 @@ export default function Home() {
       subtitle: 'Parques & Jardins',
       description: 'Levantamentos visuais de parques de estacionamento, jardins e zonas técnicas.',
       features: ['Parques de estacionamento', 'Jardins e zonas verdes', 'Áreas técnicas'],
-      fallbackImage: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+      fallbackImage: 'https://images.unsplash.com/photo-1518833500287-51ca0f2b1a0b?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
     },
     {
       id: 'seguranca-perimetros',
@@ -271,7 +268,7 @@ export default function Home() {
       subtitle: 'Perímetros & Vedações',
       description: 'Sobrevoos para verificação de cercas, vedações e áreas remotas.',
       features: ['Inspeção de cercas', 'Verificação de vedações', 'Monitorização de perímetros'],
-      fallbackImage: 'https://images.unsplash.com/photo-1569163139394-de44cb984263?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+      fallbackImage: 'https://images.unsplash.com/photo-1615743112504-59cc257c7a0f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
     },
     {
       id: 'conteudos-visuais',
@@ -285,10 +282,8 @@ export default function Home() {
 
   return (
     <div>
-      {/* Hero Section */}
       <Hero />
 
-      {/* Statement impactante - NOVO TEXTO ORIGINAL */}
       <section className="py-32 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-5xl">
@@ -307,7 +302,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Serviços Section - TEXTO HARDCODED + IMAGENS DO SANITY */}
+      {/* Serviços Section */}
       <section id="servicos" className="py-32 px-4" ref={servicesRef}>
         <div className="max-w-7xl mx-auto">
 
@@ -379,7 +374,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Final - Usando componente */}
       <CTASection />
     </div>
   )

@@ -6,6 +6,9 @@ import { LoadingProvider } from "./components/LoadingProvider";
 export const metadata = {
   title: "All Perspectives - Serviços Profissionais de Drone",
   description: "Inspeções, imobiliário e eventos. Serviços profissionais de captação aérea com drone.",
+  icons: {
+    icon: '/favicon.svg',
+  }
 };
 
 export default function RootLayout({ children }) {

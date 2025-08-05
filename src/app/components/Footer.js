@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <footer className="bg-gray-900 border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Mobile: Centrado */}
+        {/* Mobile */}
         <div className="md:hidden text-center space-y-8">
           <div>
             <h3 className="font-bold text-xl text-white mb-4">All Perspectives</h3>
@@ -29,7 +29,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Desktop: Extremos */}
+        {/* Desktop */}
         <div className="hidden md:flex justify-between items-start">
           <div className="max-w-md">
             <h3 className="font-bold text-xl text-white mb-4">All Perspectives</h3>

@@ -40,7 +40,6 @@ export default function Hero() {
             }
           }
         `)
-        console.log('Hero data from Sanity:', data)
         setHeroData(data)
       } catch (error) {
         console.error('Error fetching hero data:', error)
@@ -117,7 +116,7 @@ export default function Hero() {
   return (
     <section className="relative h-screen w-full overflow-hidden">
 
-      {/* Desktop Video - usa o campo existente backgroundVideo */}
+      {/* Desktop Video */}
       {heroData?.backgroundVideo && (
         <video
           ref={videoDesktopRef}
@@ -128,11 +127,11 @@ export default function Hero() {
           playsInline
         >
           <source src={getVideoUrl(heroData.backgroundVideo)} type="video/mp4" />
-          O seu browser não suporta vídeos HTML5.
+          Este navegador não suporta vídeo.
         </video>
       )}
 
-      {/* Mobile Video - novo campo backgroundVideoMobile */}
+      {/* Mobile Video */}
       {heroData?.backgroundVideoMobile && (
         <video
           ref={videoMobileRef}
@@ -143,11 +142,11 @@ export default function Hero() {
           playsInline
         >
           <source src={getVideoUrl(heroData.backgroundVideoMobile)} type="video/mp4" />
-          O seu browser não suporta vídeos HTML5.
+          Este navegador não suporta vídeo.
         </video>
       )}
 
-      {/* Fallback - só se não tiver nenhum vídeo */}
+      {/* Fallbacks: imagem ou fundo preto, se não houver vídeo */}
       {!heroData?.backgroundVideo && !heroData?.backgroundVideoMobile && heroData?.backgroundImage && (
         <div
           className="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat"
@@ -156,8 +155,6 @@ export default function Hero() {
           }}
         />
       )}
-
-      {/* Fallback final - fundo preto */}
       {!heroData?.backgroundVideo && !heroData?.backgroundVideoMobile && !heroData?.backgroundImage && (
         <div className="absolute top-0 left-0 w-full h-full bg-black" />
       )}
@@ -165,14 +162,10 @@ export default function Hero() {
       {/* Overlay de contraste */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/15 to-transparent" />
 
-      {/* Content - Título original + novo subtítulo */}
+      {/* Content */}
       <div className="relative z-10 h-full flex flex-col justify-start pt-40 px-4">
         <div className="max-w-7xl mx-auto w-full">
-
-          {/* Caixa com fundo semi-transparente */}
           <div className="max-w-sm lg:max-w-md bg-black/40 backdrop-blur-sm shadow-2xl p-6 lg:p-8 text-center">
-
-            {/* Título - MANTÉM O ORIGINAL */}
             <h1
               ref={titleRef}
               className="text-2xl md:text-3xl lg:text-4xl font-bold mb-5 leading-[0.9] text-white"
@@ -184,8 +177,6 @@ export default function Hero() {
               <br />
               <span className="font-extrabold">Profissional</span>
             </h1>
-
-            {/* Subtítulo - INFORMATIVO E ESPECÍFICO */}
             <div ref={subtitleRef} className="mb-6">
               <p
                 className="text-sm md:text-base lg:text-lg text-white font-semibold"
@@ -197,13 +188,13 @@ export default function Hero() {
               </p>
             </div>
 
-            {/* Botões - ATUALIZADOS */}
+            {/* Botões */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
-                href="/projects"
+                href="/contacts"
                 className="bg-white text-black px-6 py-3 font-bold hover:bg-white/90 transition-all duration-300 shadow-lg text-sm"
               >
-                Ver Projetos
+                Pedir Orçamento
               </Link>
               <Link
                 href="/#servicos"

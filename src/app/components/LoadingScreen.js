@@ -27,7 +27,7 @@ const LoadingScreen = ({ onLoadingComplete }) => {
         delay: 0.3
       }
     )
-    // 2. Preenchimento gradual do logo (como Exoape)
+    // 2. Preenchimento gradual do logo
     .fromTo(fillRef.current,
       {
         clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)'
@@ -39,9 +39,9 @@ const LoadingScreen = ({ onLoadingComplete }) => {
       },
       "-=0.5"
     )
-    // 3. Pausa breve
+    // 3. Pausa
     .to({}, { duration: 0.8 })
-    // 4. Saída elegante
+    // 4. Saída suave
     .to(logoRef.current, {
       scale: 1.1,
       opacity: 0,
@@ -70,9 +70,8 @@ const LoadingScreen = ({ onLoadingComplete }) => {
       ref={loadingRef}
       className="fixed inset-0 bg-black z-50 flex items-center justify-center"
     >
-      {/* Logo Container */}
+      {/* Logo */}
       <div ref={logoRef} className="relative">
-        {/* Logo base (outline/cinzento) */}
         <svg
           width="140"
           height="140"
