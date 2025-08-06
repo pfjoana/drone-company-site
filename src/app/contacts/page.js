@@ -8,52 +8,24 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 
-// Constantes
-const CONTACT_INFO = {
-  email: 'geral@allperspectives.pt',
-  phone: '+351 919 490 318',
-  location: 'Porto, Portugal',
-  instagram: {
-    url: 'https://instagram.com/allperspectives.pt',
-    handle: '@allperspectives.pt'
-  }
-}
+import { CONTACT_INFO, INITIAL_FORM_DATA } from '../constants/contact'
+import { SERVICE_OPTIONS } from '../constants/services'
 
-const SERVICE_OPTIONS = [
-  { value: '', label: 'Tipo de serviço' },
-  { value: 'inspecoes', label: 'Inspeções Técnicas Aéreas' },
-  { value: 'acompanhamento', label: 'Acompanhamento de Obras' },
-  { value: 'paineis', label: 'Inspeção de Painéis Solares' },
-  { value: 'espacos', label: 'Levantamento de Espaços Exteriores' },
-  { value: 'seguranca', label: 'Verificação de Segurança' },
-  { value: 'conteudos', label: 'Conteúdos Visuais' },
-  { value: 'outro', label: 'Outro' }
-]
 
-const INITIAL_FORM_DATA = {
-  nome: '',
-  email: '',
-  telefone: '',
-  servico: '',
-  mensagem: ''
-}
-
-// Componente para ícone do Instagram
 const InstagramIcon = ({ className = "w-5 h-5" }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
   </svg>
 )
 
-// Componente para informações de contacto
 const ContactInfo = ({ isMobile = false, rightContentRef = null }) => {
   const containerClass = isMobile
     ? "text-center space-y-4 text-lg text-black font-bold bg-gray-50 p-6 rounded-lg"
     : "space-y-6 text-xl text-black font-bold mb-12"
 
-  const itemClass = isMobile
-    ? "hover:text-gray-600 transition-colors"
-    : "contact-item hover:text-gray-600 transition-colors cursor-pointer"
+  const itemClass = !isMobile
+    ? "contact-item"
+    : undefined
 
   const locationClass = isMobile
     ? "text-gray-700 font-semibold"
@@ -95,7 +67,6 @@ const ContactInfo = ({ isMobile = false, rightContentRef = null }) => {
   )
 }
 
-// Componente para mensagens de status
 const StatusMessage = ({ type }) => {
   const isSuccess = type === 'success'
   const bgColor = isSuccess ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'
@@ -115,7 +86,6 @@ const StatusMessage = ({ type }) => {
   )
 }
 
-// Componente para campos do formulário
 const FormField = ({ type = "text", name, value, onChange, placeholder, required = false, options = null, rows = null, isMobile = false }) => {
   const baseClassName = `w-full px-0 ${isMobile ? 'py-4' : 'py-5'} bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 ${isMobile ? 'text-lg' : 'text-xl'}`
 
@@ -164,7 +134,6 @@ const FormField = ({ type = "text", name, value, onChange, placeholder, required
   )
 }
 
-// Componente do formulário
 const ContactForm = ({ formData, handleChange, handleSubmit, isSubmitting, isMobile = false }) => (
   <form onSubmit={handleSubmit} className={isMobile ? "space-y-6" : "space-y-10"}>
     <div className={isMobile ? "space-y-6" : "grid grid-cols-1 md:grid-cols-2 gap-10"}>
@@ -252,7 +221,6 @@ export default function Contactos() {
   useEffect(() => {
     const ctx = gsap.context(() => {
 
-      // 1. Header
       const headerSplit = new SplitText(headerRef.current, {
         type: "lines,words",
         linesClass: "overflow-visible"
@@ -383,8 +351,6 @@ export default function Contactos() {
 
   return (
     <div className="pt-24">
-
-      {/* Header */}
       <section className="py-12 md:py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-5xl">
@@ -411,7 +377,6 @@ export default function Contactos() {
           <div className="block md:hidden space-y-8">
             <ContactInfo isMobile />
 
-            {/* Formulário mobile */}
             <div ref={formRef}>
               {submitStatus && <StatusMessage type={submitStatus} />}
 
