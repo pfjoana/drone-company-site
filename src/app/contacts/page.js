@@ -8,15 +8,201 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 
-export default function Contactos() {
-  const [formData, setFormData] = useState({
-    nome: '',
-    email: '',
-    telefone: '',
-    servico: '',
-    mensagem: ''
-  })
+import { CONTACT_INFO, INITIAL_FORM_DATA } from '../constants/contact'
+import { SERVICE_OPTIONS } from '../constants/services'
 
+
+const InstagramIcon = ({ className = "w-5 h-5" }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+  </svg>
+)
+
+const ContactInfo = ({ isMobile = false, rightContentRef = null }) => {
+  const containerClass = isMobile
+    ? "text-center space-y-4 text-lg text-black font-bold bg-gray-50 p-6 rounded-lg"
+    : "space-y-6 text-xl text-black font-bold mb-12"
+
+  const itemClass = !isMobile
+    ? "contact-item"
+    : undefined
+
+  const locationClass = isMobile
+    ? "text-gray-700 font-semibold"
+    : "contact-item text-gray-700 font-semibold"
+
+  const instagramContainerClass = isMobile
+    ? "border-t border-gray-200 pt-4 mt-4"
+    : "contact-item border-t border-gray-200 pt-6"
+
+  const instagramLinkClass = isMobile
+    ? "inline-flex items-center space-x-2 text-gray-600 hover:text-black transition-colors font-medium"
+    : "inline-flex items-center space-x-3 text-gray-600 hover:text-black transition-colors font-medium text-lg"
+
+  const iconSize = isMobile ? "w-5 h-5" : "w-6 h-6"
+
+  return (
+    <div ref={rightContentRef} className={containerClass}>
+      <div className={itemClass}>
+        {CONTACT_INFO.email}
+      </div>
+      <div className={itemClass}>
+        {CONTACT_INFO.phone}
+      </div>
+      <div className={locationClass}>
+        {CONTACT_INFO.location}
+      </div>
+      <div className={instagramContainerClass}>
+        <a
+          href={CONTACT_INFO.instagram.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={instagramLinkClass}
+        >
+          <InstagramIcon className={iconSize} />
+          <span>{CONTACT_INFO.instagram.handle}</span>
+        </a>
+      </div>
+    </div>
+  )
+}
+
+const StatusMessage = ({ type }) => {
+  const isSuccess = type === 'success'
+  const bgColor = isSuccess ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'
+
+  return (
+    <div className={`${bgColor} border p-6 rounded-lg mb-8 md:mb-12 shadow-sm`}>
+      <h4 className="font-bold mb-2">
+        {isSuccess ? 'Mensagem enviada com sucesso!' : 'Erro ao enviar mensagem'}
+      </h4>
+      <p>
+        {isSuccess
+          ? 'Entraremos em contacto em breve. Obrigado pelo seu interesse.'
+          : 'Ocorreu um erro. Tente novamente ou contacte-nos diretamente por email.'
+        }
+      </p>
+    </div>
+  )
+}
+
+const FormField = ({ type = "text", name, value, onChange, placeholder, required = false, options = null, rows = null, isMobile = false }) => {
+  const baseClassName = `w-full px-0 ${isMobile ? 'py-4' : 'py-5'} bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 ${isMobile ? 'text-lg' : 'text-xl'}`
+
+  if (type === 'select') {
+    return (
+      <select
+        name={name}
+        value={value}
+        onChange={onChange}
+        required={required}
+        className={baseClassName}
+      >
+        {options.map(option => (
+          <option key={option.value} value={option.value} className="bg-white">
+            {option.label}
+          </option>
+        ))}
+      </select>
+    )
+  }
+
+  if (type === 'textarea') {
+    return (
+      <textarea
+        name={name}
+        value={value}
+        onChange={onChange}
+        required={required}
+        rows={rows}
+        className={`${baseClassName} resize-none`}
+        placeholder={placeholder}
+      />
+    )
+  }
+
+  return (
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      required={required}
+      className={baseClassName}
+      placeholder={placeholder}
+    />
+  )
+}
+
+const ContactForm = ({ formData, handleChange, handleSubmit, isSubmitting, isMobile = false }) => (
+  <form onSubmit={handleSubmit} className={isMobile ? "space-y-6" : "space-y-10"}>
+    <div className={isMobile ? "space-y-6" : "grid grid-cols-1 md:grid-cols-2 gap-10"}>
+      <FormField
+        name="nome"
+        value={formData.nome}
+        onChange={handleChange}
+        placeholder="Nome"
+        required
+        isMobile={isMobile}
+      />
+      <FormField
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        placeholder="Email"
+        required
+        isMobile={isMobile}
+      />
+    </div>
+
+    <div className={isMobile ? "space-y-6" : "grid grid-cols-1 md:grid-cols-2 gap-10"}>
+      <FormField
+        type="tel"
+        name="telefone"
+        value={formData.telefone}
+        onChange={handleChange}
+        placeholder="Telefone"
+        isMobile={isMobile}
+      />
+      <FormField
+        type="select"
+        name="servico"
+        value={formData.servico}
+        onChange={handleChange}
+        options={SERVICE_OPTIONS}
+        required
+        isMobile={isMobile}
+      />
+    </div>
+
+    <FormField
+      type="textarea"
+      name="mensagem"
+      value={formData.mensagem}
+      onChange={handleChange}
+      placeholder="Conte-nos sobre o seu desafio técnico..."
+      rows={isMobile ? 4 : 5}
+      required
+      isMobile={isMobile}
+    />
+
+    <div className={`pt-4 ${isMobile ? 'text-center' : ''}`}>
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className={`bg-black text-white px-10 rounded font-bold hover:bg-gray-800 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${
+          isMobile ? 'py-4 text-lg' : 'py-5 text-xl'
+        }`}
+      >
+        {isSubmitting ? 'Enviando...' : 'Enviar mensagem'}
+      </button>
+    </div>
+  </form>
+)
+
+export default function Contactos() {
+  const [formData, setFormData] = useState(INITIAL_FORM_DATA)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
 
@@ -25,7 +211,6 @@ export default function Contactos() {
   const headerParagraphRef = useRef(null)
   const formRef = useRef(null)
   const rightContentRef = useRef(null)
-  const droneRef = useRef(null)
 
   // Register GSAP plugins
   useEffect(() => {
@@ -36,7 +221,6 @@ export default function Contactos() {
   useEffect(() => {
     const ctx = gsap.context(() => {
 
-      // 1. Header
       const headerSplit = new SplitText(headerRef.current, {
         type: "lines,words",
         linesClass: "overflow-visible"
@@ -152,13 +336,7 @@ export default function Contactos() {
 
       if (response.ok) {
         setSubmitStatus('success')
-        setFormData({
-          nome: '',
-          email: '',
-          telefone: '',
-          servico: '',
-          mensagem: ''
-        })
+        setFormData(INITIAL_FORM_DATA)
       } else {
         setSubmitStatus('error')
         console.error('Erro do servidor:', data.error)
@@ -173,8 +351,6 @@ export default function Contactos() {
 
   return (
     <div className="pt-24">
-
-      {/* Header */}
       <section className="py-12 md:py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-5xl">
@@ -199,134 +375,18 @@ export default function Contactos() {
       <section className="py-8 md:py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="block md:hidden space-y-8">
-            <div className="text-center space-y-4 text-lg text-black font-bold bg-gray-50 p-6 rounded-lg">
-              <div className="hover:text-gray-600 transition-colors">
-                geral@allperspectives.pt
-              </div>
-              <div className="hover:text-gray-600 transition-colors">
-                +351 919 490 318
-              </div>
-              <div className="text-gray-700 font-semibold">
-                Porto, Portugal
-              </div>
-              <div className="border-t border-gray-200 pt-4 mt-4">
-                <a
-                  href="https://instagram.com/allperspectives.pt"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center space-x-2 text-gray-600 hover:text-black transition-colors font-medium"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                  </svg>
-                  <span>@allperspectives.pt</span>
-                </a>
-              </div>
-            </div>
+            <ContactInfo isMobile />
 
-            {/* Formulário mobile */}
             <div ref={formRef}>
+              {submitStatus && <StatusMessage type={submitStatus} />}
 
-              {submitStatus === 'success' && (
-                <div className="bg-green-50 border border-green-200 text-green-700 p-6 rounded-lg mb-8 shadow-sm">
-                  <h4 className="font-bold mb-2">Mensagem enviada com sucesso!</h4>
-                  <p>Entraremos em contacto em breve. Obrigado pelo seu interesse.</p>
-                </div>
-              )}
-
-              {submitStatus === 'error' && (
-                <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-lg mb-8 shadow-sm">
-                  <h4 className="font-bold mb-2">Erro ao enviar mensagem</h4>
-                  <p>Ocorreu um erro. Tente novamente ou contacte-nos diretamente por email.</p>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-6">
-                  <div>
-                    <input
-                      type="text"
-                      id="nome"
-                      name="nome"
-                      value={formData.nome}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 text-lg"
-                      placeholder="Nome"
-                    />
-                  </div>
-
-                  <div>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 text-lg"
-                      placeholder="Email"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  <div>
-                    <input
-                      type="tel"
-                      id="telefone"
-                      name="telefone"
-                      value={formData.telefone}
-                      onChange={handleChange}
-                      className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 text-lg"
-                      placeholder="Telefone"
-                    />
-                  </div>
-
-                  <div>
-                    <select
-                      id="servico"
-                      name="servico"
-                      value={formData.servico}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black focus:border-black focus:outline-none transition-all duration-300 text-lg"
-                    >
-                      <option value="" className="bg-white">Tipo de serviço</option>
-                      <option value="inspecoes" className="bg-white">Inspeções Técnicas Aéreas</option>
-                      <option value="acompanhamento" className="bg-white">Acompanhamento de Obras</option>
-                      <option value="paineis" className="bg-white">Inspeção de Painéis Solares</option>
-                      <option value="espacos" className="bg-white">Levantamento de Espaços Exteriores</option>
-                      <option value="seguranca" className="bg-white">Verificação de Segurança</option>
-                      <option value="conteudos" className="bg-white">Conteúdos Visuais</option>
-                      <option value="outro" className="bg-white">Outro</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <textarea
-                    id="mensagem"
-                    name="mensagem"
-                    value={formData.mensagem}
-                    onChange={handleChange}
-                    required
-                    rows={4}
-                    className="w-full px-0 py-4 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 resize-none text-lg"
-                    placeholder="Conte-nos sobre o seu desafio técnico..."
-                  />
-                </div>
-
-                <div className="pt-4 text-center">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="bg-black text-white px-10 py-4 rounded font-bold hover:bg-gray-800 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
-                  >
-                    {isSubmitting ? 'Enviando...' : 'Enviar mensagem'}
-                  </button>
-                </div>
-              </form>
+              <ContactForm
+                formData={formData}
+                handleChange={handleChange}
+                handleSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
+                isMobile={true}
+              />
             </div>
 
             <div className="relative">
@@ -335,156 +395,25 @@ export default function Contactos() {
                   Ready for lift-off?
                 </p>
               </div>
-
-              {/* Imagem */}
-              {/* <div className="w-full max-w-sm mx-auto">
-                <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-lg">
-                  <Image
-                    src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                    alt="Drone profissional"
-                    fill
-                    className="object-cover"
-                    sizes="320px"
-                  />
-                </div>
-              </div> */}
             </div>
           </div>
 
           {/* Desktop Layout */}
           <div className="hidden md:block relative">
             <div ref={formRef} className="max-w-2xl">
+              {submitStatus && <StatusMessage type={submitStatus} />}
 
-              {submitStatus === 'success' && (
-                <div className="bg-green-50 border border-green-200 text-green-700 p-6 rounded-lg mb-12 shadow-sm">
-                  <h4 className="font-bold mb-2">Mensagem enviada com sucesso!</h4>
-                  <p>Entraremos em contacto em breve. Obrigado pelo seu interesse.</p>
-                </div>
-              )}
-
-              {submitStatus === 'error' && (
-                <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-lg mb-12 shadow-sm">
-                  <h4 className="font-bold mb-2">Erro ao enviar mensagem</h4>
-                  <p>Ocorreu um erro. Tente novamente ou contacte-nos diretamente por email.</p>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-10">
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <div>
-                    <input
-                      type="text"
-                      id="nome"
-                      name="nome"
-                      value={formData.nome}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-0 py-5 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 text-xl"
-                      placeholder="Nome"
-                    />
-                  </div>
-
-                  <div>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-0 py-5 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 text-xl"
-                      placeholder="Email"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <div>
-                    <input
-                      type="tel"
-                      id="telefone"
-                      name="telefone"
-                      value={formData.telefone}
-                      onChange={handleChange}
-                      className="w-full px-0 py-5 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 text-xl"
-                      placeholder="Telefone"
-                    />
-                  </div>
-
-                  <div>
-                    <select
-                      id="servico"
-                      name="servico"
-                      value={formData.servico}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-0 py-5 bg-transparent border-0 border-b-2 border-gray-200 text-black focus:border-black focus:outline-none transition-all duration-300 text-xl"
-                    >
-                      <option value="" className="bg-white">Tipo de serviço</option>
-                      <option value="inspecoes" className="bg-white">Inspeções Técnicas Aéreas</option>
-                      <option value="acompanhamento" className="bg-white">Acompanhamento de Obras</option>
-                      <option value="paineis" className="bg-white">Inspeção de Painéis Solares</option>
-                      <option value="espacos" className="bg-white">Levantamento de Espaços Exteriores</option>
-                      <option value="seguranca" className="bg-white">Verificação de Segurança</option>
-                      <option value="conteudos" className="bg-white">Conteúdos Visuais</option>
-                      <option value="outro" className="bg-white">Outro</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <textarea
-                    id="mensagem"
-                    name="mensagem"
-                    value={formData.mensagem}
-                    onChange={handleChange}
-                    required
-                    rows={5}
-                    className="w-full px-0 py-5 bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 resize-none text-xl"
-                    placeholder="Conte-nos sobre o seu desafio técnico..."
-                  />
-                </div>
-
-                <div className="pt-4">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="bg-black text-white px-10 py-5 rounded font-bold hover:bg-gray-800 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-xl"
-                  >
-                    {isSubmitting ? 'Enviando...' : 'Enviar mensagem'}
-                  </button>
-                </div>
-              </form>
+              <ContactForm
+                formData={formData}
+                handleChange={handleChange}
+                handleSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
+                isMobile={false}
+              />
             </div>
 
             <div className="absolute right-8 top-0 text-right z-10">
-
-              {/* Contactos diretos */}
-              <div ref={rightContentRef} className="space-y-6 text-xl text-black font-bold mb-12">
-                <div className="contact-item hover:text-gray-600 transition-colors cursor-pointer">
-                  geral@allperspectives.pt
-                </div>
-                <div className="contact-item hover:text-gray-600 transition-colors cursor-pointer">
-                  +351 919 490 318
-                </div>
-                <div className="contact-item text-gray-700 font-semibold">
-                  Porto, Portugal
-                </div>
-                <div className="contact-item border-t border-gray-200 pt-6">
-                  <a
-                    href="https://instagram.com/allperspectives.pt"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-3 text-gray-600 hover:text-black transition-colors font-medium text-lg"
-                  >
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                    </svg>
-                    <span>@allperspectives.pt</span>
-                  </a>
-                </div>
-              </div>
+              <ContactInfo rightContentRef={rightContentRef} />
 
               <div className="mb-16">
                 <p className="text-2xl md:text-3xl font-bold text-gray-300 italic">
