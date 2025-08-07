@@ -1,3 +1,5 @@
+import { CONTACT_INFO } from '../constants/contact'
+
 export default function Footer() {
   return (
     <footer className="bg-gray-900 border-t border-gray-800">
@@ -12,18 +14,17 @@ export default function Footer() {
               para otimizar operações.
             </p>
           </div>
-
           <div>
-            <h4 className="font-semibold mb-4 text-white">Contacto</h4>
+            <h4 className="font-semibold mb-4 text-white">Contactos</h4>
             <div className="space-y-2 text-gray-400">
-              <p className="hover:text-white transition-colors cursor-pointer">
-                email@allperspectives.com
+              <p>
+                {CONTACT_INFO.email}
               </p>
-              <p className="hover:text-white transition-colors cursor-pointer">
-                +351 123 456 789
+              <p>
+                {CONTACT_INFO.phone}
               </p>
               <p className="text-gray-300 font-medium">
-                Porto, Portugal
+                {CONTACT_INFO.location}
               </p>
             </div>
           </div>
@@ -39,18 +40,17 @@ export default function Footer() {
               para otimizar operações.
             </p>
           </div>
-
           <div className="text-right">
-            <h4 className="font-semibold mb-4 text-white">Contacto</h4>
+            <h4 className="font-semibold mb-4 text-white">Contactos</h4>
             <div className="space-y-2 text-gray-400">
-              <p className="hover:text-white transition-colors cursor-pointer">
-                geral@allperspectives.pt
+              <p>
+                {CONTACT_INFO.email}
               </p>
-              <p className="hover:text-white transition-colors cursor-pointer">
-                +351 919 490 318
+              <p>
+                {CONTACT_INFO.phone}
               </p>
               <p className="text-gray-300 font-medium">
-                Porto, Portugal
+                {CONTACT_INFO.location}
               </p>
             </div>
           </div>
