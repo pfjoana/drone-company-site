@@ -71,9 +71,6 @@ export default function Sobre() {
 
       gsap.set(statementSplit.words, { y: 100, opacity: 0 })
 
-      // Remover overflow hidden das linhas após criar o split
-      gsap.set(statementSplit.lines, { overflow: "visible" })
-
       ScrollTrigger.create({
         trigger: statementRef.current,
         start: "top 90%",
@@ -162,7 +159,7 @@ export default function Sobre() {
         if (skillsTitle) {
           const skillsTitleSplit = new SplitText(skillsTitle, {
             type: "lines,words",
-            linesClass: "overflow-hidden"
+            linesClass: "overflow-visible"
           })
 
           gsap.set(skillsTitleSplit.words, { y: 50, opacity: 0 })
@@ -245,7 +242,7 @@ export default function Sobre() {
         if (valuesTitle) {
           const valuesTitleSplit = new SplitText(valuesTitle, {
             type: "lines,words",
-            linesClass: "overflow-hidden"
+            linesClass: "overflow-visible"
           })
           gsap.set(valuesTitleSplit.words, { y: 100, opacity: 0 })
           gsap.set(valueCards, { y: 50, opacity: 0, scale: 0.95 })
@@ -324,19 +321,17 @@ export default function Sobre() {
 
             {/* Imagem mobile */}
             <div className="w-full max-w-sm mx-auto">
-              <div ref={mobileImageRef} className="relative w-full h-80 overflow-hidden rounded-lg shadow-xl">
-                {aboutData?.profileImage?.asset?.url ? (
-                  <Image
-                    src={aboutData.profileImage.asset.url}
-                    alt={staticData.name}
-                    fill
-                    className="object-cover"
-                    sizes="320px"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gray-200"></div>
-                )}
-              </div>
+              {aboutData?.profileImage?.asset?.url ? (
+                <div ref={mobileImageRef} className="relative w-full h-80 overflow-hidden rounded-lg shadow-xl">
+                    <Image
+                      src={aboutData.profileImage.asset.url}
+                      alt={staticData.name}
+                      fill
+                      className="object-cover"
+                      sizes="320px"
+                    />
+                </div>
+              ) : null}
             </div>
 
             {/* Conteúdo mobile */}
@@ -379,19 +374,17 @@ export default function Sobre() {
               ref={desktopImageRef}
               className="absolute left-8 top-0 w-80 h-96 lg:w-[400px] lg:h-[480px] xl:w-[450px] xl:h-[540px]"
             >
-              <div className="relative w-full h-full overflow-hidden rounded-lg shadow-2xl">
-                {aboutData?.profileImage?.asset?.url ? (
-                  <Image
-                    src={aboutData.profileImage.asset.url}
-                    alt={staticData.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 400px, 450px"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gray-200"></div>
-                )}
-              </div>
+              {aboutData?.profileImage?.asset?.url ? (
+                <div className="relative w-full h-full overflow-hidden rounded-lg shadow-2xl">
+                    <Image
+                      src={aboutData.profileImage.asset.url}
+                      alt={staticData.name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 1024px) 400px, 450px"
+                    />
+                </div>
+              ) : null}
             </div>
 
             {/* Conteúdo à direita */}

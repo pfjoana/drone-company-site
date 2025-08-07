@@ -234,10 +234,6 @@ export default function Contactos() {
       gsap.set(headerSplit.words, { y: 100, opacity: 0 })
       gsap.set(headerParagraphSplit.lines, { y: 50, opacity: 0 })
 
-      // Remover overflow hidden das linhas
-      gsap.set(headerSplit.lines, { overflow: "visible" })
-      gsap.set(headerParagraphSplit.lines, { overflow: "visible" })
-
       ScrollTrigger.create({
         trigger: headerRef.current,
         start: "top 90%",

@@ -111,10 +111,6 @@ export default function Home() {
       gsap.set(statementSplit.words, { y: 100, opacity: 0 })
       gsap.set(paragraphSplit.lines, { y: 50, opacity: 0 })
 
-      // Remover overflow hidden das linhas
-      gsap.set(statementSplit.lines, { overflow: "visible" })
-      gsap.set(paragraphSplit.lines, { overflow: "visible" })
-
       // ScrollTrigger para o statement
       ScrollTrigger.create({
         trigger: statementRef.current,
@@ -145,12 +141,12 @@ export default function Home() {
 
       const serviceTitleSplit = new SplitText(serviceTitle, {
         type: "lines,words",
-        linesClass: "overflow-hidden"
+        linesClass: "overflow-visible"
       })
 
       const serviceSubtitleSplit = new SplitText(serviceSubtitle, {
         type: "lines",
-        linesClass: "overflow-hidden"
+        linesClass: "overflow-visible"
       })
 
       gsap.set(serviceTitleSplit.words, { y: 100, opacity: 0 })
