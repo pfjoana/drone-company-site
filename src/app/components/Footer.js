@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { CONTACT_INFO } from '../constants/contact'
 
 export default function Footer() {
@@ -56,10 +57,21 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-6 text-center">
-          <p className="text-gray-500 text-sm">
-            © 2025 All Perspectives. Todos os direitos reservados.
-          </p>
+        <div className="border-t border-gray-800 mt-8 pt-6">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <p className="text-gray-500 text-sm">
+              © 2025 All Perspectives. Todos os direitos reservados.
+            </p>
+
+            <div className="flex space-x-6 text-sm">
+              <Link
+                href="/politica-privacidade"
+                className="text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                Política de Privacidade
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

@@ -11,7 +11,6 @@ import { SplitText } from 'gsap/SplitText'
 import { CONTACT_INFO, INITIAL_FORM_DATA } from '../constants/contact'
 import { SERVICE_OPTIONS } from '../constants/services'
 
-
 const InstagramIcon = ({ className = "w-5 h-5" }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
@@ -86,55 +85,78 @@ const StatusMessage = ({ type }) => {
   )
 }
 
-const FormField = ({ type = "text", name, value, onChange, placeholder, required = false, options = null, rows = null, isMobile = false }) => {
-  const baseClassName = `w-full px-0 ${isMobile ? 'py-4' : 'py-5'} bg-transparent border-0 border-b-2 border-gray-200 text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 ${isMobile ? 'text-lg' : 'text-xl'}`
+const FormField = ({
+  type = "text",
+  name,
+  value,
+  onChange,
+  placeholder,
+  required = false,
+  options = null,
+  rows = null,
+  isMobile = false,
+  error = null
+}) => {
+  const baseClassName = `w-full px-0 ${isMobile ? 'py-4' : 'py-5'} bg-transparent border-0 border-b-2 ${
+    error ? 'border-red-500' : 'border-gray-200'
+  } text-black placeholder-gray-500 focus:border-black focus:outline-none transition-all duration-300 ${
+    isMobile ? 'text-lg' : 'text-xl'
+  }`
 
-  if (type === 'select') {
+  const renderField = () => {
+    if (type === 'select') {
+      return (
+        <select
+          name={name}
+          value={value}
+          onChange={onChange}
+          className={baseClassName}
+        >
+          {options.map(option => (
+            <option key={option.value} value={option.value} className="bg-white">
+              {option.label}
+            </option>
+          ))}
+        </select>
+      )
+    }
+
+    if (type === 'textarea') {
+      return (
+        <textarea
+          name={name}
+          value={value}
+          onChange={onChange}
+          rows={rows}
+          className={`${baseClassName} resize-none`}
+          placeholder={placeholder}
+        />
+      )
+    }
+
     return (
-      <select
+      <input
+        type={type}
         name={name}
         value={value}
         onChange={onChange}
-        required={required}
         className={baseClassName}
-      >
-        {options.map(option => (
-          <option key={option.value} value={option.value} className="bg-white">
-            {option.label}
-          </option>
-        ))}
-      </select>
-    )
-  }
-
-  if (type === 'textarea') {
-    return (
-      <textarea
-        name={name}
-        value={value}
-        onChange={onChange}
-        required={required}
-        rows={rows}
-        className={`${baseClassName} resize-none`}
         placeholder={placeholder}
       />
     )
   }
 
   return (
-    <input
-      type={type}
-      name={name}
-      value={value}
-      onChange={onChange}
-      required={required}
-      className={baseClassName}
-      placeholder={placeholder}
-    />
+    <div>
+      {renderField()}
+      {error && (
+        <p className="text-red-500 text-sm mt-2">{error}</p>
+      )}
+    </div>
   )
 }
 
-const ContactForm = ({ formData, handleChange, handleSubmit, isSubmitting, isMobile = false }) => (
+const ContactForm = ({ formData, handleChange, handleSubmit, isSubmitting, isMobile = false, validationErrors = {} }) => (
   <form onSubmit={handleSubmit} className={isMobile ? "space-y-6" : "space-y-10"}>
     <div className={isMobile ? "space-y-6" : "grid grid-cols-1 md:grid-cols-2 gap-10"}>
       <FormField
@@ -142,8 +164,8 @@ const ContactForm = ({ formData, handleChange, handleSubmit, isSubmitting, isMob
         value={formData.nome}
         onChange={handleChange}
         placeholder="Nome"
-        required
         isMobile={isMobile}
+        error={validationErrors.nome}
       />
       <FormField
         type="email"
@@ -151,8 +173,8 @@ const ContactForm = ({ formData, handleChange, handleSubmit, isSubmitting, isMob
         value={formData.email}
         onChange={handleChange}
         placeholder="Email"
-        required
         isMobile={isMobile}
+        error={validationErrors.email}
       />
     </div>
 
@@ -171,8 +193,8 @@ const ContactForm = ({ formData, handleChange, handleSubmit, isSubmitting, isMob
         value={formData.servico}
         onChange={handleChange}
         options={SERVICE_OPTIONS}
-        required
         isMobile={isMobile}
+        error={validationErrors.servico}
       />
     </div>
 
@@ -183,9 +205,44 @@ const ContactForm = ({ formData, handleChange, handleSubmit, isSubmitting, isMob
       onChange={handleChange}
       placeholder="Conte-nos sobre o seu desafio técnico..."
       rows={isMobile ? 4 : 5}
-      required
       isMobile={isMobile}
+      error={validationErrors.mensagem}
     />
+
+    {/* Checkbox de Privacidade */}
+    <div className="pt-2 pb-4">
+      <label className="flex items-start space-x-3 cursor-pointer group">
+        <div className="flex-shrink-0 mt-1">
+          <input
+            type="checkbox"
+            name="privacyConsent"
+            checked={formData.privacyConsent || false}
+            onChange={handleChange}
+            className={`w-5 h-5 text-black bg-white border-2 ${
+              validationErrors.privacyConsent ? 'border-red-500' : 'border-gray-300'
+            } rounded focus:ring-black focus:ring-2 checked:bg-black checked:border-black`}
+          />
+        </div>
+        <div>
+          <span className={`text-gray-700 leading-relaxed ${isMobile ? 'text-base' : 'text-lg'} group-hover:text-black transition-colors`}>
+            Aceito a{' '}
+            <a
+              href="/politica-privacidade"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-black font-semibold underline hover:no-underline"
+            >
+              Política de Privacidade
+            </a>
+            {' '}e autorizo o tratamento dos meus dados pessoais para resposta a este pedido de contacto.
+            <span className="text-red-500 ml-1">*</span>
+          </span>
+          {validationErrors.privacyConsent && (
+            <p className="text-red-500 text-sm mt-2">{validationErrors.privacyConsent}</p>
+          )}
+        </div>
+      </label>
+    </div>
 
     <div className={`pt-4 ${isMobile ? 'text-center' : ''}`}>
       <button
@@ -205,6 +262,7 @@ export default function Contactos() {
   const [formData, setFormData] = useState(INITIAL_FORM_DATA)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
+  const [validationErrors, setValidationErrors] = useState({}) // NOVO
 
   // Refs para animações
   const headerRef = useRef(null)
@@ -302,17 +360,62 @@ export default function Contactos() {
   }, [])
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: type === 'checkbox' ? checked : value
     })
+
+    // Limpar erro do campo quando o utilizador começa a digitar
+    if (validationErrors[name]) {
+      setValidationErrors({
+        ...validationErrors,
+        [name]: null
+      })
+    }
   }
 
+  // FUNÇÃO ATUALIZADA
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitStatus(null)
+    setValidationErrors({}) // Limpar erros anteriores
 
+    // Validação customizada
+    const errors = {}
+
+    if (!formData.nome.trim()) {
+      errors.nome = 'Nome é de preenchimento obrigatório'
+    }
+
+    if (!formData.email.trim()) {
+      errors.email = 'Email é de preenchimento obrigatório'
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = 'Email inválido'
+    }
+
+    if (!formData.mensagem.trim()) {
+      errors.mensagem = 'Mensagem é de preenchimento obrigatório'
+    }
+
+    if (!formData.servico) {
+      errors.servico = 'Serviço é de preenchimento obrigatório'
+    }
+
+    if (!formData.privacyConsent) {
+      errors.privacyConsent = 'É necessário aceitar a política de privacidade'
+    }
+
+    // Se há erros, mostra e para
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors)
+      setIsSubmitting(false)
+      return
+    }
+
+    // Se chegou aqui, não há erros - continua com o envio
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -324,7 +427,8 @@ export default function Contactos() {
           email: formData.email,
           phone: formData.telefone,
           service: formData.servico,
-          message: formData.mensagem
+          message: formData.mensagem,
+          privacyConsent: formData.privacyConsent
         }),
       })
 
@@ -382,6 +486,7 @@ export default function Contactos() {
                 handleSubmit={handleSubmit}
                 isSubmitting={isSubmitting}
                 isMobile={true}
+                validationErrors={validationErrors}
               />
             </div>
 
@@ -405,6 +510,7 @@ export default function Contactos() {
                 handleSubmit={handleSubmit}
                 isSubmitting={isSubmitting}
                 isMobile={false}
+                validationErrors={validationErrors}
               />
             </div>
 

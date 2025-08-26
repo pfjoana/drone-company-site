@@ -1,12 +1,21 @@
 import nodemailer from 'nodemailer';
+import { NextResponse } from 'next/server';
 
 export async function POST(request) {
   try {
-    const { name, email, phone, message, service } = await request.json();
+    const { name, email, phone, message, service, privacyConsent } = await request.json();
 
     if (!name || !email || !message) {
-      return Response.json(
+      return NextResponse.json(
         { error: 'Nome, email e mensagem são obrigatórios' },
+        { status: 400 }
+      );
+    }
+
+    // Alterar esta validação - verificar especificamente se é true
+    if (privacyConsent !== true) {
+      return NextResponse.json(
+        { error: 'É necessário aceitar a política de privacidade' },
         { status: 400 }
       );
     }
@@ -70,6 +79,10 @@ export async function POST(request) {
                   <td style="padding: 10px 0; font-weight: 600; color: #374151; vertical-align: top;">Mensagem:</td>
                   <td style="padding: 10px 0; color: #6b7280; line-height: 1.6;">${message.replace(/\n/g, '<br>')}</td>
                 </tr>
+                <tr>
+                  <td style="padding: 10px 0; border-top: 1px solid #e5e7eb; font-weight: 600; color: #374151;">Consentimento RGPD:</td>
+                  <td style="padding: 10px 0; border-top: 1px solid #e5e7eb; color: #16a34a;">✓ Aceite</td>
+                </tr>
               </table>
             </div>
 
@@ -126,14 +139,14 @@ export async function POST(request) {
     await transporter.sendMail(mailToOwner);
     await transporter.sendMail(mailToClient);
 
-    return Response.json(
+    return NextResponse.json(
       { message: 'Email enviado com sucesso!' },
       { status: 200 }
     );
 
   } catch (error) {
     console.error('Erro no envio do email:', error);
-    return Response.json(
+    return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
     );
