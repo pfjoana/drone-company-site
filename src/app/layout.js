@@ -5,10 +5,20 @@ import { LoadingProvider } from "./components/LoadingProvider";
 
 export const metadata = {
   title: "All Perspectives - Serviços Profissionais de Drone",
-  description: "Inspeções, imobiliário e eventos. Serviços profissionais de captação aérea com drone.",
+  description: "Especialistas em inspeções técnicas aéreas, monitorização de obras e levantamentos com drone. Soluções profissionais para gestão de infraestruturas e ativos.",
   icons: {
     icon: '/favicon.svg',
-  }
+  },
+
+  openGraph: {
+    title: "All Perspectives - Serviços Profissionais de Drone",
+    description: "Especialistas em inspeções técnicas aéreas, monitorização de obras e levantamentos com drone. Soluções profissionais para gestão de infraestruturas e ativos.",
+    images: [
+      {
+        url: '/og-image.png',
+      }
+    ],
+  },
 };
 
 export default function RootLayout({ children }) {
