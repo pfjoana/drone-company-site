@@ -17,6 +17,58 @@ const InstagramIcon = ({ className = "w-5 h-5" }) => (
   </svg>
 )
 
+// const ContactInfo = ({ isMobile = false, rightContentRef = null }) => {
+//   const containerClass = isMobile
+//     ? "text-center space-y-4 text-lg text-black font-bold bg-gray-50 p-6 rounded-lg"
+//     : "space-y-6 text-xl text-black font-bold mb-12"
+
+//   const itemClass = !isMobile
+//     ? "contact-item"
+//     : undefined
+
+//   const locationClass = isMobile
+//     ? "text-gray-700 font-semibold"
+//     : "contact-item text-gray-700 font-semibold"
+
+//   const instagramContainerClass = isMobile
+//     ? "border-t border-gray-200 pt-4 mt-4"
+//     : "contact-item border-t border-gray-200 pt-6"
+
+//   const instagramLinkClass = isMobile
+//     ? "inline-flex items-center space-x-2 text-gray-600 hover:text-black transition-colors font-medium"
+//     : "inline-flex items-center space-x-3 text-gray-600 hover:text-black transition-colors font-medium text-lg"
+
+//   const iconSize = isMobile ? "w-5 h-5" : "w-6 h-6"
+
+//   return (
+//     <div ref={rightContentRef} className={containerClass}>
+//       <div className={itemClass}>
+//         {CONTACT_INFO.email}
+//       </div>
+//       <div className={itemClass}>
+//         {CONTACT_INFO.phone}
+//         <div className={`text-xs text-gray-500 mt-1 font-normal ${isMobile ? 'text-center' : 'text-left'}`}>
+//             Chamada para rede móvel nacional
+//           </div>
+//       </div>
+//       <div className={locationClass}>
+//         {CONTACT_INFO.location}
+//       </div>
+//       <div className={instagramContainerClass}>
+//         <a
+//           href={CONTACT_INFO.instagram.url}
+//           target="_blank"
+//           rel="noopener noreferrer"
+//           className={instagramLinkClass}
+//         >
+//           <InstagramIcon className={iconSize} />
+//           <span>{CONTACT_INFO.instagram.handle}</span>
+//         </a>
+//       </div>
+//     </div>
+//   )
+// }
+
 const ContactInfo = ({ isMobile = false, rightContentRef = null }) => {
   const containerClass = isMobile
     ? "text-center space-y-4 text-lg text-black font-bold bg-gray-50 p-6 rounded-lg"
@@ -46,7 +98,12 @@ const ContactInfo = ({ isMobile = false, rightContentRef = null }) => {
         {CONTACT_INFO.email}
       </div>
       <div className={itemClass}>
-        {CONTACT_INFO.phone}
+        <div>
+          {CONTACT_INFO.phone}
+          <div className={`text-xs text-gray-500 mt-1 font-normal ${isMobile ? 'text-center' : 'text-right'}`}>
+            Chamada para a<br/>rede móvel nacional
+          </div>
+        </div>
       </div>
       <div className={locationClass}>
         {CONTACT_INFO.location}
