@@ -4,15 +4,16 @@ import Footer from "./components/Footer";
 import { LoadingProvider } from "./components/LoadingProvider";
 
 export const metadata = {
+  metadataBase: new URL('https://www.allperspectives.pt'),
   title: "All Perspectives - Serviços Profissionais de Drone",
-  description: "Especialistas em inspeções técnicas aéreas, monitorização de obras e levantamentos com drone. Soluções profissionais para gestão de infraestruturas e ativos.",
+  description: "Inspeções técnicas aéreas, monitorização de obras e levantamentos com drone. Soluções profissionais para gestão de infraestruturas.",
   icons: {
     icon: '/favicon.svg',
   },
 
   openGraph: {
     title: "All Perspectives - Serviços Profissionais de Drone",
-    description: "Especialistas em inspeções técnicas aéreas, monitorização de obras e levantamentos com drone. Soluções profissionais para gestão de infraestruturas e ativos.",
+    description: "Inspeções técnicas aéreas, monitorização de obras e levantamentos com drone. Soluções profissionais para gestão de infraestruturas.",
     images: [
       {
         url: '/og-image.png',

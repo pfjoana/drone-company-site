@@ -21,9 +21,14 @@ export default function Footer() {
               <p>
                 {CONTACT_INFO.email}
               </p>
-              <p>
-                {CONTACT_INFO.phone}
-              </p>
+              <div>
+                <p>
+                  {CONTACT_INFO.phone}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Chamada para a<br/>rede móvel nacional
+                </p>
+              </div>
               <p className="text-gray-300 font-medium">
                 {CONTACT_INFO.location}
               </p>
@@ -47,9 +52,14 @@ export default function Footer() {
               <p>
                 {CONTACT_INFO.email}
               </p>
-              <p>
-                {CONTACT_INFO.phone}
-              </p>
+              <div>
+                <p>
+                  {CONTACT_INFO.phone}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Chamada para a<br/>rede móvel nacional
+                </p>
+              </div>
               <p className="text-gray-300 font-medium">
                 {CONTACT_INFO.location}
               </p>
@@ -62,7 +72,6 @@ export default function Footer() {
             <p className="text-gray-500 text-sm">
               © 2025 All Perspectives. Todos os direitos reservados.
             </p>
-
             <div className="flex space-x-6 text-sm">
               <Link
                 href="/politica-privacidade"
